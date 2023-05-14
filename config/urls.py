@@ -14,6 +14,7 @@ urlpatterns = [
     path("users/", include("my_hebrew_dates.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    path("calendars/", include("my_hebrew_dates.hebcal.urls", namespace="hebcal")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

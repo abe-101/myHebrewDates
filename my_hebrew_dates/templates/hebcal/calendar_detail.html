@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}My Calendar{% endblock %}
+
+{% block content %}
+  <h1>Create Calendar</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ calendar_form.as_p }}
+    {{ hebrew_date_formset.management_form }}
+    {% for hebrew_date_form in hebrew_date_formset.forms %}
+      <div class="formset-row">
+        {{ hebrew_date_form.as_p }}
+      </div>
+    {% endfor %}
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

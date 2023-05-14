@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "my_hebrew_dates.users",
+    "my_hebrew_dates.hebcal.apps.HebcalConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

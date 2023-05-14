@@ -15,9 +15,11 @@
     <!-- Latest compiled and minified Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Your stuff: Third-party CSS libraries go here -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" />
 
     <!-- This file stores project-specific CSS -->
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     {% endblock %}
     <!-- Le javascript
     ================================================== -->
@@ -73,6 +75,17 @@
                 </li>
               {% endif %}
             </ul>
+            <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+              <li class="nav-item col-6 col-lg-auto">
+                  <a class="nav-link" href="https://discord.gg/2vqUzSpt6N"><i class="bi bi-discord"></i></a>
+              </li>
+              <li class="nav-item col-6 col-lg-auto">
+                <a class="nav-link" href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"><i class="bi bi-envelope"></i></a>
+              </li>
+              <li class="nav-item col-6 col-lg-auto">
+                <a class="nav-link" href="https://github.com/abe-101/myhebrewdates"><i class="bi bi-github"></i></a>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -106,6 +119,7 @@
       window.addEventListener('DOMContentLoaded', () => {/* Run whatever you want */});
     </script>
     {% endcomment %}
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="abe101" data-description="Support me on Buy me a coffee!" data-message="" data-color="#ff813f" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
     {% endblock inline_javascript %}
   </body>
 </html>
