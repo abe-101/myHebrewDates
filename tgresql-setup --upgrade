@@ -1,0 +1,66 @@
+May 13 21:18:07 fedora systemd[1]: Starting postgresql.service - PostgreSQL database server...
+[0;38;5;245m░░ [0m[0;32mSubject: A start job for unit postgresql.service has begun execution[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mA start job for unit postgresql.service has begun execution.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe job identifier is 348.[0m
+May 13 21:18:07 fedora postgresql-check-db-dir[2787]: An old version of the database format was found.
+May 13 21:18:07 fedora postgresql-check-db-dir[2787]: Use 'postgresql-setup --upgrade' to upgrade to version '15'
+May 13 21:18:07 fedora postgresql-check-db-dir[2787]: See /usr/share/doc/postgresql/README.rpm-dist for more information.
+May 13 21:18:07 fedora systemd[1]: [0;1;39m[0;1;31m[0;1;39mpostgresql.service: Control process exited, code=exited, status=1/FAILURE[0m
+[0;38;5;245m░░ [0m[0;32mSubject: Unit process exited[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mAn ExecStartPre= process belonging to unit postgresql.service has exited.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe process' exit code is 'exited' and its exit status is 1.[0m
+May 13 21:18:07 fedora systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mpostgresql.service: Failed with result 'exit-code'.[0m
+[0;38;5;245m░░ [0m[0;32mSubject: Unit failed[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe unit postgresql.service has entered the 'failed' state with result 'exit-code'.[0m
+May 13 21:18:07 fedora systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start postgresql.service - PostgreSQL database server.[0m
+[0;38;5;245m░░ [0m[0;32mSubject: A start job for unit postgresql.service has failed[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mA start job for unit postgresql.service has finished with a failure.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe job identifier is 348 and the job result is failed.[0m
+May 13 23:05:05 fedora systemd[1]: Starting postgresql.service - PostgreSQL database server...
+[0;38;5;245m░░ [0m[0;32mSubject: A start job for unit postgresql.service has begun execution[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mA start job for unit postgresql.service has begun execution.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe job identifier is 5578.[0m
+May 13 23:05:05 fedora postgresql-check-db-dir[16667]: An old version of the database format was found.
+May 13 23:05:05 fedora postgresql-check-db-dir[16667]: Use 'postgresql-setup --upgrade' to upgrade to version '15'
+May 13 23:05:05 fedora postgresql-check-db-dir[16667]: See /usr/share/doc/postgresql/README.rpm-dist for more information.
+May 13 23:05:05 fedora systemd[1]: [0;1;39m[0;1;31m[0;1;39mpostgresql.service: Control process exited, code=exited, status=1/FAILURE[0m
+[0;38;5;245m░░ [0m[0;32mSubject: Unit process exited[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mAn ExecStartPre= process belonging to unit postgresql.service has exited.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe process' exit code is 'exited' and its exit status is 1.[0m
+May 13 23:05:05 fedora systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mpostgresql.service: Failed with result 'exit-code'.[0m
+[0;38;5;245m░░ [0m[0;32mSubject: Unit failed[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe unit postgresql.service has entered the 'failed' state with result 'exit-code'.[0m
+May 13 23:05:05 fedora systemd[1]: [0;1;31m[0;1;39m[0;1;31mFailed to start postgresql.service - PostgreSQL database server.[0m
+[0;38;5;245m░░ [0m[0;32mSubject: A start job for unit postgresql.service has failed[0m
+[0;38;5;245m░░[0m [0;32mDefined-By: systemd[0m
+[0;38;5;245m░░[0m [0;32mSupport: https://lists.freedesktop.org/mailman/listinfo/systemd-devel[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mA start job for unit postgresql.service has finished with a failure.[0m
+[0;38;5;245m░░[0m [0;32m[0m
+[0;38;5;245m░░[0m [0;32mThe job identifier is 5578 and the job result is failed.[0m
