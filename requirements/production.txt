@@ -9,4 +9,4 @@ Collectfast==2.2.0  # https://github.com/antonagestam/collectfast
 # Django
 # ------------------------------------------------------------------------------
 django-storages[google]==1.13.2  # https://github.com/jschneier/django-storages
-django-anymail[sendgrid]==9.2  # https://github.com/anymail/django-anymail
+django-anymail[sendgrid]==10.0  # https://github.com/anymail/django-anymail
