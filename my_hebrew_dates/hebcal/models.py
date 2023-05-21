@@ -44,8 +44,8 @@ class HebrewDate(models.Model):
         (9, "Kislev"),
         (10, "Tevet"),
         (11, "Shevat"),
-        (12, "Adar I"),
-        (13, "Adar II"),
+        (12, "Adar II"),
+        (13, "Adar I"),
     ]
     month = models.PositiveSmallIntegerField(choices=MONTH_CHOICES)
     DAY_CHOICES = [(i, i) for i in range(1, 31)]
@@ -62,6 +62,12 @@ class HebrewDate(models.Model):
     def get_english_dates(self):
         hebrew_str = f"{self.month}-{self.day}"
         return hebrew_to_english_dict.get(hebrew_str)
+
+    def get_formatted_name(self):
+        capitalized_date = " ".join(word.capitalize() for word in self.name.split()) + "'s"
+        event_type = dict(self.EVENT_CHOICES).get(self.event_type)
+        formatted_event_name = capitalized_date + " " + event_type.capitalize()
+        return formatted_event_name
 
     def __str__(self):
         return self.name
