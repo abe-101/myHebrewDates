@@ -31,6 +31,10 @@ class Calendar(models.Model):
 
 class HebrewDate(models.Model):
     name = models.CharField(max_length=64)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
 
     MONTH_CHOICES = [
         (1, "Nissan"),
