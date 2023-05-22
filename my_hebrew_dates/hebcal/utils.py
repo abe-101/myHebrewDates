@@ -22,6 +22,7 @@ def generate_ical(modelCalendar: ModelCalendar):
             engDate: date = engDate
             event = Event()
             event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
+            event.add("description", hebrewDate.get_hebrew_date() + "\n Brought to you by: MyHebrewDates.com")
             event.add("dtstart", engDate)
             event.add("dtend", engDate)
             newcal.add_component(event)

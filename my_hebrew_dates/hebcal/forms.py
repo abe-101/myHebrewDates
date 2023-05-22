@@ -25,3 +25,6 @@ class HebrewDateForm(forms.ModelForm):
             "day": forms.Select(choices=HebrewDate.DAY_CHOICES),
             "event_type": forms.Select(choices=HebrewDate.EVENT_CHOICES),
         }
+
+
+HebrewDateFormSet = forms.inlineformset_factory(Calendar, HebrewDate, form=HebrewDateForm, extra=3)
