@@ -1,38 +1,48 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
-{% block title %}My Calendars{% endblock %}
+{% block title %}Calendars{% endblock title %}
 
 {% block content %}
-  <h2>My Calendars</h2>
-  <ul>
-    {% for calendar in calendars %}
-    <li><a href="{{ calendar.get_absolute_url }}">{{ calendar.name }}</a>
-      <form method="post" style="display: inline;">
-        {% csrf_token %}
-        <input type="hidden" name="calendar_id" value="{{ calendar.id }}">
-        <button type="submit" name="delete">Delete</button>
-      </form>
-      <div style="display: inline;">
-        <input hidden id="calendar_file_url{{calendar.id}}" value="https://{{domain_name}}{% url 'hebcal:calendar_file' calendar.uuid %}">
-        <button onclick="copyFileUrl({{calendar.id}})" class="btn btn-primary" type="button" title="Add this link to your calendar client">
-          <i class="bi bi-clipboard-check"></i>
-          Subscribe
-        </button>
-        <a href={% url 'hebcal:instructions' %} class="btn" type="button" data-toggle="tooltip" data-placement="bottom" title="How to Add a Calendar Feed to Google Calendar">
-          <i class="bi bi-info-circle"></i>
-        </a>
-
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1 class="text-center">My Calendars</h1>
+      <hr>
+      {% for calendar in calendar_list %}
+        <div class="row mb-3">
+          <div class="col">
+            <div class="d-flex align-items-center justify-content-between bg-light p-3">
+              <div>
+                <h5 class="mb-0">
+                  <a href="{% url 'hebcal:calendar_edit' calendar.pk %}">{{ calendar.name }}</a>
+                </h5>
+                <p class="text-muted mb-0">{{ calendar.timezone }}</p>
+              </div>
+              <div>
+                <input hidden id="calendar_file_url{{calendar.id}}" value="https://{{domain_name}}{% url 'hebcal:calendar_file' calendar.uuid %}">
+                <button onclick="copyFileUrl({{calendar.id}})" class="btn btn-primary" type="button" title="Add this link to your calendar client">
+                  <i class="bi bi-clipboard-check"></i> Subscribe
+                </button>
+                <a href="#" class="btn btn-secondary" type="button" data-toggle="tooltip" data-placement="bottom" title="How to Add a Calendar Feed to Your Calendar Client" data-trigger="hover">
+                  <i class="bi bi-info-circle"></i>
+                </a>
+                <a href="{% url 'hebcal:calendar_edit' calendar.pk %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'hebcal:calendar_delete' calendar.pk %}" class="btn btn-danger">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      <div class="text-center">
+        <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-success">New</a>
       </div>
-    </li>
+    </div>
+  </div>
+</div>
 
-    {% empty %}
-    <li>No calendars found.</li>
-    {% endfor %}
-  </ul>
-  <h2>Create a new calendar</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-  </form>
-  {% endblock %}
+<script>
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+</script>
+{% endblock content %}
