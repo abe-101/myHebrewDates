@@ -37,7 +37,9 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
         context = self.get_context_data()
         hebrewDates = context["hebrewDates"]
         with transaction.atomic():
-            self.object = form.save()
+            self.object = form.save(commit=False)
+            self.object.owner = self.request.user  # Set the owner field
+            self.object.save()
 
             if hebrewDates.is_valid():
                 hebrewDates.instance = self.object
@@ -63,7 +65,9 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data()
         hebrewDates = context["hebrewDates"]
         with transaction.atomic():
-            self.object = form.save()
+            self.object = form.save(commit=False)
+            self.object.owner = self.request.user  # Set the owner field
+            self.object.save()
 
             if hebrewDates.is_valid():
                 hebrewDates.instance = self.object
