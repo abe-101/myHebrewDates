@@ -17,6 +17,14 @@ class CalendarListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_list.html"
 
+    def get_context_data(self, **kwargs):
+        # Call the parent implementation to get the default context
+        context = super().get_context_data(**kwargs)
+        # Add the domain_name to the context
+        context["domain_name"] = Site.objects.get_current().domain
+
+        return context
+
 
 class CalendarCreateView(LoginRequiredMixin, CreateView):
     model = Calendar
