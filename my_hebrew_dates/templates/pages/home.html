@@ -2,12 +2,119 @@
 
 {% block content %}
 <!-- Main content -->
-<div class="container mt-4">
-  <h1>Welcome to MyHebrewDates!</h1>
-  <p>Never miss an important Hebrew date again. MyHebrewDates is a web application that allows you to save and manage
-    important Hebrew dates, such as birthdays, anniversaries, and yartzeits. </p>
-  <p>The webapp provides users with an iCal file containing all of their saved dates, which they can subscribe to into
-    their preferred calendar application.</p>
-  <p>Please note that this application is currently under development and is not yet available to the public.</p>
-</div>
+<header class="bg-light py-5">
+    <div class="container text-center">
+        <h1 class="display-4">My Hebrew Dates</h1>
+        <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p>
+        <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-lg">Get Started</a>
+    </div>
+</header>
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-calendar4-event display-3 text-primary"></i>
+        </div>
+        <h2>Create Personalized Calendars</h2>
+        <p>Create custom Hebrew event calendars for your family, including birthdays, anniversaries, and more.</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-file-earmark-arrow-up display-3 text-primary"></i>
+        </div>
+        <h2>Corresponding English Events</h2>
+        <p>Automatically generate English event labels that correspond to your Hebrew dates for easy understanding.</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-link-45deg display-3 text-primary"></i>
+        </div>
+        <h2>Share with Family Members</h2>
+        <p>Share your personalized calendar with family members by providing them with a unique URL to subscribe to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">What Our Users Say</h2>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <p class="card-text">"My Hebrew Dates has made it so much easier for our family to remember and celebrate important Hebrew events. Highly recommended!"</p>
+            <h5 class="card-title">Ezra Cohen</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <p class="card-text">"I love using My Hebrew Dates to keep track of all our family birthdays and other special dates. It's a fantastic tool!"</p>
+            <h5 class="card-title">Leah Rosenberg</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body">
+            <p class="card-text">"My Hebrew Dates has brought our family closer together by helping us stay connected through our shared calendar. Thank you!"</p>
+            <h5 class="card-title">Benjamin Steinberg</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">How It Works</h2>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-pencil-square display-3 text-primary"></i>
+        </div>
+        <h5>Create Your Calendar</h5>
+        <p>Sign up and create a personalized Hebrew event calendar for your family.</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-link-45deg display-3 text-primary"></i>
+        </div>
+        <h5>Share the URL</h5>
+        <p>Share the unique URL of your calendar with your family members.</p>
+      </div>
+      <div class="col-lg-4">
+        <div class="text-center mb-4">
+          <i class="bi bi-calendar-check display-3 text-primary"></i>
+        </div>
+        <h5>Stay Connected</h5>
+        <p>Your family members can subscribe to the calendar and receive updates for the Hebrew events.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<!-- Footer Section -->
+<footer class="bg-dark py-3 text-center">
+  <div class="container">
+    <p class="text-white mb-0">&copy; <span id="currentYear"></span> My Hebrew Dates. All rights reserved.</p>
+  </div>
+
+  <script>
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+    // Set the current year in the footer
+    document.getElementById("currentYear").innerText = currentYear;
+  </script>
+</footer>
+
+
+
 {% endblock %}
