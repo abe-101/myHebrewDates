@@ -17,6 +17,11 @@ class CalendarListView(LoginRequiredMixin, ListView):
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_list.html"
 
+    def get_queryset(self):
+        # Retrieve the calendars belonging to the current user
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
+
     def get_context_data(self, **kwargs):
         # Call the parent implementation to get the default context
         context = super().get_context_data(**kwargs)
@@ -31,6 +36,11 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_detail.html"
     fields = ["name", "timezone"]
+
+    def get_queryset(self):
+        # Retrieve the calendars belonging to the current user
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -60,6 +70,11 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_detail.html"
     fields = ["name", "timezone"]
+
+    def get_queryset(self):
+        # Retrieve the calendars belonging to the current user
+        queryset = super().get_queryset()
+        return queryset.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
