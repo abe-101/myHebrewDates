@@ -7,6 +7,8 @@ from django.db import transaction
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
@@ -39,6 +41,10 @@ class CalendarShareView(DeleteView):
     template_name = "hebcal/calendar_share.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
+
+    @method_decorator(cache_page(60 * 15))  # Cache the dispatch method for 15 minutes
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         # Retrieve the calendar by uuid
@@ -150,6 +156,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "hebcal/calendar_delete.html"
 
 
+@method_decorator(cache_page(60 * 15))  # Cache the page for 15 minutes
 def calendar_file(request, uuid):
     calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
     generate_ical(calendar)
