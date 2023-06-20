@@ -156,7 +156,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "hebcal/calendar_delete.html"
 
 
-@method_decorator(cache_page(60 * 15))  # Cache the page for 15 minutes
+@cache_page(60 * 15)  # Cache the page for 15 minutes
 def calendar_file(request, uuid):
     calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
     generate_ical(calendar)
