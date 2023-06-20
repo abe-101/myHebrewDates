@@ -25,10 +25,10 @@
       </p>
       <div class="collapse" id="addToCalendar">
         <ul class="list-group mt-3">
-          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Apple</a></li>
-          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2F{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Google</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Office 365</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Outlook.com</a></li>
+          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Apple</a></li>
+          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Google</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Office 365</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Outlook.com</a></li>
         </ul>
       </div>
     </div>
