@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 import icalendar
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
@@ -49,6 +51,11 @@ class CalendarShareView(DeleteView):
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
         cal = icalendar.Calendar.from_ical(self.object.calendar_file_str)
+        # Get the current date
+        current_date = datetime.now().date()
+
+        # Calculate the date range for the events (from current date to one year from now)
+        one_year_from_now = current_date + timedelta(days=365)
 
         events = []
         for component in cal.walk():
@@ -59,7 +66,8 @@ class CalendarShareView(DeleteView):
                     "start": component.get("dtstart").dt,
                     "end": component.get("dtend").dt,
                 }
-                events.append(event)
+                if current_date <= event["start"] <= one_year_from_now:
+                    events.append(event)
 
         # Sort events by start date and time
         events.sort(key=lambda e: e["start"])
