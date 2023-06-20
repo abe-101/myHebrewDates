@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import icalendar
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 from django.db import transaction
@@ -146,6 +147,12 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
             if hebrewDates.is_valid():
                 hebrewDates.instance = self.object
                 hebrewDates.save()
+            else:
+                # Display error messages and rerender the form with user data
+                messages.error(self.request, "Please correct the errors in the form.")
+                return self.render_to_response(self.get_context_data(form=form))
+
+        messages.success(self.request, "Calendar updated successfully.")
         return super().form_valid(form)
 
 
