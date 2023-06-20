@@ -1,6 +1,6 @@
 # My Hebrew Dates
 
-MyHebrewDates is a web application that allows users to save and manage important Hebrew dates, such as birthdays, anniversaries, and holidays. The app provides users with an iCal file containing all of their saved dates, which they can import into their preferred calendar application. With MyHebrewDates, users will never miss an important Hebrew date again.
+MyHebrewDates is a web app for sharing Hebrew dates like birthdays, anniversaries, and yartzeit. It provides a subscribable feed for your calendar app, ensuring you never miss an important Hebrew date.
 
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
