@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Add To Calendar{% endblock title %}
+
+{% block content %}
+<div class="container" style="max-width: 650px;">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between">
+      <h5 class="card-title"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
+      <input hidden id="calendar_file_url{{calendar.id}}" value="{% url 'hebcal:calendar_share' calendar.uuid %}">
+      <button onclick="copyFileUrl({{calendar.id}})" class="btn btn-primary" type="button" title="Add this link to your calendar client">
+        <i class="bi bi-share"></i>
+      </button>
+
+    </div>
+    <div class="card-body">
+      <p>
+      By clicking the "Add To Calendar" button, you can choose your preferred calendar client and effortlessly sync the hebrew events with your personal calendar. Select your preferred platform from the list and follow the instructions to subscribe to this calendar.
+      </p>
+
+      <p>
+      <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
+        Add To Calendar
+      </button>
+      </p>
+      <div class="collapse" id="addToCalendar">
+        <ul class="list-group mt-3">
+          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Apple</a></li>
+          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=webcal%3A%2F%2F{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Google</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Office 365</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Outlook.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a class="link-dark link-offset-2 link-underline link-underline-opacity-0 link-offset-3-hover link-underline-opacity-75-hover" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="bi bi-lightbulb"></i> About following a calendar
+      </a>
+      <span>
+        <i class="bi bi-caret-down"></i>
+      </span>
+      <div class="collapse" id="collapseExample">
+        When you subscribe to this calendar, all of the events in the calendar will appear on your own calendar. When the calendar owner creates new events, they'll automatically appear on your calendar. It's like magic. ⭐
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock content %}

@@ -14,35 +14,33 @@
             <div class="d-flex align-items-center justify-content-between bg-light p-3">
               <div>
                 <h5 class="mb-0">
-                  <a href="{% url 'hebcal:calendar_edit' calendar.pk %}">{{ calendar.name }}</a>
+                  <a href="{% url 'hebcal:calendar_share' calendar.uuid %}">{{ calendar.name }}</a>
                 </h5>
                 <p class="text-muted mb-0">{{ calendar.timezone }}</p>
               </div>
               <div>
-                <input hidden id="calendar_file_url{{calendar.id}}" value="https://{{domain_name}}{% url 'hebcal:calendar_file' calendar.uuid %}">
+                <input hidden id="calendar_file_url{{calendar.id}}" value="{% url 'hebcal:calendar_share' calendar.uuid %}">
                 <button onclick="copyFileUrl({{calendar.id}})" class="btn btn-primary" type="button" title="Add this link to your calendar client">
-                  <i class="bi bi-clipboard-check"></i> Subscribe
+                  <i class="bi bi-share"></i>
                 </button>
-                <a href="#" class="btn btn-secondary" type="button" data-toggle="tooltip" data-placement="bottom" title="How to Add a Calendar Feed to Your Calendar Client" data-trigger="hover">
-                  <i class="bi bi-info-circle"></i>
-                </a>
+
                 <a href="{% url 'hebcal:calendar_edit' calendar.pk %}" class="btn btn-primary">Edit</a>
                 <a href="{% url 'hebcal:calendar_delete' calendar.pk %}" class="btn btn-danger">Delete</a>
               </div>
             </div>
           </div>
         </div>
-      {% endfor %}
-      <div class="text-center">
-        <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-success">New</a>
-      </div>
+        {% endfor %}
+        <div class="text-center">
+          <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-success">New</a>
+        </div>
     </div>
   </div>
 </div>
 
 <script>
-(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+  (function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 </script>
 {% endblock content %}

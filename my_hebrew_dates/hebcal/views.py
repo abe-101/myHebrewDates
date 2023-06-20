@@ -31,6 +31,26 @@ class CalendarListView(LoginRequiredMixin, ListView):
         return context
 
 
+class CalendarShareView(DeleteView):
+    model = Calendar
+    template_name = "hebcal/calendar_share.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
+    def get_queryset(self):
+        # Retrieve the calendar by uuid
+        queryset = super().get_queryset()
+        return queryset.filter(uuid=self.kwargs["uuid"])
+
+    def get_context_data(self, **kwargs):
+        # Call the parent implementation to get the default context
+        context = super().get_context_data(**kwargs)
+        # Add the domain_name to the context
+        context["domain_name"] = Site.objects.get_current().domain
+
+        return context
+
+
 class CalendarCreateView(LoginRequiredMixin, CreateView):
     model = Calendar
     login_url = reverse_lazy("login")
@@ -110,7 +130,7 @@ def calendar_file(request, uuid):
     generate_ical(calendar)
     calendar_str: str = calendar.calendar_file_str
 
-    response = HttpResponse(calendar_str, content_type="application/octet-stream")
-    response["Content-Disposition"] = f'attachment; filename="{uuid}.ical"'
+    response = HttpResponse(calendar_str, content_type="text/calendar")
+    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
 
     return response
