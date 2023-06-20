@@ -1,3 +1,4 @@
+import icalendar
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 from django.db import transaction
@@ -47,6 +48,22 @@ class CalendarShareView(DeleteView):
         context = super().get_context_data(**kwargs)
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
+        cal = icalendar.Calendar.from_ical(self.object.calendar_file_str)
+
+        events = []
+        for component in cal.walk():
+            if component.name == "VEVENT":
+                event = {
+                    "summary": component.get("summary"),
+                    "description": component.get("description")[:-37],
+                    "start": component.get("dtstart").dt,
+                    "end": component.get("dtend").dt,
+                }
+                events.append(event)
+
+        # Sort events by start date and time
+        events.sort(key=lambda e: e["start"])
+        context["events"] = events
 
         return context
 
