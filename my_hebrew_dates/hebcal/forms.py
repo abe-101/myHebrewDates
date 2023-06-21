@@ -6,13 +6,9 @@ from .models import Calendar, HebrewDate
 class CalendarForm(forms.ModelForm):
     class Meta:
         model = Calendar
-        fields = ["name", "timezone"]
+        fields = ["name"]
         labels = {
             "name": "Name",
-            "timezone": "Timezone",
-        }
-        widgets = {
-            "timezone": forms.Select(choices=Calendar.TIMEZONE_CHOICES),
         }
 
 

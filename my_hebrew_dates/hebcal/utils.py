@@ -1,6 +1,6 @@
 from datetime import date
 
-from icalendar import Calendar, Event, Timezone
+from icalendar import Calendar, Event
 
 from .models import Calendar as ModelCalendar
 from .models import HebrewDate
@@ -11,10 +11,6 @@ def generate_ical(modelCalendar: ModelCalendar):
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
     newcal.add("x-wr-calname", modelCalendar.name)
-
-    newtimezone = Timezone()
-    newtimezone.add("tzid", modelCalendar.timezone)
-    newcal.add_component(newtimezone)
 
     events = []
 

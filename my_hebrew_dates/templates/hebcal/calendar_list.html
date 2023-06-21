@@ -16,7 +16,6 @@
                 <h5 class="mb-0">
                   <a href="{% url 'hebcal:calendar_share' calendar.uuid %}">{{ calendar.name }}</a>
                 </h5>
-                <p class="text-muted mb-0">{{ calendar.timezone }}</p>
               </div>
               <div>
                 <input hidden id="calendar_file_url{{calendar.id}}" value="https://{{domain_name}}{% url 'hebcal:calendar_share' calendar.uuid %}">
