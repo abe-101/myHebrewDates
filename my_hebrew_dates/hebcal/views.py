@@ -114,6 +114,12 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
             if hebrewDates.is_valid():
                 hebrewDates.instance = self.object
                 hebrewDates.save()
+            else:
+                # Display error messages and rerender the form with user data
+                messages.error(self.request, "Please correct the errors in the form.")
+                return self.render_to_response(self.get_context_data(form=form))
+
+        messages.success(self.request, "Calendar created successfully.")
         return super().form_valid(form)
 
 
