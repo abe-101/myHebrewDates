@@ -16,6 +16,8 @@ def generate_ical(modelCalendar: ModelCalendar):
     newtimezone.add("tzid", modelCalendar.timezone)
     newcal.add_component(newtimezone)
 
+    events = []
+
     for hebrewDate in modelCalendar.calendarOf.all():
         hebrewDate: HebrewDate = hebrewDate
         for engDate in hebrewDate.get_english_dates():
@@ -25,7 +27,12 @@ def generate_ical(modelCalendar: ModelCalendar):
             event.add("description", hebrewDate.get_hebrew_date() + "\n Brought to you by: MyHebrewDates.com")
             event.add("dtstart", engDate)
             event.add("dtend", engDate)
-            newcal.add_component(event)
+            events.append(event)
+
+    sorted_events = sorted(events, key=lambda e: e["dtstart"].dt)
+
+    for event in sorted_events:
+        newcal.add_component(event)
 
     cal_bye_str = newcal.to_ical()
     modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
