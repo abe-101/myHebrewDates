@@ -21,7 +21,7 @@ from .utils import generate_ical
 
 class CalendarListView(LoginRequiredMixin, ListView):
     model = Calendar
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_list.html"
 
     def get_queryset(self):
@@ -86,7 +86,7 @@ class CalendarShareView(DetailView):
 
 class CalendarCreateView(LoginRequiredMixin, CreateView):
     model = Calendar
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_detail.html"
     fields = ["name", "timezone"]
 
@@ -127,7 +127,7 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
 
 class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     model = Calendar
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_detail.html"
     fields = ["name", "timezone"]
 
@@ -168,7 +168,7 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
 class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     model = Calendar
     success_url = reverse_lazy("hebcal:calendar_list")
-    login_url = reverse_lazy("login")
+    login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_delete.html"
 
 
