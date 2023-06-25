@@ -1,1 +1,63 @@
 {% extends "base.html" %}
+
+{% block content %}
+<!-- Main content -->
+<header class="bg-light py-5">
+    <div class="container text-center">
+        <h1 class="display-4">About My Hebrew Dates</h1>
+        <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p>
+    </div>
+</header>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h2>About Us</h2>
+        <p>My Hebrew Dates is a platform designed to make it simple and convenient for families to create personalized Hebrew event calendars. We understand the importance of keeping track of Hebrew dates, such as birthdays and anniversaries, and we want to help you celebrate these special occasions with your loved ones.</p>
+        <p>Our goal is to provide an intuitive and user-friendly interface that allows you to easily create custom calendars and share them with your family members. With our service, you can generate corresponding English event labels for a better understanding of the dates, ensuring everyone stays connected and informed.</p>
+      </div>
+      <div class="col-lg-6">
+        <h2>About the Developer</h2>
+        <p>Abe Hanoka is the talented developer behind My Hebrew Dates. With a passion for both programming and Hebrew culture, Abe envisioned a platform that would bridge the gap between Hebrew dates and modern technology.</p>
+        <p>Abe's expertise in web development and dedication to creating innovative solutions led to the creation of My Hebrew Dates. By combining his technical skills with a deep understanding of Hebrew traditions, Abe has crafted a tool that simplifies the process of managing Hebrew event calendars.</p>
+      </div>
+    </div>
+  </div>
+  <div class="container text-center">
+    <div class="row mt-5">
+        <div class="col-auto m-1">
+            <a class="btn btn-outline-secondary" href="mailto:abe@myhebrewdates.com?subject=Feedback%20on%20MyHebrewDates">
+                <i class="bi bi-envelope"></i>
+                Get in touch
+            </a>
+        </div>
+        <div class="col-auto m-1">
+            <a class="btn btn-outline-secondary" href="https://github.com/abe-101/myHebrewDates">
+                <i class="bi bi-github"></i> GitHub
+            </a>
+        </div>
+        <div class="col-auto m-1">
+            <a class="btn btn-outline-secondary" href="https://discord.gg/2vqUzSpt6N">
+                <i class="bi bi-discord"></i> Discord
+            </a>
+        </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Section -->
+<footer class="bg-dark py-3 text-center">
+  <div class="container">
+    <p class="text-white mb-0">&copy; <span id="currentYear"></span> My Hebrew Dates. All rights reserved.</p>
+  </div>
+
+  <script>
+    // Get the current year
+    const currentYear = new Date().getFullYear();
+    // Set the current year in the footer
+    document.getElementById("currentYear").innerText = currentYear;
+  </script>
+</footer>
+
+{% endblock %}
