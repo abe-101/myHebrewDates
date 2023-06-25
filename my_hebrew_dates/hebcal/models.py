@@ -1,5 +1,4 @@
 import uuid
-import zoneinfo
 
 from django.conf import settings
 from django.db import models
@@ -64,9 +63,6 @@ class Calendar(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    # https://stackoverflow.com/a/70251235
-    TIMEZONE_CHOICES = ((x, x) for x in sorted(zoneinfo.available_timezones(), key=str.lower))
-    timezone = models.CharField("Timezone", choices=TIMEZONE_CHOICES, max_length=250, default="America/New_York")
     calendar_file_str = models.TextField(blank=True, null=True)
 
     def __str__(self):

@@ -88,7 +88,7 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
     model = Calendar
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_detail.html"
-    fields = ["name", "timezone"]
+    fields = ["name"]
 
     def get_queryset(self):
         # Retrieve the calendars belonging to the current user
@@ -129,7 +129,7 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     model = Calendar
     login_url = reverse_lazy("login")
     template_name = "hebcal/calendar_detail.html"
-    fields = ["name", "timezone"]
+    fields = ["name"]
 
     def get_queryset(self):
         # Retrieve the calendars belonging to the current user
