@@ -24,8 +24,10 @@ def generate_ical(modelCalendar: ModelCalendar):
         hebrewDate: HebrewDate = hebrewDate
         for engDate in hebrewDate.get_english_dates():
             engDate: date = engDate
-            eventHash = sha1((hebrewDate.event_type + hebrewDate.name + hebrewDate.get_hebrew_date()).encode("utf-8")).digest()
-            uid = date.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
+            eventHash = sha1(
+                (hebrewDate.event_type + hebrewDate.name + hebrewDate.get_hebrew_date()).encode("utf-8")
+            ).digest()
+            uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
             event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
             event.add("description", hebrewDate.get_hebrew_date() + "\n Brought to you by: MyHebrewDates.com")
