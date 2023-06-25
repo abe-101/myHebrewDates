@@ -1,4 +1,6 @@
+from base64 import urlsafe_b64encode
 from datetime import date
+from hashlib import sha1
 
 from icalendar import Calendar, Event, Timezone
 
@@ -22,11 +24,16 @@ def generate_ical(modelCalendar: ModelCalendar):
         hebrewDate: HebrewDate = hebrewDate
         for engDate in hebrewDate.get_english_dates():
             engDate: date = engDate
+            eventHash = sha1(
+                (hebrewDate.event_type + hebrewDate.name + hebrewDate.get_hebrew_date()).encode("utf-8")
+            ).digest()
+            uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
             event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
             event.add("description", hebrewDate.get_hebrew_date() + "\n Brought to you by: MyHebrewDates.com")
             event.add("dtstart", engDate)
             event.add("dtend", engDate)
+            event.add("uid", uid)
             events.append(event)
 
     sorted_events = sorted(events, key=lambda e: e["dtstart"].dt)
