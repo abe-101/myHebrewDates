@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from django.db import transaction
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 
 # from django.utils.decorators import method_decorator
 # from django.views.decorators.cache import cache_page
@@ -150,54 +150,6 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
         with transaction.atomic():
             self.object = form.save(commit=False)
             self.object.owner = self.request.user  # Set the owner field
-            self.object.save()
-
-            if hebrewDates.is_valid():
-                hebrewDates.instance = self.object
-                hebrewDates.save()
-            else:
-                # Display error messages and rerender the form with user data
-                messages.error(self.request, "Please correct the errors in the form.")
-                return self.render_to_response(self.get_context_data(form=form))
-
-        generate_ical(self.object)
-        messages.success(self.request, "Calendar updated successfully.")
-        return super().form_valid(form)
-
-
-class HebrewDateForm(UpdateView):
-    model = Calendar
-    template_name = "hebcal/hebrewdate_form.html"
-    slug_field = "uuid"
-    slug_url_kwarg = "uuid"
-    fields = []
-
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_object(self, queryset=None):
-        # Retrieve the calendar by uuid
-        queryset = self.get_queryset()
-        return queryset.filter(uuid=self.kwargs["uuid"]).first()
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["hebrewDates"] = HebrewDateFormSet(self.request.POST, instance=self.object)
-        else:
-            data["hebrewDates"] = HebrewDateFormSet()
-        return data
-
-    def get_success_url(self):
-        # Replace with your success URL logic
-        return reverse("hebcal:calendar_share", kwargs={"uuid": self.kwargs.get("uuid")})
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        hebrewDates = context["hebrewDates"]
-        with transaction.atomic():
-            self.object = form.save(commit=False)
-            # self.object.owner = self.request.user  # Set the owner field
             self.object.save()
 
             if hebrewDates.is_valid():
