@@ -7,10 +7,11 @@
   <div class="card mt-4 mb-4">
     <div class="card-header d-flex justify-content-between">
       <h5 class="card-title"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
-      <input hidden id="calendar_file_url{{calendar.id}}" value="https://{{domain_name}}{% url 'hebcal:calendar_share' calendar.uuid %}">
-      <button onclick="copyFileUrl({{calendar.id}})" class="btn btn-primary" type="button" title="Share with friends and family">
+      <input hidden id="calendar_file_url{{calendar.uuid}}" value="https://{{domain_name}}{% url 'hebcal:calendar_share' calendar.uuid %}">
+      <button onclick="shareFile('{{calendar.uuid}}')" class="btn btn-primary" type="button" title="Share with friends and family">
         <i class="bi bi-share"></i>
       </button>
+
 
     </div>
     <div class="card-body">
