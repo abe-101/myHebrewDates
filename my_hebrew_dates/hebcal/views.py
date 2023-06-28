@@ -38,20 +38,20 @@ class CalendarListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CalendarShareView(DetailView):
+class CalendarDetailView(DetailView):
     model = Calendar
-    template_name = "hebcal/calendar_share.html"
+    template_name = "hebcal/calendar_detail.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
     # @method_decorator(cache_page(60 * 15))  # Cache the dispatch method for 15 minutes
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    # def dispatch(self, request, *args, **kwargs):
+    #    return super().dispatch(request, *args, **kwargs)
 
-    def get_object(self, queryset=None):
-        # Retrieve the calendar by uuid
-        queryset = self.get_queryset()
-        return queryset.filter(uuid=self.kwargs["uuid"]).first()
+    # def get_object(self, queryset=None):
+    #    # Retrieve the calendar by uuid
+    #    queryset = self.get_queryset()
+    #    return queryset.filter(uuid=self.kwargs["uuid"]).first()
 
     def get_context_data(self, **kwargs):
         # Call the parent implementation to get the default context
@@ -87,7 +87,7 @@ class CalendarShareView(DetailView):
 class CalendarCreateView(LoginRequiredMixin, CreateView):
     model = Calendar
     login_url = reverse_lazy("users:redirect")
-    template_name = "hebcal/calendar_detail.html"
+    template_name = "hebcal/calendar_edit.html"
     fields = ["name", "timezone"]
 
     def get_queryset(self):
@@ -128,8 +128,10 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
 class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     model = Calendar
     login_url = reverse_lazy("users:redirect")
-    template_name = "hebcal/calendar_detail.html"
+    template_name = "hebcal/calendar_edit.html"
     fields = ["name", "timezone"]
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
 
     def get_queryset(self):
         # Retrieve the calendars belonging to the current user
@@ -170,6 +172,8 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("hebcal:calendar_list")
     login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_delete.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
 
 
 # @cache_page(60 * 15)  # Cache the page for 15 minutes
