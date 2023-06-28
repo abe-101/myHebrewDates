@@ -73,7 +73,7 @@ class Calendar(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("hebcal:calendar_edit", kwargs={"pk": self.pk})
+        return reverse("hebcal:calendar_edit", kwargs={"uuid": self.uuid})
 
 
 class HebrewDate(models.Model):
@@ -123,4 +123,4 @@ class HebrewDate(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("hebcal:calendar_edit", kwargs={"pk": self.calendar.pk})
+        return reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})

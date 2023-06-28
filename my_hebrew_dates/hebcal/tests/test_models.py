@@ -14,7 +14,7 @@ class CalendarModelTest(TestCase):
         self.assertEqual(str(self.calendar), "Test Calendar")
 
     def test_get_absolute_url(self):
-        url = reverse("hebcal:calendar_edit", kwargs={"pk": self.calendar.pk})
+        url = reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
         self.assertEqual(self.calendar.get_absolute_url(), url)
 
 
@@ -39,5 +39,5 @@ class HebrewDateModelTest(TestCase):
         self.assertEqual(self.hebrew_date.get_formatted_name(), "Test Hebrew Date's Birthday")
 
     def test_get_absolute_url(self):
-        url = reverse("hebcal:calendar_edit", kwargs={"pk": self.calendar.pk})
+        url = reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
         self.assertEqual(self.hebrew_date.get_absolute_url(), url)

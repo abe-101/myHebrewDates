@@ -1,80 +1,80 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}Calendars{% endblock title %}
+{% block title %}{{ calendar.name }}{% endblock title %}
+
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h2 class="text-center">My Calendar</h2>
-                <hr>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            Calendar {{ form.name.label_tag }}
-                            {{ form.name }}
-                        </div>
-                        <div class="col-sm-6">
-                            {{ form.timezone.label_tag }}
-                            {{ form.timezone }}
-                        </div>
-                    </div>
+<div class="container" style="max-width: 650px;">
+  <div class="card mt-4 mb-4">
+    <div class="card-header d-flex justify-content-between">
+      <h5 class="card-title"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
+      <input hidden id="calendar_file_url{{calendar.uuid}}" value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+      <button onclick="shareFile('{{calendar.uuid}}')" class="btn btn-primary" type="button" title="Share with friends and family">
+        <i class="bi bi-share"></i>
+      </button>
 
 
-                    <table class="table">
-                        {{ hebrewDates.management_form }}
-
-                        {% for form in hebrewDates.forms %}
-                            {% if forloop.first %}
-                                <thead>
-                                <tr>
-                                    {% for field in form.visible_fields %}
-                                        <th>{{ field.label|capfirst }}</th>
-                                    {% endfor %}
-                                </tr>
-                                </thead>
-                            {% endif %}
-                            <tr class="{% cycle 'row1' 'row2' %} formset_row">
-                                {% for field in form.visible_fields %}
-                                    <td>
-                                        {# Include the hidden fields in the form #}
-                                        {% if forloop.first %}
-                                            {% for hidden in form.hidden_fields %}
-                                                {{ hidden }}
-                                            {% endfor %}
-                                        {% endif %}
-                                        {{ field.errors.as_ul }}
-                                        {{ field }}
-                                    </td>
-                                {% endfor %}
-                            </tr>
-                        {% endfor %}
-                    </table>
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Save"/>
-                        <a href="{% url 'hebcal:calendar_list' %}" class="btn btn-secondary">Back to Calendar List</a>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script src="{% static 'formset/jquery.formset.js' %}"></script>
-<script type="text/javascript">
-    $('.formset_row').formset({
-        addText: '<i class="fas fa-plus"></i> Add Hebrew Date',
-        deleteText: '<i class="fas fa-trash-alt"></i> Remove',
-        prefix: 'calendarOf',
-        addCssClass: 'btn btn-primary',
-        deleteCssClass: 'btn btn-danger',
-        added: function (row) {
-            // Perform additional actions after a row is added (if needed)
-        },
-        removed: function (row) {
-            // Perform additional actions after a row is removed (if needed)
-        }
-    });
-</script>
+    <div class="card-body">
+      <p>
+      By clicking the "Add To Calendar" button, you can choose your preferred calendar client and effortlessly sync the hebrew events with your personal calendar. Select your preferred platform from the list and follow the instructions to subscribe to this calendar.
+      </p>
 
-{% endblock %}
+      <p>
+      <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
+        Add To Calendar
+      </button>
+      </p>
+      <div class="collapse" id="addToCalendar">
+        <ul class="list-group mt-3">
+          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Apple</a></li>
+          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Google</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Office 365</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Outlook.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card-footer">
+      <a class="link-dark link-offset-2 link-underline link-underline-opacity-0 link-offset-3-hover link-underline-opacity-75-hover" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="bi bi-lightbulb"></i> About following a calendar
+      </a>
+      <span>
+        <i class="bi bi-caret-down"></i>
+      </span>
+      <div class="collapse" id="collapseExample">
+        When you subscribe to this calendar, all of the events in the calendar will appear on your own calendar. When the calendar owner creates new events, they'll automatically appear on your calendar. It's like magic. ⭐
+      </div>
+    </div>
+  </div>
+  <div class="card mb-4">
+
+    <div class="card-body">
+      <ul class="list-group">
+        {% for event in events %}
+        <li class="list-group-item">
+          <div class="row align-items-center">
+            <div class="col-1 text-center">
+              <span class="dot">&#11044;</span>
+            </div>
+            <div class="col-2">
+              <p class="mb-1 text-center" style="font-size: 1.25rem;"><strong>{{ event.start|date:"d" }}</strong></p>
+              <p class="mb-0 text-center">{{ event.start|date:"M" }}</p>
+            </div>
+            <div class="col">
+              <p class="mb-1"><strong>{{ event.summary }}</strong></p>
+              <p class="mb-0">{{ event.description }}</p>
+            </div>
+            <div class="col"></div> <!-- Empty column to occupy remaining space -->
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+{% endblock content %}

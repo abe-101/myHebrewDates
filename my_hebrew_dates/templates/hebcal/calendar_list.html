@@ -26,20 +26,20 @@
           <tbody>
             {% for calendar in calendar_list %}
             <tr>
-              <td class="py-3"><a class="text-decoration-none fs-6" href="{% url 'hebcal:calendar_share' calendar.uuid %}">{{calendar.name}}</a></td>
+              <td class="py-3"><a class="text-decoration-none fs-6" href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{calendar.name}}</a></td>
               <td class="py-3 text-muted">America/New_York</td>
               <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
               <td class="py-3 text-center">
                 <input hidden id="calendar_file_url{{calendar.uuid}}"
-                value="https://{{domain_name}}{% url 'hebcal:calendar_share' calendar.uuid %}">
+                value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
                 <button onclick="shareFile('{{calendar.uuid}}')" class="btn btn-success py-1 px-2 mx-1" type="button"
                   title="Share with friends and family">
                   <i class="bi bi-share"></i>
                 </button>
-                <a href="{% url 'hebcal:calendar_edit' calendar.pk %}" class="btn btn-primary py-1 px-2 mx-1">
+                <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" class="btn btn-primary py-1 px-2 mx-1">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <a href="{% url 'hebcal:calendar_delete' calendar.pk %}" class="btn btn-danger py-1 px-2 mx-1">
+                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" class="btn btn-danger py-1 px-2 mx-1">
                   <i class="bi bi-trash"></i>
                 </a>
               </td>

@@ -1,10 +1,80 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% load static %}
 
+{% block title %}Calendars{% endblock title %}
 {% block content %}
-<h1>Edit</h1>
-<form action="" method="post">{% csrf_token %}
-    {{ form|crispy }}
-    <button class="btn btn-info ml-2" type="submit">Update</button>
-</form>
-{% endblock content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <h2 class="text-center">My Calendar</h2>
+                <hr>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-sm-6">
+                            Calendar {{ form.name.label_tag }}
+                            {{ form.name }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.timezone.label_tag }}
+                            {{ form.timezone }}
+                        </div>
+                    </div>
+
+
+                    <table class="table">
+                        {{ hebrewDates.management_form }}
+
+                        {% for form in hebrewDates.forms %}
+                            {% if forloop.first %}
+                                <thead>
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <th>{{ field.label|capfirst }}</th>
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                            {% endif %}
+                            <tr class="{% cycle 'row1' 'row2' %} formset_row">
+                                {% for field in form.visible_fields %}
+                                    <td>
+                                        {# Include the hidden fields in the form #}
+                                        {% if forloop.first %}
+                                            {% for hidden in form.hidden_fields %}
+                                                {{ hidden }}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {{ field.errors.as_ul }}
+                                        {{ field }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Save"/>
+                        <a href="{% url 'hebcal:calendar_list' %}" class="btn btn-secondary">Back to Calendar List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="{% static 'formset/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+    $('.formset_row').formset({
+        addText: '<i class="fas fa-plus"></i> Add Hebrew Date',
+        deleteText: '<i class="fas fa-trash-alt"></i> Remove',
+        prefix: 'calendarOf',
+        addCssClass: 'btn btn-primary',
+        deleteCssClass: 'btn btn-danger',
+        added: function (row) {
+            // Perform additional actions after a row is added (if needed)
+        },
+        removed: function (row) {
+            // Perform additional actions after a row is removed (if needed)
+        }
+    });
+</script>
+
+{% endblock %}
