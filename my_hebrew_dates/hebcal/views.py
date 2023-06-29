@@ -90,10 +90,10 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
     template_name = "hebcal/calendar_edit.html"
     fields = ["name", "timezone"]
 
-    def get_queryset(self):
-        # Retrieve the calendars belonging to the current user
-        queryset = super().get_queryset()
-        return queryset.filter(owner=self.request.user)
+    # def get_queryset(self):
+    #    # Retrieve the calendars belonging to the current user
+    #    queryset = super().get_queryset()
+    #    return queryset.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -110,9 +110,9 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
         with transaction.atomic():
             self.object = form.save(commit=False)
             self.object.owner = self.request.user  # Set the owner field
-            self.object.save()
 
             if hebrewDates.is_valid():
+                self.object.save()
                 hebrewDates.instance = self.object
                 hebrewDates.save()
             else:
@@ -133,10 +133,10 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
-    def get_queryset(self):
-        # Retrieve the calendars belonging to the current user
-        queryset = super().get_queryset()
-        return queryset.filter(owner=self.request.user)
+    # def get_queryset(self):
+    #    # Retrieve the calendars belonging to the current user
+    #    queryset = super().get_queryset()
+    #    return queryset.filter(owner=self.request.user)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -152,9 +152,9 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
         with transaction.atomic():
             self.object = form.save(commit=False)
             self.object.owner = self.request.user  # Set the owner field
-            self.object.save()
 
             if hebrewDates.is_valid():
+                self.object.save()
                 hebrewDates.instance = self.object
                 hebrewDates.save()
             else:
