@@ -30,7 +30,10 @@ def generate_ical(modelCalendar: ModelCalendar):
             uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
             event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
-            event.add("description", hebrewDate.get_hebrew_date() + "\n Brought to you by: MyHebrewDates.com")
+            event.add(
+                "description",
+                hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://MyHebrewDates.com",
+            )
             event.add("dtstart", engDate)
             event.add("dtend", engDate)
             event.add("uid", uid)
