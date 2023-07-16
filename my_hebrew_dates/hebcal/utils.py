@@ -35,10 +35,14 @@ def generate_ical(modelCalendar: ModelCalendar):
                 "description",
                 hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://myhebrewdates.com",
             )
-            event.add("dtstart", engDate)
-            event.add("dtend", engDate)
+
+            startTime = datetime.combine(engDate, time())
+            endTime = startTime + timedelta(days=1)
+
+            event.add("dtstart", startTime)
+            event.add("dtend", endTime)
             event.add("uid", uid)
-            event.add("categories", hebrewDate.get_event_type_display())
+            event.add("categories", str(hebrewDate.get_event_type_display()))
             event.add("transp", "TRANSPARENT")
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
@@ -48,9 +52,7 @@ def generate_ical(modelCalendar: ModelCalendar):
             alarm.add("action", "DISPLAY")
             alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
 
-            alarmTime = datetime.combine(engDate, time()) + timedelta(hours=8)
-
-            alarm.add("trigger", alarmTime)
+            alarm.add("trigger", startTime + timedelta(hours=8))
             event.add_component(alarm)
 
             events.append(event)
