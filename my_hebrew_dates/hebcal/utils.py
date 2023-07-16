@@ -38,7 +38,7 @@ def generate_ical(modelCalendar: ModelCalendar):
 
             event.add("dtstamp", datetime.utcnow())  # Set DTSTAMP to the current UTC time
             event.add("dtstart", engDate)
-            event.add("dtend", engDate)
+            event.add("dtend", engDate + timedelta(days=1))
             event.add("uid", uid)
             event.add("categories", str(hebrewDate.get_event_type_display()))
             event.add("transp", "TRANSPARENT")
