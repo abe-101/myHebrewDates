@@ -43,7 +43,8 @@ def generate_ical(modelCalendar: ModelCalendar):
             alarm = Alarm()
             alarm.add("action", "DISPLAY")
             alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
-            alarm.add("trigger", timedelta(hours=8))
+
+            alarm.add("trigger", timedelta(hours=3))
             event.add_component(alarm)
 
             events.append(event)
