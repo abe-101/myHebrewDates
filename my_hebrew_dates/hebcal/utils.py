@@ -2,7 +2,7 @@ from base64 import urlsafe_b64encode
 from datetime import date, datetime, time, timedelta
 from hashlib import sha1
 
-from icalendar import Alarm, Calendar, Event, Timezone
+from icalendar import Alarm, Calendar, Event
 
 from .models import Calendar as ModelCalendar
 from .models import HebrewDate
@@ -14,9 +14,9 @@ def generate_ical(modelCalendar: ModelCalendar):
     newcal.add("version", "2.0")
     newcal.add("x-wr-calname", modelCalendar.name)
 
-    newtimezone = Timezone()
-    newtimezone.add("tzid", modelCalendar.timezone)
-    newcal.add_component(newtimezone)
+    # newtimezone = Timezone()
+    # newtimezone.add("tzid", modelCalendar.timezone)
+    # newcal.add_component(newtimezone)
 
     events = []
 
@@ -39,6 +39,7 @@ def generate_ical(modelCalendar: ModelCalendar):
             startTime = datetime.combine(engDate, time())
             endTime = startTime + timedelta(days=1)
 
+            event.add("dtstamp", datetime.utcnow())  # Set DTSTAMP to the current UTC time
             event.add("dtstart", startTime)
             event.add("dtend", endTime)
             event.add("uid", uid)
