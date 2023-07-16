@@ -1,8 +1,8 @@
 from base64 import urlsafe_b64encode
-from datetime import date
+from datetime import date, timedelta
 from hashlib import sha1
 
-from icalendar import Calendar, Event, Timezone
+from icalendar import Alarm, Calendar, Event, Timezone
 
 from .models import Calendar as ModelCalendar
 from .models import HebrewDate
@@ -34,6 +34,18 @@ def generate_ical(modelCalendar: ModelCalendar):
             event.add("dtstart", engDate)
             event.add("dtend", engDate)
             event.add("uid", uid)
+            event.add("categories", hebrewDate.get_event_type_display())
+            event.add("transp", "TRANSPARENT")
+            event.add("x-microsoft-cdo-alldayevent", "TRUE")
+            event.add("x-microsoft-cdo-busystatus", "FREE")
+
+            # Add alarm to the event
+            alarm = Alarm()
+            alarm.add("action", "DISPLAY")
+            alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
+            alarm.add("trigger", timedelta(hours=8))
+            event.add_component(alarm)
+
             events.append(event)
 
     sorted_events = sorted(events, key=lambda e: e["dtstart"].dt)
