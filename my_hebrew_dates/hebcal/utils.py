@@ -1,5 +1,5 @@
 from base64 import urlsafe_b64encode
-from datetime import date, timedelta
+from datetime import date, datetime, time, timedelta
 from hashlib import sha1
 
 from icalendar import Alarm, Calendar, Event, Timezone
@@ -48,9 +48,9 @@ def generate_ical(modelCalendar: ModelCalendar):
             alarm.add("action", "DISPLAY")
             alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
 
-            # engDateTime = datetime.combine(engDate, time()) + timedelta(hours=8)
+            alarmTime = datetime.combine(engDate, time()) + timedelta(hours=8)
 
-            alarm.add("trigger", timedelta(hours=8))
+            alarm.add("trigger", alarmTime)
             event.add_component(alarm)
 
             events.append(event)
