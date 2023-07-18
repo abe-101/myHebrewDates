@@ -14,8 +14,8 @@
           {% if user.is_authenticated %}
             <a href="{% url 'hebcal:calendar_new' %}" class="szButton btn btn-primary btn-lg">Get Started</a>
             {% else %}
-            <a href="{% url 'account_login' %}" class="szButton szBox btn btn-primary btn-lg">Sign In</a>
-            <a href="{% url 'account_signup' %}" class="szButton szBox btn btn-primary btn-lg">Sign Up</a>
+            <a href="{% url 'account_login' %}" class="szButton btn btn-primary btn-lg">Sign In</a>
+            <a href="{% url 'account_signup' %}" class="szButton btn btn-primary btn-lg">Sign Up</a>
             {% endif %}
     </div>
 </header>
