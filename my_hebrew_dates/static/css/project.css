@@ -18,8 +18,8 @@
 :root {
     --szColorBlack: #000;  /* main background color */
     --szColorWhite: #ffffff; /* main text color */
-    --szColorAccent: #20501a; /*#96ff88 highlight color */
-    --szColorAccentLight: #2e6b273c; /*#96ff88 highlight color */
+    --szColorAccent1: #ff813f; /*#96ff88 highlight color 20501a*/
+    --szColorAccent2: #ff813f; /*#96ff88 highlight color 2e6b273c    fd8c35*/
     --bs-body-color: var(--szColorBlack);
 }
 
@@ -30,7 +30,7 @@ body {
 }
 
 .text-primary{
-    color: var(--szColorAccent) !important;
+    color: var(--szColorWhite) !important;
 }
 
 .card-title{
@@ -44,7 +44,7 @@ body {
 
 nav{        /* top nav bar */  
     border: none !important;
-    border-bottom:var(--szColorAccent) 2px solid !important;
+    border-bottom:var(--szColorAccent2) 2px solid !important;
 }
 
 nav .navbar{   
@@ -58,23 +58,27 @@ nav .navbar{
 }
 
 .bg-dark{ /* dark background styles */
-    background: var(--szColorBlack) !important;
+    background: var(--szColorAccent1) !important;
     border: none;
-    border-top: 5px double var(--szColorAccent);
+    border-top: 5px double var(--szColorAccent2);
 }
 
 .text-white{
     color: var(--szColorWhite) !important;
 }
 
+.text-orange{
+    color: var(--szColorAccent1) !important;
+}
+
 .szBorderUnder{
-    border-bottom: 5px double var(--szColorAccent);
+    border-bottom: 5px double var(--szColorAccent1);
     width: 50%;
     margin: auto auto;
 }
 
 hr{
-    color: var(--szColorAccent);
+    color: var(--szColorAccent1);
     border: none;
     text-align: center;
     opacity: 1;
@@ -89,19 +93,23 @@ hr::before{
     border-bottom: 2px solid;
 }
 
+.smallerMargins{
+    margin:10px auto ;
+}
+
 .py-5{  /* main colored div, sizing and centered */
     display:block;
     margin-right:auto; 
     margin-left:auto;
-    width: 90vw;
-    border-radius: 0;
+    width: 96vw;
     color: var(--szColorBlack) !important;
 }
 
 .szColorBackground{
-    background: var(--szColorAccentLight);
+    background: var(--szColorAccent2);
     border-radius: .375rem;
-    margin: auto 1px;
+    color: var(--szColorWhite) !important;
+    margin: 5px auto;
 }
 /* Navbar and Link Styles */
 .navbar{
@@ -128,22 +136,74 @@ hr::before{
     font-weight: bolder;
 }
 
+/* Arrow */
+.arrow {
+    height:3px;
+    width: 3px;
+    margin: 0 0;
+    border: solid var(--szColorAccent1);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+}
+
+.row{
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 99.5%;
+}
+.col-lg-6{
+    display: flex;      /* makes div same height */
+    flex-wrap: wrap;
+    min-height: 40vh;
+}
+
+/* Form Styles Sign up Sign in */
+.form-control,.form-check-input{
+    border:.5px solid var(--szColorAccent1);
+}
+.form-control:focus,.form-check-input:focus{
+    box-shadow: 0 0 11px var(--szColorAccent2);    /* adds glow on focus */
+    transition: .3s box-shadow;
+}
+
+.form-check-input:checked{
+    background-color: var(--szColorAccent2);
+    color: var(--szColorWhite);
+}
+
+
+
+
 /* Links Styles */
 .szLink{
-    color: var(--szColorAccent);
-    text-decoration: none;
-    text-shadow: 2px 2px 10px var(--szColorAccent);
-    filter: dropshadow(color=var(--szColorAccent), offx=2, offy=2);
-    border: var(--szColorAccent);
+    color: var(--szColorBlack);
+    white-space: nowrap
 }
 .szLink:active, .szLink:hover{
-    text-decoration: underline;
+    text-shadow: 2px 2px 10px var(--szColorAccent2);
+    filter: dropshadow(color=var(--szColorAccent2), offx=2, offy=2);
+    border: var(--szColorAccent2);
+    transition: .2s text-shadow;
 }
+
+.socialaccount_provider{
+    color: var(--szColorBlack);
+
+}
+.socialaccount_provider:active, .socialaccount_provider:hover{
+    text-shadow: 2px 2px 10px var(--szColorAccent2);
+    filter: dropshadow(color=var(--szColorAccent2), offx=2, offy=2);
+    border: var(--szColorAccent2);
+    transition: .2s text-shadow;}
 
 /* Glow Text Styles */
 .szGlow:hover,.nav-link:hover{
-    text-shadow: 2px 2px 10px var(--szColorAccent);
-    filter: dropshadow(color=var(--szColorAccent), offx=2, offy=2);
+    text-shadow: 2px 2px 10px var(--szColorAccent2);
+    filter: dropshadow(color=var(--szColorAccent2), offx=2, offy=2);
     transition: .2s text-shadow;
 }
 
@@ -154,40 +214,40 @@ hr::before{
 /* Button Styles */
 .szButton{
     background: var(--szColorWhite);
-    color: var(--szColorAccent);  /* button colors */
-    border: 5px solid var(--szColorAccent);
+    color: var(--szColorAccent1);  /* button colors */
+    border: 5px solid var(--szColorAccent1);
     border-radius: var(--bs-border-radius);
 }
 
 .szButton:hover{
-    background: var(--szColorAccent);
+    background: var(--szColorAccent1);
     color: var(--szColorWhite);  /* button colors on hover */
-    border: 5px solid var(--szColorAccent);
+    border: 5px solid var(--szColorAccent1);
 }
 
 .szButton:active{
     background: var(--szColorWhite) !important;
-    color: var(--szColorAccent) !important;  /* Button colors on click */
-    border: 5px solid var(--szColorAccent) !important;
+    color: var(--szColorAccent12) !important;  /* Button colors on click */
+    border: 5px solid var(--szColorAccent1) !important;
 }
 
 /*User Feedback Cards Styles*/
 
-.szFeedbackCard {
+.card{
+    border: .5px solid var(--szColorAccent1);
     display: flex;      /* makes cards same height */
     flex-wrap: wrap;
     height: 30vh;
+
 }
 .card-body{
-    /* background-color: var(--szColorBlack) !important; */
     border-radius: var(--bs-border-radius);
     padding: auto   0;
-    /* color: var(--szColorWhite) !important; */
 
 }
 
 .card-body:hover {
-    box-shadow: 0 0 11px var(--szColorBlack);    /* adds shadow on hover */
+    box-shadow: 0 0 11px var(--szColorAccent1);    /* adds glow on hover */
     transition: .3s box-shadow;
 }
 
@@ -195,7 +255,7 @@ hr::before{
 /* Cool Border Animation On Hover Styles */
 /*
 .szBorder {
-    --c: var(--szColorAccent);/* the border color */
+    --c: var(--szColorAccent2);/* the border color */
 /*   --b: 4px;/* the border thickness*/
    /* --g: 15px;/* the gap on hover *//*
 
@@ -220,7 +280,7 @@ hr::before{
     display: block;
     width: 0;
     height: 2px;
-    background: var(--szColorAccent);
+    background: var(--szColorAccent2);
     transition: width .3s;
 }
 
