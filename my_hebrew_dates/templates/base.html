@@ -31,10 +31,13 @@
       <!-- Bootstrap JS -->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
+            <!-- SHIRA's Google Fonts -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=David+Libre&family=Oleo+Script&family=Ubuntu:wght@300;400&family=Yatra+One&display=swap" rel="stylesheet">
 
       <!-- place project specific Javascript in this file -->
       <script defer src="{% static 'js/project.js' %}"></script>
-
       <!-- Google tag (gtag.js) -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-MLL490GGCR"></script>
       <script>
@@ -58,36 +61,36 @@
           <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <a class="navbar-brand" href="{% url 'home' %}">My Hebrew Dates</a>
-
+          <a class="navbar-brand szGlow" href="{% url 'home' %}">My Hebrew Dates</a>
+          
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
+              <li class="nav-item szNav active">
                 <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 <a class="nav-link" href="{% url 'about' %}">About</a>
               </li>
               {% if request.user.is_authenticated %}
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 <a class="nav-link" href="{% url 'hebcal:calendar_list' %}">Calendars</a>
               </li>
 
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 <a class="nav-link" href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
               </li>
               {% else %}
               {% if ACCOUNT_ALLOW_REGISTRATION %}
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
               </li>
               {% endif %}
-              <li class="nav-item">
+              <li class="nav-item szNav">
                 {# URL provided by django-allauth/account/urls.py #}
                 <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
               </li>
@@ -107,6 +110,7 @@
           </div>
         </div>
       </nav>
+      <div class="szPlaceholder"></div>
 
     </div>
 
