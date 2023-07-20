@@ -8,7 +8,7 @@
     <div class="card-header d-flex justify-content-between">
       <h5 class="card-title"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
       <input hidden id="calendar_file_url{{calendar.uuid}}" value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
-      <button onclick="shareFile('{{calendar.uuid}}')" class="szButton btn btn-primary" type="button" title="Share with friends and family">
+      <button onclick="shareFile('{{calendar.uuid}}')" class="szButtonSmall btn btn-primary" type="button" title="Share with friends and family">
         <i class="bi bi-share"></i>
       </button>
 
@@ -20,21 +20,21 @@
       </p>
 
       <p>
-      <button class="szButton btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
+      <button class="szButtonSmall btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
         Add To Calendar
       </button>
       </p>
       <div class="collapse" id="addToCalendar">
         <ul class="list-group mt-3">
-          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Apple</a></li>
-          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Google</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Office 365</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Outlook.com</a></li>
+          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="szLink ">Apple</a></li>
+          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Google</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Office 365</a></li>
+          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Outlook.com</a></li>
         </ul>
       </div>
     </div>
     <div class="card-footer">
-      <a class="link-dark link-offset-2 link-underline link-underline-opacity-0 link-offset-3-hover link-underline-opacity-75-hover" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+      <a class="szLink text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
         <i class="bi bi-lightbulb"></i> About following a calendar
       </a>
       <span>

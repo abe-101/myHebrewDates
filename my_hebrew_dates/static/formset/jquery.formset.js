@@ -71,7 +71,7 @@
           row
             .children(':last')
             .append(
-              '<a class="' +
+              '<a class="szButtonSmall ' +
                 options.deleteCssClass +
                 '" href="javascript:void(0)">' +
                 options.deleteText +
@@ -81,7 +81,7 @@
           // If they're laid out as an ordered/unordered list,
           // insert an <li> after the last list item:
           row.append(
-            '<li><a class="' +
+            '<li><a class="szButtonSmall' +
               options.deleteCssClass +
               '" href="javascript:void(0)">' +
               options.deleteText +
@@ -91,7 +91,7 @@
           // Otherwise, just insert the remove button as the
           // last child element of the form's container:
           row.append(
-            '<a class="' +
+            '<a class="szButtonSmall' +
               options.deleteCssClass +
               '" href="javascript:void(0)">' +
               options.deleteText +

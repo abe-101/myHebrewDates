@@ -13,16 +13,16 @@
                     <div class="form-group row">
                         <div class="col-sm-6">
                             Calendar {{ form.name.label_tag }}
-                            {{ form.name }}
+                            <span class="szInput">{{ form.name }}</span>
                         </div>
                         <div class="col-sm-6">
                             {{ form.timezone.label_tag }}
-                            {{ form.timezone }}
+                            <span class="szInput">{{ form.timezone }}</span>
                         </div>
                     </div>
 
 
-                    <table class="table">
+                    <table class="table szTable">
                         {{ hebrewDates.management_form }}
 
                         {% for form in hebrewDates.forms %}
@@ -45,15 +45,15 @@
                                             {% endfor %}
                                         {% endif %}
                                         {{ field.errors.as_ul }}
-                                        {{ field }}
+                                        <span class="szInput">{{ field }}</span>
                                     </td>
                                 {% endfor %}
                             </tr>
                         {% endfor %}
                     </table>
                     <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Save"/>
-                        <a href="{% url 'hebcal:calendar_list' %}" class="btn btn-secondary">Back to Calendar List</a>
+                        <input type="submit" class="szButtonSmall btn btn-primary" value="Save"/>
+                        <a href="{% url 'hebcal:calendar_list' %}" class="szButtonSmall btn btn-secondary">Back to Calendar List</a>
                     </div>
                 </form>
             </div>
@@ -66,8 +66,8 @@
         addText: '<i class="fas fa-plus"></i> Add Hebrew Date',
         deleteText: '<i class="fas fa-trash-alt"></i> Remove',
         prefix: 'calendarOf',
-        addCssClass: 'btn btn-primary',
-        deleteCssClass: 'btn btn-danger',
+        addCssClass: 'btn btn-primary szButtonSmall',
+        deleteCssClass: 'btn btn-danger szButtonSmall',
         added: function (row) {
             // Perform additional actions after a row is added (if needed)
         },

@@ -10,7 +10,7 @@
     <div class="container text-center">
         <h1 class="display-4">My Hebrew Dates</h1> 
         <!-- <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p> -->
-        <p class="lead">Add Hebrew dates to your Google, Apple, or Outlook calendar with the click of a button!</p>
+        <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
           {% if user.is_authenticated %}
             <a href="{% url 'hebcal:calendar_new' %}" class="szButton btn btn-primary btn-lg">Get Started</a>
             {% else %}
@@ -58,26 +58,26 @@
 
     <div class="row">
       <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body szBorder">
-            <p class="card-text">"My Hebrew Dates has made it so much easier for our family to remember and celebrate important Hebrew events. Highly recommended!"</p>
-            <h5 class="card-title">Ezra Cohen</h5>
+        <div class="szcard card mb-4">
+          <div class="szcard-body card-body szBorder">
+            <p class="szcard-text card-text">"My Hebrew Dates has made it so much easier for our family to remember and celebrate important Hebrew events. Highly recommended!"</p>
+            <h5 class="szcard-title card-title">Ezra Cohen</h5>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body szBorder">
-            <p class="card-text">"I love using My Hebrew Dates to keep track of all our family birthdays and other special dates. It's a fantastic tool!"</p>
-            <h5 class="card-title">Leah Rosenberg</h5>
+        <div class="szcard card mb-4">
+          <div class="szcard-body card-body szBorder">
+            <p class="szcard-text card-text">"I love using My Hebrew Dates to keep track of all our family birthdays and other special dates. It's a fantastic tool!"</p>
+            <h5 class="szcard-title card-title">Leah Rosenberg</h5>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body szBorder">
-            <p class="card-text">"My Hebrew Dates has brought our family closer together by helping us stay connected through our shared calendar. Thank you!"</p>
-            <h5 class="card-title">Benjamin Steinberg</h5>
+        <div class="szcard card mb-4">
+          <div class="szcard-body card-body szBorder">
+            <p class="szcard-text card-text">"My Hebrew Dates has brought our family closer together by helping us stay connected through our shared calendar. Thank you!"</p>
+            <h5 class="szcard-title card-title">Benjamin Steinberg</h5>
           </div>
         </div>
       </div>
