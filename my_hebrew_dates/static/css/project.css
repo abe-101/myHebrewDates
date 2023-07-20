@@ -19,7 +19,8 @@
     --szColorBlack: #000;  /* main background color */
     --szColorWhite: #ffffff; /* main text color */
     --szColorAccent1: #ff813f; /*#96ff88 highlight color 20501a*/
-    --szColorAccent2: #88ddff; /*#96ff88 highlight color 2e6b273c    */
+    --szColorAccent2: #ff823f55; /*#96ff88 highlight color 20501a*/
+    --szColorAccent3: #88ddff; /*#96ff88 highlight color 2e6b273c    */
     --bs-body-color: var(--szColorBlack);
 }
 
@@ -151,6 +152,9 @@ hr::before{
     margin: 5px auto;
 }
 
+div.alert{
+    background-color: var(--szColorAccent2);
+}
 
 /* Arrow */
 .arrow {
@@ -179,15 +183,17 @@ hr::before{
 }
 
 /* Form Styles Sign up Sign in */
-.form-control,.form-check-input{
+.form-control,.form-check-input,input[type=radio]{
     border:.5px solid var(--szColorAccent1);
 }
 .form-control:focus,.form-check-input:focus{
     box-shadow: 0 0 11px var(--szColorAccent1);    /* adds glow on focus */
+    border:.5px solid var(--szColorAccent1);
     transition: .3s box-shadow;
 }
 
-.form-check-input:checked{
+.form-check-input:checked,input[type=radio]:checked{
+    border:.5px solid var(--szColorAccent1);
     background-color: var(--szColorAccent1);
     color: var(--szColorWhite);
 }
@@ -236,7 +242,6 @@ hr::before{
     color: var(--szColorWhite);  /* button colors on hover */
     border: 5px solid var(--szColorAccent1);
 }
-
 .szButton:active{
     background: var(--szColorWhite) !important;
     color: var(--szColorAccent1) !important;  /* Button colors on click */

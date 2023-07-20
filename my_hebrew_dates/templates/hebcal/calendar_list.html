@@ -32,14 +32,14 @@
               <td class="py-3 text-center">
                 <input hidden id="calendar_file_url{{calendar.uuid}}"
                 value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
-                <button onclick="shareFile('{{calendar.uuid}}')" class="btn btn-success py-1 px-2 mx-1" type="button"
+                <button onclick="shareFile('{{calendar.uuid}}')" class="szButton btn btn-success py-1 px-2 mx-1" type="button"
                   title="Share with friends and family">
                   <i class="bi bi-share"></i>
                 </button>
-                <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" class="btn btn-primary py-1 px-2 mx-1">
+                <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" class="szButton btn btn-primary py-1 px-2 mx-1">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" class="btn btn-danger py-1 px-2 mx-1">
+                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" class="szButton btn btn-danger py-1 px-2 mx-1">
                   <i class="bi bi-trash"></i>
                 </a>
               </td>
