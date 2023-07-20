@@ -7,22 +7,25 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <h2 class="text-center">My Calendar</h2>
+                <br>
                 <hr>
+                <br>
                 <form action="" method="post">
                     {% csrf_token %}
                     <div class="form-group row">
                         <div class="col-sm-6">
-                            Calendar {{ form.name.label_tag }}
-                            <span class="szInput">{{ form.name }}</span>
+                            <span class="szLabel">Calendar {{ form.name.label_tag }}</span>
+                            {{ form.name }}
                         </div>
                         <div class="col-sm-6">
-                            {{ form.timezone.label_tag }}
-                            <span class="szInput">{{ form.timezone }}</span>
+                        <span class="szLabel">{{ form.timezone.label_tag }}</span>
+                            {{ form.timezone }}
                         </div>
                     </div>
-
-
-                    <table class="table szTable">
+<br>
+<hr>
+<br>
+                    <table class="table">
                         {{ hebrewDates.management_form }}
 
                         {% for form in hebrewDates.forms %}
@@ -45,7 +48,7 @@
                                             {% endfor %}
                                         {% endif %}
                                         {{ field.errors.as_ul }}
-                                        <span class="szInput">{{ field }}</span>
+                                        {{ field }}
                                     </td>
                                 {% endfor %}
                             </tr>
@@ -63,8 +66,8 @@
 <script src="{% static 'formset/jquery.formset.js' %}"></script>
 <script type="text/javascript">
     $('.formset_row').formset({
-        addText: '<i class="fas fa-plus"></i> Add Hebrew Date',
-        deleteText: '<i class="fas fa-trash-alt"></i> Remove',
+        addText: '<i class="fas fa-plus"></i> Add Another',
+        deleteText: '<i class="bi bi-trash"></i>',
         prefix: 'calendarOf',
         addCssClass: 'btn btn-primary szButtonSmall',
         deleteCssClass: 'btn btn-danger szButtonSmall',

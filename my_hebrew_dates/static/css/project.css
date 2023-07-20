@@ -24,12 +24,14 @@
     --bs-body-color: var(--szColorBlack);
 }
 
-/* Basic styles to start with */
+/* Basic styles */
 body {
     background: var(--szColorWhite);   /*whole background will be this color*/
     font-family: 'Ubuntu', sans-serif;
 }
-
+*::selection{
+    background-color: var(--szColorAccent2);
+}
 .text-primary{
     color: var(--szColorWhite) !important;
 }
@@ -136,6 +138,10 @@ hr::before{
 .smallerMargins{
     margin:10px auto ;
 }
+.szLabel{
+    box-shadow:inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)));
+    font-weight: bold;
+}
 
 .py-5{  /* main colored div, sizing and centered */
     display:block;
@@ -183,19 +189,23 @@ div.alert{
 }
 
 /* Form Styles Sign up Sign in */
-.form-control,.form-check-input,input#id_name,select,td+input{
+.form-control,.form-check-input{
     border:.5px solid var(--szColorAccent1);
     border-radius: .375rem;
 }
-.form-control:focus,.form-check-input:focus,input#id_name:focus,select:focus{
+.form-control:focus,.form-check-input:focus{
     box-shadow: 0 0 11px var(--szColorAccent1);    /* adds glow on focus */
     border:.5px solid var(--szColorAccent1);
     transition: .3s box-shadow;
+    border-radius: .375rem;
 }
 .form-check-input:checked{
     border:.5px solid var(--szColorAccent1);
     background-color: var(--szColorAccent1);
     color: var(--szColorWhite);
+}
+input[id*='id_calendarOf'][id$='name'], select,input#id_name{
+    border-radius: .375rem;
 }
 
 input[type=radio]{
