@@ -29,9 +29,7 @@ body {
     background: var(--szColorWhite);   /*whole background will be this color*/
     font-family: 'Ubuntu', sans-serif;
 }
-*::selection{
-    background-color: var(--szColorAccent2);
-}
+
 .text-primary{
     color: var(--szColorWhite) !important;
 }
@@ -246,7 +244,7 @@ input[type=radio]{
 .szButton{
     background: var(--szColorWhite);
     color: var(--szColorAccent1);  /* button colors */
-    border: 5px solid var(--szColorAccent1);
+    border: 2px solid var(--szColorAccent1);
     border-radius: var(--bs-border-radius);
     min-width: 10vw;
 }
@@ -254,12 +252,12 @@ input[type=radio]{
 .szButton:hover{
     background: var(--szColorAccent1);
     color: var(--szColorWhite);  /* button colors on hover */
-    border: 5px solid var(--szColorAccent1);
+    border: 2px solid var(--szColorAccent1);
 }
 .szButton:active{
     background: var(--szColorWhite) !important;
     color: var(--szColorAccent1) !important;  /* Button colors on click */
-    border: 5px solid var(--szColorAccent1) !important;
+    border: 2px solid var(--szColorAccent1) !important;
 }
 
 .szButtonSmall{
