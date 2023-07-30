@@ -4,14 +4,19 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-  <h1>{{ user.username }}</h1>
-  <form class="form-horizontal" method="post" action="{% url 'users:update' %}">
+<div class="text-center">
+<div class="szPlaceholder"></div>
+  <h1 class="szCaps">~ {{ user.username }} ~</h1>
+  <hr>
+  <br>
+  <form class="form-horizontal szSmallerSection" method="post" action="{% url 'users:update' %}">
     {% csrf_token %}
     {{ form|crispy }}
     <div class="control-group">
       <div class="controls">
-        <button type="submit" class="szButtonSmall btn btn-primary">Update</button>
+        <button type="submit" class="szButtonSmall btn btn-primary">Update Name</button>
       </div>
     </div>
   </form>
+</div>
 {% endblock %}

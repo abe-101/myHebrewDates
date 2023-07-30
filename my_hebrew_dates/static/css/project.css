@@ -29,6 +29,13 @@ body {
     background: var(--szColorWhite);   /*whole background will be this color*/
     font-family: 'Ubuntu', sans-serif;
 }
+.szCaps{
+    text-transform: uppercase;
+}
+.szSmallerSection{
+    width: 80vw;
+    margin: 0 auto !important;
+}
 
 .text-primary{
     color: var(--szColorWhite) !important;
@@ -45,20 +52,8 @@ body {
 
 /* Navbar and Link Styles */
 nav{
-    background: var(--szColorAccent1) !important;
-    border-bottom:var(--szColorAccent1) 2px solid !important;
+    width: 100%;
 }
-
-.navbar{
-    overflow: hidden; /* navbar sticks to top while scrolling */
-    position: fixed;
-    width:100%;
-    z-index: 5;
-    height:70px;
-    box-shadow: 0 8px 6px -6px black;
-    top: 0;
-}
-
 .navbar-brand{
     font-size: x-large;
     font-weight: bolder;
@@ -67,27 +62,59 @@ nav{
 
 .navbar-brand:hover{
     color: var(--szColorWhite);
-
 }
 
-.nav-link {
+a.nav-link {
     vertical-align: middle;
-    line-height: 60px;
     color: var(--szColorWhite);
     cursor: pointer;
     word-wrap: normal;
-    text-align: center;
-    padding: 30px;
     text-decoration: none !important;
+    width: 100%;
+    height: 100%;
 }
 
-/*hover button on menu*/
-.nav-link:hover {
+a.nav-link:hover {
     color: var(--szColorAccent1);
     background-color: var(--szColorWhite);
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-top: 1px solid var(--szColorAccent1);
     transition: .2s border;
+} 
+
+.navbar{
+    position: fixed;
+    z-index: 1;
+    /* width:100%; */
+    height:70px;
+    box-shadow: 0 8px 6px -6px black;
+    background: var(--szColorAccent1) !important;
+    border-bottom:var(--szColorAccent1) 2px solid !important;
+}
+
+.navbar-collapse.show{
+    background-color: var(--szColorAccent1);
+    padding: 10px;
+    border: 2px solid var(--szColorWhite);
+}
+
+.navbar-collapse.show.ms-md-auto{
+    margin: auto;
+}
+
+button.navbar-toggler{
+    margin-right: 10px;
+}
+
+nav.container-fluid{
+    display: block;
+}
+
+.ms-md-auto{
+    margin-right: 30px;
+}
+
+.szflex,.navbar-collapse{
+    display: block;
 }
 
 
@@ -161,31 +188,40 @@ div.alert{
 }
 
 /* Arrow */
-.arrow {
-    height:5px;
-    width: 5px;
-    margin: 0 0;
-    border: solid var(--szColorAccent1);
-    border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
+.arrow{
+    display: none;
+}
+@media (min-width: 992px){
+    .arrow {
+        height:10px;
+        width: 10px;
+        margin: 0 0;
+        border: solid var(--szColorAccent1);
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 5px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+    }
 }
 
 .row{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     width: 99.5%;
 }
-.col-lg-6{
+
+@media (min-width: 992px){
+.col-lg-4{
     display: flex;      /* makes div same height */
     flex-wrap: wrap;
+    flex-direction: column;
     min-height: 40vh;
+    width: 30% !important; 
 }
-
+}
 /* Form Styles Sign up Sign in */
 .form-control,.form-check-input{
     border:.5px solid var(--szColorAccent1);
@@ -302,28 +338,6 @@ input[type=radio]{
     transition: .3s box-shadow;
 }
 
-
-/* Cool Border Animation On Hover Styles */
-/*
-.szBorder {
-    --c: var(--szColorAccent1);/* the border color */
-/*   --b: 4px;/* the border thickness*/
-   /* --g: 15px;/* the gap on hover *//*
-
-    padding: calc(var(--g) + var(--b));
-    --_g: #0000 25%, var(--c) 0;
-    background:
-        conic-gradient(from 180deg at top var(--b) right var(--b), var(--_g)) var(--_i, 200%) 0 /200% var(--_i, var(--b)) no-repeat,
-        conic-gradient(at bottom var(--b) left var(--b), var(--_g)) 0 var(--_i, 200%)/var(--_i, var(--b)) 200% no-repeat;
-    transition: .2s, background-position .2s .2s;
-    cursor: pointer;
-    border-radius: .357rem;
-}
-
-.szBorder:hover {
-    --_i: 100%;
-    transition: .2s, background-size .2s .2s;
-} */
 
 /* Swipe Underline On Hover Styles */
 .szUnder::after {
