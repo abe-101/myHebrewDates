@@ -26,7 +26,7 @@
           <tbody>
             {% for calendar in calendar_list %}
             <tr>
-              <td class="py-3"><a class="szLink  fs-6" href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{calendar.name}}</a></td>
+              <td class="py-3"><a class="szLink szCaps fs-6" href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{calendar.name}}</a></td>
               <td class="py-3 text-muted">{{calendar.timezone}}</td>
               <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
               <td class="py-3 text-center">
@@ -36,10 +36,10 @@
                   title="Share with friends and family">
                   <i class="bi bi-share"></i>
                 </button>
-                <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" class="szButtonSmall btn btn-primary py-1 px-2 mx-1">
+                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" title="Edit this calendar" class="szButtonSmall btn btn-primary py-1 px-2 mx-1">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" class="szButtonSmall btn btn-danger py-1 px-2 mx-1">
+                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" title="Delete this calendar" class="szButtonSmall btn btn-danger py-1 px-2 mx-1">
                   <i class="bi bi-trash"></i>
                 </a>
               </td>

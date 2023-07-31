@@ -5,6 +5,9 @@
 {% block head_title %}{% translate "Sign Out" %}{% endblock %}
 
 {% block inner %}
+<div class="szPlaceholder"></div>
+<div class="text-center">
+
 <h1>{% translate "Sign Out" %}</h1>
 
 <p>{% translate 'Are you sure you want to sign out?' %}</p>
@@ -16,4 +19,5 @@
   {% endif %}
   <button class="szButton btn btn-danger" type="submit">{% translate 'Sign Out' %}</button>
 </form>
+</div>
 {% endblock %}
