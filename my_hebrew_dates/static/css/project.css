@@ -1,5 +1,4 @@
 /* These styles are generated from project.scss. */
-
 .alert-debug {
 	color: black;
 	background-color: white;
@@ -84,8 +83,9 @@ a.nav-link {
 	height: 100%;
 }
 
-a.nav-link:hover, a.nav-link:active {
-	color:var(--szColorWhite);
+a.nav-link:hover,
+a.nav-link:active {
+	color: var(--szColorWhite);
 	text-shadow: -1px -1px var(--szColorBlack);
 	text-shadow: 1px 1px var(--szColorBlack);
 	transition: 0.2s text-shadow;
@@ -400,7 +400,7 @@ input[type='radio'] {
 	border: 2px solid var(--szColorWhite) !important;
 }
 
-.szWider{
+.szWider {
 	width: 25%;
+	word-wrap: normal;
 }
-
