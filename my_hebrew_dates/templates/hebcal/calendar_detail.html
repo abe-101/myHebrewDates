@@ -6,9 +6,9 @@
 <div class="container szSmallerSection">
   <div class="card mt-4 mb-4">
     <div class="card-header d-flex justify-content-between">
-      <h5 class="card-title"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
+      <h5 class="card-title szCaps"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
       <input hidden id="calendar_file_url{{calendar.uuid}}" value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
-      <button onclick="shareFile('{{calendar.uuid}}')" class="szButtonSmall btn btn-primary" type="button" title="Share with friends and family">
+      <button onclick="shareFile('{{calendar.uuid}}')" class="szWhiteBorder szButtonSmall btn btn-primary" type="button" title="Share with friends and family">
         <i class="bi bi-share"></i>
       </button>
 
@@ -55,7 +55,7 @@
             <div class="col-1 text-center">
               <span class="dot">&#11044;</span>
             </div>
-            <div class="col-2">
+            <div class="col-2 szWider">
               <p class="mb-1 text-center" style="font-size: 1.25rem;"><strong>{{ event.start|date:"d" }}</strong></p>
               <p class="mb-0 text-center">{{ event.start|date:"M" }}</p>
             </div>

@@ -1,354 +1,406 @@
 /* These styles are generated from project.scss. */
 
 .alert-debug {
-    color: black;
-    background-color: white;
-    border-color: #d6e9c6;
+	color: black;
+	background-color: white;
+	border-color: #d6e9c6;
 }
 
 .alert-error {
-    color: #b94a48;
-    background-color: #f2dede;
-    border-color: #eed3d7;
+	color: #b94a48;
+	background-color: #f2dede;
+	border-color: #eed3d7;
 }
 
 /* Shira Zacks edits begin here */
 
 /* Colors for the site */
 :root {
-    --szColorBlack: #000;  /* main background color */
-    --szColorWhite: #ffffff; /* main text color */
-    --szColorAccent1: #ff813f; /*#96ff88 highlight color 20501a*/
-    --szColorAccent2: #ff823f55; /*#96ff88 highlight color 20501a*/
-    --szColorAccent3: #88ddff; /*#96ff88 highlight color 2e6b273c    */
-    --bs-body-color: var(--szColorBlack);
+	--szColorBlack: #000;
+	/* main background color */
+	--szColorWhite: #ffffff;
+	/* main text color */
+	--szColorAccent1: #ff813f;
+	/*#96ff88 highlight color 20501a*/
+	--szColorAccent2: #ff823f55;
+	/*#96ff88 highlight color 20501a*/
+	--szColorAccent3: #88ddff;
+	/*#96ff88 highlight color 2e6b273c    */
+	--bs-body-color: var(--szColorBlack);
 }
 
 /* Basic styles */
 body {
-    background: var(--szColorWhite);   /*whole background will be this color*/
-    font-family: 'Ubuntu', sans-serif;
-}
-.szCaps{
-    text-transform: uppercase;
-}
-.szSmallerSection{
-    width: 80vw;
-    margin: 0 auto !important;
+	background: var(--szColorWhite);
+	/*whole background will be this color*/
+	font-family: 'Ubuntu', sans-serif;
 }
 
-.text-primary{
-    color: var(--szColorWhite) !important;
+.szCaps {
+	text-transform: uppercase;
 }
 
-.szcard-title{
-    font-family: 'Oleo Script', cursive;
+.szSmallerSection {
+	width: 80vw;
+	margin: 0 auto !important;
 }
 
-.container{
-    margin:0;  /* makes the website take up whole screen instead of little section in middle */
-    max-width:100% !important;
+.text-primary {
+	color: var(--szColorWhite) !important;
+}
+
+.szcard-title {
+	font-family: 'Oleo Script', cursive;
+}
+
+.container {
+	margin: 0;
+	/* makes the website take up whole screen instead of little section in middle */
+	max-width: 100% !important;
 }
 
 /* Navbar and Link Styles */
-nav{
-    width: 100%;
-}
-.navbar-brand{
-    font-size: x-large;
-    font-weight: bolder;
-    color: var(--szColorWhite);
+nav {
+	width: 100%;
 }
 
-.navbar-brand:hover{
-    color: var(--szColorWhite);
+.navbar-brand {
+	font-size: x-large;
+	font-weight: bolder;
+	color: var(--szColorWhite);
+}
+
+.navbar-brand:hover {
+	color: var(--szColorWhite);
 }
 
 a.nav-link {
-    vertical-align: middle;
-    color: var(--szColorWhite);
-    cursor: pointer;
-    word-wrap: normal;
-    text-decoration: none !important;
-    width: 100%;
-    height: 100%;
+	vertical-align: middle;
+	color: var(--szColorWhite);
+	cursor: pointer;
+	word-wrap: normal;
+	text-decoration: none !important;
+	width: 100%;
+	height: 100%;
 }
 
-a.nav-link:hover {
-    color: var(--szColorAccent1);
-    background-color: var(--szColorWhite);
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    transition: .2s border;
-} 
-
-.navbar{
-    position: fixed;
-    z-index: 1;
-    /* width:100%; */
-    height:70px;
-    box-shadow: 0 8px 6px -6px black;
-    background: var(--szColorAccent1) !important;
-    border-bottom:var(--szColorAccent1) 2px solid !important;
+a.nav-link:hover, a.nav-link:active {
+	color:var(--szColorWhite);
+	text-shadow: -1px -1px var(--szColorBlack);
+	text-shadow: 1px 1px var(--szColorBlack);
+	transition: 0.2s text-shadow;
 }
 
-.navbar-collapse.show{
-    background-color: var(--szColorAccent1);
-    padding: 10px;
-    border: 2px solid var(--szColorWhite);
+.navbar {
+	position: fixed;
+	z-index: 1;
+	/* width:100%; */
+	height: 70px;
+	box-shadow: 0 8px 6px -6px black;
+	background: var(--szColorAccent1) !important;
+	border-bottom: var(--szColorAccent1) 2px solid !important;
 }
 
-.navbar-collapse.show.ms-md-auto{
-    margin: auto;
+.navbar-collapse.show {
+	background-color: var(--szColorAccent1);
+	padding: 10px;
+	border: 2px solid var(--szColorWhite);
+	margin: 0 50% 0 0;
 }
 
-button.navbar-toggler{
-    margin-right: 10px;
+.navbar-collapse.show.ms-md-auto {
+	margin: auto;
 }
 
-nav.container-fluid{
-    display: block;
+button.navbar-toggler {
+	margin-right: 10px;
 }
 
-.ms-md-auto{
-    margin-right: 30px;
+nav.container-fluid {
+	display: block;
 }
 
-.szflex,.navbar-collapse{
-    display: block;
+.ms-md-auto {
+	margin-right: 30px;
 }
 
-
-.bg-light{ /* light background styles */
-    background:var(--szColorWhite) !important;
-    /* border: none; */
-    color: var(--szColorBlack) !important;
+.szflex,
+.navbar-collapse {
+	display: block;
 }
 
-.bg-dark{ /* dark background styles */
-    background: var(--szColorAccent1) !important;
-    border: none;
-    border-top: 5px double var(--szColorAccent1);
+.bg-light {
+	/* light background styles */
+	background: var(--szColorWhite) !important;
+	/* border: none; */
+	color: var(--szColorBlack) !important;
 }
 
-.text-white{
-    color: var(--szColorWhite) !important;
+.bg-dark {
+	/* dark background styles */
+	background: var(--szColorAccent1) !important;
+	border: none;
+	border-top: 5px double var(--szColorAccent1);
 }
 
-.text-orange{
-    color: var(--szColorAccent1) !important;
+.text-white {
+	color: var(--szColorWhite) !important;
 }
 
-.szBorderUnder{
-    border-bottom: 5px double var(--szColorAccent1);
-    width: 50%;
-    margin: auto auto;
+.text-orange {
+	color: var(--szColorAccent1) !important;
 }
 
-hr{
-    color: var(--szColorAccent1);
-    border: none;
-    text-align: center;
-    opacity: 1;
-    width: 50%;
-    margin: 0 25% 0 25%;
-}
-hr::before{
-    content: "♦ ♦ ♦";/*ℍℍℍ*/
-    height: 14px;
-    width: 100%;
-    display: inline-block;
-    border-bottom: 2px solid;
+.szBorderUnder {
+	border-bottom: 5px double var(--szColorAccent1);
+	width: 50%;
+	margin: auto auto;
 }
 
-.smallerMargins{
-    margin:10px auto ;
-}
-.szLabel{
-    box-shadow:inset 0 0 0 9999px var(--bs-table-bg-state,var(--bs-table-bg-type,var(--bs-table-accent-bg)));
-    font-weight: bold;
-}
-
-.py-5{  /* main colored div, sizing and centered */
-    display:block;
-    margin-right:auto; 
-    margin-left:auto;
-    width: 96vw;
-    color: var(--szColorBlack) !important;
+hr {
+	color: var(--szColorAccent1);
+	border: none;
+	text-align: center;
+	opacity: 1;
+	width: 50%;
+	margin: 0 25% 0 25%;
 }
 
-.szColorBackground{
-    background: var(--szColorAccent1);
-    border-radius: .375rem;
-    color: var(--szColorWhite) !important;
-    margin: 5px auto;
+hr::before {
+	content: '♦ ♦ ♦';
+	/*ℍℍℍ*/
+	height: 14px;
+	width: 100%;
+	display: inline-block;
+	border-bottom: 2px solid;
 }
 
-div.alert{
-    background-color: var(--szColorAccent2);
+.smallerMargins {
+	margin: 10px auto;
+}
+
+.szLabel {
+	box-shadow: inset 0 0 0 9999px var(--bs-table-bg-state, var(--bs-table-bg-type, var(--bs-table-accent-bg)));
+	font-weight: bold;
+}
+
+.py-5 {
+	/* main colored div, sizing and centered */
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	width: 96vw;
+	color: var(--szColorBlack) !important;
+}
+
+.szColorBackground {
+	background: var(--szColorAccent1);
+	border-radius: 0.375rem;
+	color: var(--szColorWhite) !important;
+	margin: 5px auto;
+}
+
+div.alert {
+	background-color: var(--szColorAccent2);
 }
 
 /* Arrow */
-.arrow{
-    display: none;
-}
-@media (min-width: 992px){
-    .arrow {
-        height:10px;
-        width: 10px;
-        margin: 0 0;
-        border: solid var(--szColorAccent1);
-        border-width: 0 3px 3px 0;
-        display: inline-block;
-        padding: 5px;
-        transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
-    }
+.arrow {
+	display: none;
 }
 
-.row{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    width: 99.5%;
+@media (min-width: 992px) {
+	.arrow {
+		height: 10px;
+		width: 10px;
+		margin: 0 0;
+		border: solid var(--szColorAccent1);
+		border-width: 0 3px 3px 0;
+		display: inline-block;
+		padding: 5px;
+		transform: rotate(-45deg);
+		-webkit-transform: rotate(-45deg);
+	}
 }
 
-@media (min-width: 992px){
-.col-lg-4{
-    display: flex;      /* makes div same height */
-    flex-wrap: wrap;
-    flex-direction: column;
-    min-height: 40vh;
-    width: 30% !important; 
+.row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	width: 99.5%;
 }
+
+@media (min-width: 992px) {
+	.col-lg-4 {
+		display: flex;
+		/* makes div same height */
+		flex-wrap: wrap;
+		flex-direction: column;
+		min-height: 40vh;
+		width: 30% !important;
+	}
 }
+
 /* Form Styles Sign up Sign in */
-.form-control,.form-check-input{
-    border:.5px solid var(--szColorAccent1);
-    border-radius: .375rem;
-}
-.form-control:focus,.form-check-input:focus{
-    box-shadow: 0 0 11px var(--szColorAccent1);    /* adds glow on focus */
-    border:.5px solid var(--szColorAccent1);
-    transition: .3s box-shadow;
-    border-radius: .375rem;
-}
-.form-check-input:checked{
-    border:.5px solid var(--szColorAccent1);
-    background-color: var(--szColorAccent1);
-    color: var(--szColorWhite);
-}
-input[id*='id_calendarOf'][id$='name'], select,input#id_name{
-    border-radius: .375rem;
+.form-control,
+.form-check-input {
+	border: 0.5px solid var(--szColorAccent1);
+	border-radius: 0.375rem;
 }
 
-input[type=radio]{
-    accent-color: var(--szColorAccent1);
+.form-control:focus,
+.form-check-input:focus {
+	box-shadow: 0 0 11px var(--szColorAccent1);
+	/* adds glow on focus */
+	border: 0.5px solid var(--szColorAccent1);
+	transition: 0.3s box-shadow;
+	border-radius: 0.375rem;
+}
+
+.form-check-input:checked {
+	border: 0.5px solid var(--szColorAccent1);
+	background-color: var(--szColorAccent1);
+	color: var(--szColorWhite);
+}
+
+input[id*='id_calendarOf'][id$='name'],
+select,
+input#id_name {
+	border-radius: 0.375rem;
+}
+
+input[type='radio'] {
+	accent-color: var(--szColorAccent1);
 }
 
 /* Links Styles */
-.szLink{
-    color: var(--szColorBlack);
-    white-space: nowrap
-}
-.szLink:active, .szLink:hover{
-    text-shadow: -1px -1px var(--szColorAccent1);
-    transition: .2s text-shadow;
+.szLink {
+	color: var(--szColorBlack);
+	white-space: nowrap;
 }
 
-.socialaccount_provider{
-    color: var(--szColorBlack);
-
+.szLink:active,
+.szLink:hover {
+	text-shadow: -1px -1px var(--szColorAccent1);
+	transition: 0.2s text-shadow;
 }
-.socialaccount_provider:active, .socialaccount_provider:hover{
-    text-shadow: -1px -1px var(--szColorAccent1);
-    transition: .2s text-shadow;
+
+.socialaccount_provider {
+	color: var(--szColorBlack);
+}
+
+.socialaccount_provider:active,
+.socialaccount_provider:hover {
+	text-shadow: -1px -1px var(--szColorAccent1);
+	transition: 0.2s text-shadow;
 }
 
 /* Glow Text Styles */
-.szGlow:hover{
-    text-shadow: 2px 2px 10px var(--szColorAccent1);
-    filter: dropshadow(color=var(--szColorAccent1), offx=2, offy=2);
-    transition: .2s text-shadow;
+.szGlow:hover {
+	text-shadow: 2px 2px 10px var(--szColorAccent1);
+	filter: dropshadow(color=var(--szColorAccent1), offx=2, offy=2);
+	transition: 0.2s text-shadow;
 }
 
-.szPlaceholder{
-    height: 70px;
+.szPlaceholder {
+	height: 70px;
 }
 
 /* Button Styles */
-.szButton{
-    background: var(--szColorWhite);
-    color: var(--szColorAccent1);  /* button colors */
-    border: 2px solid var(--szColorAccent1);
-    border-radius: var(--bs-border-radius);
-    min-width: 10vw;
+.szButton {
+	background: var(--szColorWhite);
+	color: var(--szColorAccent1);
+	/* button colors */
+	border: 2px solid var(--szColorAccent1);
+	border-radius: var(--bs-border-radius);
+	min-width: 10vw;
 }
 
-.szButton:hover{
-    background: var(--szColorAccent1);
-    color: var(--szColorWhite);  /* button colors on hover */
-    border: 2px solid var(--szColorAccent1);
-}
-.szButton:active{
-    background: var(--szColorWhite) !important;
-    color: var(--szColorAccent1) !important;  /* Button colors on click */
-    border: 2px solid var(--szColorAccent1) !important;
+.szButton:hover {
+	background: var(--szColorAccent1);
+	color: var(--szColorWhite);
+	/* button colors on hover */
+	border: 2px solid var(--szColorAccent1);
 }
 
-.szButtonSmall{
-    background: var(--szColorWhite);
-    color: var(--szColorAccent1); 
-    border: 2px solid var(--szColorAccent1);
-    border-radius: var(--bs-border-radius);
+.szButton:active {
+	background: var(--szColorWhite) !important;
+	color: var(--szColorAccent1) !important;
+	/* Button colors on click */
+	border: 2px solid var(--szColorAccent1) !important;
 }
 
-.szButtonSmall:hover{
-    background: var(--szColorAccent1);
-    color: var(--szColorWhite);  
-    border: 2px solid var(--szColorAccent1);
+.szButtonSmall {
+	background: var(--szColorWhite);
+	color: var(--szColorAccent1);
+	border: 2px solid var(--szColorAccent1);
+	border-radius: var(--bs-border-radius);
 }
-.szButtonSmall:active{
-    background: var(--szColorWhite) !important;
-    color: var(--szColorAccent1) !important; 
-    border: 2px solid var(--szColorAccent1) !important;
+
+.szButtonSmall:hover {
+	background: var(--szColorAccent1);
+	color: var(--szColorWhite);
+	border: 2px solid var(--szColorAccent1);
+}
+
+.szButtonSmall:active {
+	background: var(--szColorWhite) !important;
+	color: var(--szColorAccent1) !important;
+	border: 2px solid var(--szColorAccent1) !important;
 }
 
 /*User Feedback Cards Styles*/
-.card-header,.card-footer{
-    background-color: var(--szColorAccent1);
-    color: var(--szColorWhite);
+.card-header,
+.card-footer {
+	background-color: var(--szColorAccent1);
+	color: var(--szColorWhite);
 }
 
-.szcard{
-    border: .5px solid var(--szColorAccent1);
-    display: flex;      /* makes cards same height */
-    flex-wrap: wrap;
-    height: 30vh;
-
+.szcard {
+	border: 0.5px solid var(--szColorAccent1);
+	display: flex;
+	/* makes cards same height */
+	flex-wrap: wrap;
+	height: 30vh;
 }
-.szcard-body{
-    border-radius: var(--bs-border-radius);
-    padding: auto   0;
 
+.szcard-body {
+	border-radius: var(--bs-border-radius);
+	padding: auto 0;
 }
 
 .szcard-body:hover {
-    box-shadow: 0 0 11px var(--szColorAccent1);    /* adds glow on hover */
-    transition: .3s box-shadow;
+	box-shadow: 0 0 11px var(--szColorAccent1);
+	/* adds glow on hover */
+	transition: 0.3s box-shadow;
 }
-
 
 /* Swipe Underline On Hover Styles */
 .szUnder::after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 2px;
-    background: var(--szColorAccent1);
-    transition: width .3s;
+	content: '';
+	display: block;
+	width: 0;
+	height: 2px;
+	background: var(--szColorAccent1);
+	transition: width 0.3s;
 }
 
 .szUnder:hover::after {
-    width: 100%;
+	width: 100%;
 }
+
+.szBlock {
+	display: inline-block;
+	margin: 10px;
+}
+
+.szWhiteBorder:hover,
+.szWhiteBorder:active {
+	border: 2px solid var(--szColorWhite) !important;
+}
+
+.szWider{
+	width: 25%;
+}
+
