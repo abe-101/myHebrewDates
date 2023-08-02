@@ -18,7 +18,7 @@
           <thead>
             <tr>
               <th class="text-center">Name</th>
-              <th class="text-center">Time Zone</th>
+              <th class="text-center hideSmall">Time Zone</th>
               <th class="text-center"># of Events</th>
               <th class="text-center">Actions</th>
             </tr>
@@ -27,7 +27,7 @@
             {% for calendar in calendar_list %}
             <tr>
               <td class="py-3"><a class="szLink szCaps fs-6" href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{calendar.name}}</a></td>
-              <td class="py-3 text-muted">{{calendar.timezone}}</td>
+              <td class="py-3 text-muted hideSmall">{{calendar.timezone}}</td>
               <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
               <td class="py-3 text-center">
                 <input hidden id="calendar_file_url{{calendar.uuid}}"
