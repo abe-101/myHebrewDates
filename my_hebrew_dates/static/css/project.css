@@ -192,8 +192,7 @@ hr::before {
   border-radius: 0.375rem;
   color: var(--szColorWhite) !important;
   margin: 5px auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 10px;
   height: fit-content;
 }
 
