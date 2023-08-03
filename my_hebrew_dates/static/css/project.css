@@ -376,6 +376,12 @@ input[type='radio'] {
   }
 }
 
+@media (min-width: 1440px) {
+  .szcard {
+    height: fit-content !important;
+  }
+}
+
 .szCardWords {
   vertical-align: middle;
 }
