@@ -8,6 +8,7 @@
 
 {% block inner %}
 <div class="szPlaceholder"></div>
+<div class="text-center">
 <h1>{% translate "Confirm E-mail Address" %}</h1>
 
 {% if confirmation %}
@@ -28,5 +29,6 @@
 <p>{% blocktranslate %}This e-mail confirmation link expired or is invalid. Please <a class="szLink" href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktranslate %}</p>
 
 {% endif %}
+</div>
 
 {% endblock %}

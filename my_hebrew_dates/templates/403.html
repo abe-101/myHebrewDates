@@ -3,7 +3,10 @@
 {% block title %}Forbidden (403){% endblock %}
 
 {% block content %}
+<div class="szPlaceholder"></div>
+<div class="text-center">
 <h1>Forbidden (403)</h1>
 
 <p>{% if exception %}{{ exception }}{% else %}You're not allowed to access this page. Choose somehwhere else to go from the menu above.{% endif %}</p>
+</div>
 {% endblock content %}

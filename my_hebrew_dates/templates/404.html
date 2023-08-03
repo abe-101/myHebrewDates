@@ -3,7 +3,10 @@
 {% block title %}Page not found{% endblock %}
 
 {% block content %}
+<div class="szPlaceholder"></div>
+<div class="text-center">
 <h1>Page not found</h1>
 
 <p>{% if exception %}{{ exception }}{% else %}This is not the page you were looking for. Try again!{% endif %}</p>
+</div>
 {% endblock content %}

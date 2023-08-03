@@ -86,7 +86,6 @@ a.nav-link {
 a.nav-link:hover,
 a.nav-link:active {
 	color: var(--szColorWhite);
-	text-shadow: -1px -1px var(--szColorBlack);
 	text-shadow: 1px 1px var(--szColorBlack);
 	transition: 0.2s text-shadow;
 }
@@ -288,7 +287,7 @@ input[type='radio'] {
 
 .szLink:active,
 .szLink:hover {
-	text-shadow: -1px -1px var(--szColorAccent1);
+	text-shadow: 1px 1px var(--szColorAccent1);
 	transition: 0.2s text-shadow;
 }
 
@@ -298,7 +297,7 @@ input[type='radio'] {
 
 .socialaccount_provider:active,
 .socialaccount_provider:hover {
-	text-shadow: -1px -1px var(--szColorAccent1);
+	text-shadow: 1px 1px var(--szColorAccent1);
 	transition: 0.2s text-shadow;
 }
 
