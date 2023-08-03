@@ -8,21 +8,22 @@
 <header>
   <div class="bg-light py-5">
     <div class="container text-center">
-        <h1 class="display-4">My Hebrew Dates</h1>
-        <!-- <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p> -->
-        <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
-          {% if user.is_authenticated %}
-            <a href="{% url 'hebcal:calendar_new' %}" class="szButton btn btn-primary btn-lg">Get Started</a>
-            {% else %}
-            <a href="{% url 'account_login' %}" class="szButton btn btn-primary btn-lg">Sign In</a>
-            <a href="{% url 'account_signup' %}" class="szButton btn btn-primary btn-lg">Sign Up</a>
-            {% endif %}
+      <h1 class="display-4">My Hebrew Dates</h1>
+      <!-- <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p> -->
+      <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!
+      </p>
+      {% if user.is_authenticated %}
+      <a href="{% url 'hebcal:calendar_new' %}" class="szButton btn btn-primary btn-lg">Get Started</a>
+      {% else %}
+      <a href="{% url 'account_login' %}" class="szButton btn btn-primary btn-lg">Sign In</a>
+      <a href="{% url 'account_signup' %}" class="szButton btn btn-primary btn-lg">Sign Up</a>
+      {% endif %}
     </div>
 </header>
 
 <section>
   <div class="container text-center szColorBackground">
-    <div class="row">
+    <div class="row szCenter">
       <div class="col-lg-4">
         <div class="text-center mb-4">
           <i class="bi bi-calendar4-event display-3 text-primary"></i>
@@ -60,31 +61,40 @@
       <div class="col-lg-4">
         <div class="szcard card mb-4">
           <div class="szcard-body card-body szBorder">
-            <p class="szcard-text card-text">"My Hebrew Dates has made it so much easier for our family to remember and celebrate important Hebrew events. Highly recommended!"</p>
-            <h5 class="szcard-title card-title">Ezra Cohen</h5>
+            <div class="szCardWords">
+              <p class="szcard-text card-text">"My Hebrew Dates has made it so much easier for our family to remember
+                and celebrate important Hebrew events. Highly recommended!"</p>
+              <h5 class="szcard-title card-title">Ezra Cohen</h5>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="szcard card mb-4">
           <div class="szcard-body card-body szBorder">
-            <p class="szcard-text card-text">"I love using My Hebrew Dates to keep track of all our family birthdays and other special dates. It's a fantastic tool!"</p>
-            <h5 class="szcard-title card-title">Leah Rosenberg</h5>
+            <div class="szCardWords">
+              <p class="szcard-text card-text">"I love using My Hebrew Dates to keep track of all our family birthdays
+                and other special dates. It's a fantastic tool!"</p>
+              <h5 class="szcard-title card-title">Leah Rosenberg</h5>
+            </div>
           </div>
         </div>
       </div>
       <div class="col-lg-4">
         <div class="szcard card mb-4">
           <div class="szcard-body card-body szBorder">
-            <p class="szcard-text card-text">"My Hebrew Dates has brought our family closer together by helping us stay connected through our shared calendar. Thank you!"</p>
-            <h5 class="szcard-title card-title">Benjamin Steinberg</h5>
+            <div class="szCardWords">
+              <p class="szcard-text card-text">"My Hebrew Dates has brought our family closer together by helping us
+                stay connected through our shared calendar. Thank you!"</p>
+              <h5 class="szcard-title card-title">Benjamin Steinberg</h5>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<hr/>
+<hr />
 
 <!-- How It Works Section -->
 <section class="py-5 text-center smallerMargins">
@@ -97,7 +107,8 @@
           <i class="bi bi-pencil-square display-3 text-orange"></i>
         </div>
         <h5>Create Your Calendar</h5>
-        <p>Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the Hebrew date.</p>
+        <p>Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the
+          Hebrew date.</p>
       </div>
       <p class="arrow"></p>
       <div class="col-lg-4">
@@ -113,7 +124,8 @@
           <i class="bi bi-calendar-check display-3 text-orange"></i>
         </div>
         <h5>Stay Connected</h5>
-        <p>Your family members can subscribe to the calendar and receive updates for the Hebrew events that will automatically appear in their calendar feed.</p>
+        <p>Your family members can subscribe to the calendar and receive updates for the Hebrew events that will
+          automatically appear in their calendar feed.</p>
       </div>
     </div>
   </div>
