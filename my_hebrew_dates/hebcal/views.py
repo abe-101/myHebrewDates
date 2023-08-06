@@ -70,7 +70,7 @@ class CalendarDetailView(DetailView):
             if component.name == "VEVENT":
                 event = {
                     "summary": component.get("summary"),
-                    "description": component.get("description")[:-37],
+                    "description": component.get("description")[:-54],
                     "start": component.get("dtstart").dt,
                     "end": component.get("dtend").dt,
                 }
