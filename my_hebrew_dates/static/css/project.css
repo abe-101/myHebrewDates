@@ -17,8 +17,8 @@
 :root {
   --szColorBlack: #000;
   --szColorWhite: #ffffff;
-  --szColorAccent1: #b20245;
-  --szColorAccent2: #b2024572;
+  --szColorAccent1: #9b7b8d;
+  --szColorAccent2: #8e5d798e;
   --bs-body-color: var(--szColorBlack);
 }
 
@@ -86,7 +86,7 @@ a.nav-link:active {
 
 .navbar {
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   /* width:100%; */
   height: 70px;
   box-shadow: 0 8px 6px -6px black;
