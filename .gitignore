@@ -69,6 +69,7 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
+.env
 
 # Rope project settings
 .ropeproject

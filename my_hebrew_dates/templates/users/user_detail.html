@@ -4,25 +4,26 @@
 {% block title %}User: {{ object.username }}{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="szPlaceholder"></div>
+<div class="container text-center">
 
   <div class="row">
     <div class="col-sm-12">
 
-      <h2>{{ object.username }}</h2>
+      <h2 class="szCaps">~ {{ object.username }} ~</h2>
       {% if object.name %}
         <p>{{ object.name }}</p>
       {% endif %}
     </div>
   </div>
-
+<hr>
 {% if object == request.user %}
 <!-- Action buttons -->
 <div class="row">
 
   <div class="col-sm-12">
-    <a class="btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
-    <a class="btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
+    <a class="szButtonSmall btn btn-primary" href="{% url 'users:update' %}" role="button">My Info</a>
+    <a class="szButtonSmall btn btn-primary" href="{% url 'account_email' %}" role="button">E-Mail</a>
     <!-- Your Stuff: Custom user template urls -->
   </div>
 

@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="szPlaceholder"></div>
+<div class="text-center">
 <h1>Delete</h1>
 <form action="" method="post">{% csrf_token %}
     <p>Are you sure you want to delete "{{ calendar.name }}"?</p>
-    <button class="btn btn-danger ml-2" type="submit">Confirm</button>
+    <button class="szButton btn btn-danger ml-2" type="submit">Confirm</button>
 </form>
+</div>
 {% endblock content %}

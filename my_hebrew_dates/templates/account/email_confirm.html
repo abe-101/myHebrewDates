@@ -7,25 +7,28 @@
 
 
 {% block inner %}
+<div class="szPlaceholder"></div>
+<div class="text-center">
 <h1>{% translate "Confirm E-mail Address" %}</h1>
 
 {% if confirmation %}
 
 {% user_display confirmation.email_address.user as user_display %}
 
-<p>{% blocktranslate with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.{% endblocktranslate %}</p>
+<p>{% blocktranslate with confirmation.email_address.email as email %}Please confirm that <a class="szLink" href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user <span class="szLink">{{ user_display }}.</span>{% endblocktranslate %}</p>
 
 <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
 {% csrf_token %}
-    <button class="btn btn-primary" type="submit">{% translate 'Confirm' %}</button>
+    <button class="btn szButton btn-primary" type="submit">{% translate 'Confirm' %}</button>
 </form>
 
 {% else %}
 
 {% url 'account_email' as email_url %}
 
-<p>{% blocktranslate %}This e-mail confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktranslate %}</p>
+<p>{% blocktranslate %}This e-mail confirmation link expired or is invalid. Please <a class="szLink" href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktranslate %}</p>
 
 {% endif %}
+</div>
 
 {% endblock %}
