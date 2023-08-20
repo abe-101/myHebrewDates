@@ -7,7 +7,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>{% block title %}My Hebrew Dates{% endblock title %}</title>
     <meta property="og:title" content="My Hebrew Dates">
-    <meta property="og:description" content="📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈">
+    <meta property="og:description" content="{% block og_description %}📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈{% endblock og_description %}">
     <meta property="og:image" content="{% static 'images/favicon.jpeg' %}">
     <meta property="og:url" content="https://www.MyHebrewDates.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
