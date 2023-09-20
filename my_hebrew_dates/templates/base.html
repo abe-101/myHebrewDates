@@ -60,89 +60,103 @@
 
   </head>
 
-  <body>
+  <body class="d-flex flex-column">
+    <div class="flex-grow-1">
+      <div class="mb-1">
+        <nav class="navbar navbar-expand-md">
+          <div class="container-fluid"><div class="szflex">
+              <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <a class="navbar-brand" href="{% url 'home' %}">My Hebrew Dates</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="{% url 'home' %}">Home <span
+                      class="visually-hidden">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'about' %}">About</a>
+                </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'hebcal:calendar_list' %}">Calendars</a>
+                </li>
 
-    <div class="mb-1">
-      <nav class="navbar navbar-expand-md">
-        <div class="container-fluid"><div class="szflex">
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-              aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="{% url 'home' %}">My Hebrew Dates</a>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
+                </li>
+                <li class="nav-item">
+                  {# URL provided by django-allauth/account/urls.py #}
+                  <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+                </li>
+                {% else %}
+                {% if ACCOUNT_ALLOW_REGISTRATION %}
+                <li class="nav-item">
+                  {# URL provided by django-allauth/account/urls.py #}
+                  <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                  {# URL provided by django-allauth/account/urls.py #}
+                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+                </li>
+                {% endif %}
+              </ul>
+              <ul class="navbar-nav ms-md-auto">
+                <li class="nav-item col-6 col-lg-auto">
+                  <a class="nav-link" href="https://discord.gg/2vqUzSpt6N"><i class="bi bi-discord"></i></a>
+                </li>
+                <li class="nav-item col-6 col-lg-auto">
+                  <a class="nav-link"
+                    href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"><i
+                      class="bi bi-envelope"></i></a>
+                </li>
+                <li class="nav-item col-6 col-lg-auto">
+                  <a class="nav-link" href="https://github.com/abe-101/myhebrewdates"><i
+                      class="bi bi-github"></i></a>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-              <li class="nav-item active">
-                <a class="nav-link" href="{% url 'home' %}">Home <span
-                    class="visually-hidden">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'about' %}">About</a>
-              </li>
-              {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'hebcal:calendar_list' %}">Calendars</a>
-              </li>
+        </nav>
+        <div class="szPlaceholder"></div>
 
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
-              </li>
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
-              </li>
-              {% else %}
-              {% if ACCOUNT_ALLOW_REGISTRATION %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
-              </li>
-              {% endif %}
-              <li class="nav-item">
-                {# URL provided by django-allauth/account/urls.py #}
-                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
-              </li>
-              {% endif %}
-            </ul>
-            <ul class="navbar-nav ms-md-auto">
-              <li class="nav-item col-6 col-lg-auto">
-                <a class="nav-link" href="https://discord.gg/2vqUzSpt6N"><i class="bi bi-discord"></i></a>
-              </li>
-              <li class="nav-item col-6 col-lg-auto">
-                <a class="nav-link"
-                  href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"><i
-                    class="bi bi-envelope"></i></a>
-              </li>
-              <li class="nav-item col-6 col-lg-auto">
-                <a class="nav-link" href="https://github.com/abe-101/myhebrewdates"><i
-                    class="bi bi-github"></i></a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <div class="szPlaceholder"></div>
-
-    </div>
-
-    <div class="container">
-
-      {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
-      {% endfor %}
-      {% endif %}
 
-      {% block content %}
-      <p>Use this document as a way to quick start any new project.</p>
-      {% endblock content %}
+      <div class="container">
 
-    </div> <!-- /container -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        <p>Use this document as a way to quick start any new project.</p>
+        {% endblock content %}
+
+      </div> <!-- /container -->
+    </div> <!-- flex-shrink-0 container -->
+
+    <footer class="bg-dark py-3 text-center">
+      <div class="container">
+        <p class="text-white mb-0">&copy; <span id="currentYear"></span> My Hebrew Dates. All rights reserved.</p>
+      </div>
+      <script>
+        // Get the current year
+        const currentYear = new Date().getFullYear();
+        // Set the current year in the footer
+        document.getElementById("currentYear").innerText = currentYear;
+      </script>
+    </footer>
+
 
     {% block modal %}{% endblock modal %}
 

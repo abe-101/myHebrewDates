@@ -60,18 +60,47 @@
 	</div>
 </section>
 
-<!-- Footer Section -->
-<footer class="bg-dark py-3 text-center">
+<section class="py-5">
 	<div class="container">
-		<p class="text-white mb-0">&copy; <span id="currentYear"></span> My Hebrew Dates. All rights reserved.</p>
-	</div>
+		<h2 class="text-center mb-4">FAQs</h2>
 
-	<script>
-		// Get the current year
-		const currentYear = new Date().getFullYear();
-		// Set the current year in the footer
-		document.getElementById("currentYear").innerText = currentYear;
-	</script>
-</footer>
+		<div class="col-md-8 mx-auto">
+			<div class="accordion" id="faqAccordion">
+
+				<!-- FAQ Item 1 -->
+				<div class="accordion-item mb-3 shadow">
+					<h2 class="accordion-header" id="headingOne">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							<strong>I've updated my calendar on the site, but the changes aren't showing up in my Google Calendar. Why is this?</strong>
+						</button>
+					</h2>
+					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+						<div class="accordion-body">
+              Google Calendar typically updates external calendars every 12-24 hours. Additionally, it caches events. This means even if you make immediate changes or delete and re-add the calendar, you might still see the old data until Google refreshes its cache. Please be patient and allow some time for updates to reflect.
+            </div>
+					</div>
+				</div>
+
+				<!-- FAQ Item 2 -->
+				<div class="accordion-item mb-3 shadow">
+					<h2 class="accordion-header" id="headingTwo">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							<strong>Can I bulk add events?</strong>
+						</button>
+					</h2>
+					<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+						<div class="accordion-body">
+              While our platform doesn't currently have a feature for bulk event addition, you can contact the developer to assist with adding events in bulk. Please note that this specialized service will come with a fee.
+						</div>
+					</div>
+				</div>
+
+				<!-- Add more FAQ items as needed -->
+
+			</div>
+		</div>
+	</div>
+</section>
+
 
 {% endblock %}
