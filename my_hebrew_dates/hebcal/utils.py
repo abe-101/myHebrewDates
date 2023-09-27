@@ -13,6 +13,12 @@ def generate_ical(modelCalendar: ModelCalendar):
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
     newcal.add("x-wr-calname", modelCalendar.name)
+    newcal.add("x-wr-timezone", modelCalendar.timezone)  # It is good to add this as well.
+    newcal.add(
+        "x-wr-caldesc", "Created by MyHebrewDates.com"
+    )  # You can add this for additional information about the calendar.
+
+    newcal.add("method", "PUBLISH")
 
     newtimezone = Timezone()
     newtimezone.add("tzid", modelCalendar.timezone)
