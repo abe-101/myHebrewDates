@@ -7,6 +7,7 @@ from .views import (
     CalendarListView,
     CalendarUpdateView,
     calendar_file,
+    serve_pixel,
 )
 
 app_name = "hebcal"
@@ -19,4 +20,5 @@ urlpatterns = [
     path("<uuid:uuid>/", CalendarDetailView.as_view(), name="calendar_detail"),
     path("<uuid:uuid>.ical", calendar_file, name="legacy_calendar_file"),
     path("<uuid:uuid>.ics", calendar_file, name="calendar_file"),
+    path("serve-image/<uuid:pixel_id>/", serve_pixel, name="serve_pixel"),
 ]

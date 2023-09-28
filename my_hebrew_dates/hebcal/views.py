@@ -1,5 +1,7 @@
+import base64
 import logging
 from datetime import datetime, timedelta
+from uuid import UUID
 
 import icalendar
 from django.contrib import messages
@@ -179,6 +181,19 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     template_name = "hebcal/calendar_delete.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
+
+
+def serve_pixel(request, pixel_id: UUID):
+    pixel_data = b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
+    user_agent = request.headers.get("user-agent", "")
+
+    # Log the information along with the UUID
+    logger.info("Pixel requested. IP: %s, User Agent: %s, UUID: %s", ip, user_agent, str(pixel_id))
+
+    return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
 # @cache_page(60 * 15)  # Cache the page for 15 minutes

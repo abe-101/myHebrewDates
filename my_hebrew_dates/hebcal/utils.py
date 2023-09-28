@@ -37,10 +37,19 @@ def generate_ical(modelCalendar: ModelCalendar):
             uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
             event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
-            event.add(
-                "description",
-                hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://myhebrewdates.com",
+            base_description = (
+                hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://myhebrewdates.com"
             )
+            event.add("description", base_description)
+            html_description = (
+                f"{hebrewDate.get_hebrew_date()}<br>"
+                f"<a href='https://myhebrewdates.com'>"
+                "Create your own calendar at: https://myhebrewdates.com</a><br>"
+                f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}' "
+                "width='1' height='1'>"
+            )
+
+            event.add("x-alt-desc;fmttype=text/html", html_description)
 
             event.add("dtstamp", datetime.utcnow())  # Set DTSTAMP to the current UTC time
             event.add("dtstart", engDate)
