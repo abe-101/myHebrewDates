@@ -23,7 +23,6 @@ from .utils import generate_ical
 
 # Setup logger
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 class CalendarListView(LoginRequiredMixin, ListView):
