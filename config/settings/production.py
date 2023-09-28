@@ -1,3 +1,5 @@
+import os
+
 from .base import *  # noqa
 from .base import env
 
@@ -104,6 +106,9 @@ ANYMAIL = {
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
+LOG_DIR = env("LOG_DIR", default="/var/log/django")
+LOG_FILE = os.path.join(LOG_DIR, "mhd.log")
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -124,6 +129,14 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
+    },
+    "file": {
+        "level": "DEBUG",
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": LOG_FILE,
+        "maxBytes": 1024 * 1024 * 5,  # 5 MB
+        "backupCount": 15,  # keep the last 5 log files
+        "formatter": "verbose",
     },
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
