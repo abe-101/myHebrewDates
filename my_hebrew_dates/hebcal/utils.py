@@ -43,9 +43,9 @@ def generate_ical(modelCalendar: ModelCalendar):
             event.add("description", base_description)
             html_description = (
                 f"{hebrewDate.get_hebrew_date()}<br>"
-                f"<a href='https://myhebrewdates.com'>"
-                "Delivered to you by: https://myhebrewdates.com</a><br>"
-                f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}' "
+                f"Delivered to you by: <a href='https://myhebrewdates.com'>"
+                "MyHebrewDates.com</a><br>"
+                f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' "
                 "width='1' height='1'>"
             )
 

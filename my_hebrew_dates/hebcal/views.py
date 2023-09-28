@@ -182,7 +182,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = "uuid"
 
 
-def serve_pixel(request, pixel_id: UUID):
+def serve_pixel(request, pixel_id: UUID, pk: int):
     pixel_data = b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
 
     x_forwarded_for = request.headers.get("x-forwarded-for")
@@ -190,13 +190,13 @@ def serve_pixel(request, pixel_id: UUID):
     user_agent = request.headers.get("user-agent", "")
 
     # Log the information along with the UUID
-    logger.info("Pixel requested. IP: %s, User Agent: %s, UUID: %s", ip, user_agent, str(pixel_id))
+    logger.info("Pixel requested. IP: %s, User Agent: %s, UUID: %s, PK: %s", ip, user_agent, str(pixel_id), str(pk))
 
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
 # @cache_page(60 * 15)  # Cache the page for 15 minutes
-def calendar_file(request, uuid):
+def calendar_file(request, uuid: UUID):
     user = request.user
     user_info = "Anonymous user"
     ip = request.META.get("REMOTE_ADDR", "Unknown IP")
