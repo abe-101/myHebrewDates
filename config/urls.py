@@ -19,7 +19,8 @@ urlpatterns = [
     path(
         "robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")
     ),  # add the robots.txt file
-    path("favicon.ico", RedirectView.as_view(url="/static/images/favicon.png", permanent=True)),
+    path("favicon.png", RedirectView.as_view(url="/static/images/favicon.png", permanent=True)),
+    path("favicon.ico", RedirectView.as_view(url="static/images/favicons/favicon.ico", permanent=True)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
