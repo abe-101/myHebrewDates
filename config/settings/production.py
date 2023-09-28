@@ -129,14 +129,14 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-    },
-    "file": {
-        "level": "DEBUG",
-        "class": "logging.handlers.RotatingFileHandler",
-        "filename": LOG_FILE,
-        "maxBytes": 1024 * 1024 * 5,  # 5 MB
-        "backupCount": 15,  # keep the last 5 log files
-        "formatter": "verbose",
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": LOG_FILE,
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+            "backupCount": 15,  # keep the last 5 log files
+            "formatter": "verbose",
+        },
     },
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
