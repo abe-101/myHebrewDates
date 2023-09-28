@@ -106,7 +106,7 @@ ANYMAIL = {
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
-LOG_DIR = env("LOG_DIR", default="/var/log/django")
+LOG_DIR = env("DJANGO_LOG_DIR", default="/var/log/django")
 LOG_FILE = os.path.join(LOG_DIR, "mhd.log")
 
 LOGGING = {
