@@ -64,7 +64,7 @@ class CalendarDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
-        cal = icalendar.Calendar.from_ical(self.object.calendar_file_str)
+        cal = icalendar.Calendar.from_ical(generate_ical(self.object))
         # Get the current date
         current_date = datetime.now().date()
 

@@ -41,7 +41,7 @@ def generate_ical(modelCalendar: ModelCalendar, user_agent: str = "") -> str:
                 hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://myhebrewdates.com"
             )
             # if "Google-Calendar-Importer" in user_agent:
-            if "iOS" not in user_agent or "macOS" not in user_agent:
+            if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
                 base_description += (
                     "\n"
                     f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' "
