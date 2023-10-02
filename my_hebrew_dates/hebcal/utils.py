@@ -8,7 +8,7 @@ from .models import Calendar as ModelCalendar
 from .models import HebrewDate
 
 
-def generate_ical(modelCalendar: ModelCalendar):
+def generate_ical(modelCalendar: ModelCalendar, user_agent: str = None):
     newcal = Calendar()
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
@@ -40,6 +40,13 @@ def generate_ical(modelCalendar: ModelCalendar):
             base_description = (
                 hebrewDate.get_hebrew_date() + "\n Create your own calendar at: https://myhebrewdates.com"
             )
+            # if "Google-Calendar-Importer" in user_agent:
+            if "iOS" not in user_agent or "macOS" not in user_agent:
+                base_description += (
+                    "\n"
+                    f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' "
+                    "width='1' height='1'>"
+                )
             event.add("description", base_description)
             html_description = (
                 f"{hebrewDate.get_hebrew_date()}<br>"
@@ -78,3 +85,4 @@ def generate_ical(modelCalendar: ModelCalendar):
     cal_bye_str = newcal.to_ical()
     modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
     modelCalendar.save()
+    return cal_bye_str.decode("utf8")

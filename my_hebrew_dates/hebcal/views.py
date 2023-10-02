@@ -197,21 +197,20 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 
 # @cache_page(60 * 15)  # Cache the page for 15 minutes
 def calendar_file(request, uuid: UUID):
-    user = request.user
-    user_info = "Anonymous user"
-    ip = request.META.get("REMOTE_ADDR", "Unknown IP")
+    # user = request.user
+    # user_info = "Anonymous user"
+    # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
     user_agent = request.headers.get("user-agent", "Unknown Agent")
 
-    if user.is_authenticated:
-        user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
+    # if user.is_authenticated:
+    #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
 
-    logger.info(
-        "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
-    )
+    # logger.info(
+    #    "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
+    # )
 
     calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
-    generate_ical(calendar)
-    calendar_str: str = calendar.calendar_file_str
+    calendar_str: str = generate_ical(modelCalendar=calendar, user_agent=user_agent)
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
     response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
