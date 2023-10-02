@@ -8,7 +8,7 @@ from .models import Calendar as ModelCalendar
 from .models import HebrewDate
 
 
-def generate_ical(modelCalendar: ModelCalendar, user_agent: str = None):
+def generate_ical(modelCalendar: ModelCalendar, user_agent: str = "") -> str:
     newcal = Calendar()
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
