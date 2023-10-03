@@ -33,7 +33,13 @@ class CalendarListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         # Retrieve the calendars belonging to the current user
         queryset = super().get_queryset()
-        return queryset.filter(owner=self.request.user)
+        user_owned_calendars = queryset.filter(owner=self.request.user)
+
+        logger.info(
+            f"User {self.request.user} accessed CalendarListView. "
+            f"Total calendars owned by user: {user_owned_calendars.count()}"
+        )
+        return user_owned_calendars
 
     def get_context_data(self, **kwargs):
         # Call the parent implementation to get the default context
@@ -62,6 +68,13 @@ class CalendarDetailView(DetailView):
     def get_context_data(self, **kwargs):
         # Call the parent implementation to get the default context
         context = super().get_context_data(**kwargs)
+
+        # Log whether the user is authenticated or not
+        if self.request.user.is_authenticated:
+            logger.info(f"Authenticated user {self.request.user} accessed Calendar {self.object.uuid}")
+        else:
+            logger.info(f"Unauthenticated user accessed calendar {self.object.uuid}")
+
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
         cal = icalendar.Calendar.from_ical(generate_ical(self.object))
@@ -69,7 +82,7 @@ class CalendarDetailView(DetailView):
         current_date = datetime.now().date()
 
         # Calculate the date range for the events (from current date to one year from now)
-        one_year_from_now = current_date + timedelta(days=365)
+        one_year_from_now = current_date + timedelta(days=395)
 
         events = []
         for component in cal.walk():
@@ -96,17 +109,14 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
     template_name = "hebcal/calendar_edit.html"
     fields = ["name", "timezone"]
 
-    # def get_queryset(self):
-    #    # Retrieve the calendars belonging to the current user
-    #    queryset = super().get_queryset()
-    #    return queryset.filter(owner=self.request.user)
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["hebrewDates"] = HebrewDateFormSet(self.request.POST)
+            logger.info("HebrewDateFormSet initialized with POST data.")
         else:
             data["hebrewDates"] = HebrewDateFormSet()
+            logger.info("New HebrewDateFormSet initialized.")
         data["domain_name"] = Site.objects.get_current().domain
         return data
 
@@ -121,12 +131,15 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
                 self.object.save()
                 hebrewDates.instance = self.object
                 hebrewDates.save()
+                logger.info(f"Calendar object saved: {self.object.uuid}, Owner: {self.request.user}")
             else:
                 # Display error messages and rerender the form with user data
                 messages.error(self.request, "Please correct the errors in the form.")
+                logger.warning(f"Error in form submission by user: {self.request.user}. Errors: {hebrewDates.errors}")
                 return self.render_to_response(self.get_context_data(form=form))
 
         generate_ical(self.object)
+        logger.info(f"iCal generated for Calendar: {self.object.uuid}")
         messages.success(self.request, "Calendar created successfully.")
         return super().form_valid(form)
 
@@ -139,17 +152,14 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
-    # def get_queryset(self):
-    #    # Retrieve the calendars belonging to the current user
-    #    queryset = super().get_queryset()
-    #    return queryset.filter(owner=self.request.user)
-
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         if self.request.POST:
             data["hebrewDates"] = HebrewDateFormSet(self.request.POST, instance=self.object)
+            logger.info("HebrewDateFormSet initialized with POST data.")
         else:
             data["hebrewDates"] = HebrewDateFormSet(instance=self.object)
+            logger.info("New HebrewDateFormSet initialized.")
         return data
 
     def form_valid(self, form):
@@ -163,12 +173,20 @@ class CalendarUpdateView(LoginRequiredMixin, UpdateView):
                 self.object.save()
                 hebrewDates.instance = self.object
                 hebrewDates.save()
+                logger.info(
+                    f"Calendar object updated: {self.object.uuid}, "
+                    f"Owner={self.request.user}, "
+                    f"Name={self.object.name}, "
+                    f"Timezone={self.object.timezone}"
+                )
             else:
                 # Display error messages and rerender the form with user data
                 messages.error(self.request, "Please correct the errors in the form.")
+                logger.warning(f"Form submission error by user {self.request.user}: " f"{hebrewDates.errors}")
                 return self.render_to_response(self.get_context_data(form=form))
 
         generate_ical(self.object)
+        logger.info(f"iCal generated for Calendar: {self.object.uuid}")
         messages.success(self.request, "Calendar updated successfully.")
         return super().form_valid(form)
 
