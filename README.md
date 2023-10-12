@@ -34,18 +34,34 @@ Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings
   source venv/bin/activate
   ```
 
-3. Install the base dependencies:
+3. Install the local dependencies:
   ```shell
-  pip install -r requirements/base.txt
+  pip install -r requirements/local.txt
   ```
 
-4. Set up the database:
+4. Pre-Commit Install:
+  ```shell
+  pre-commit install
+  ```
+
+5. Create Database:
+  ```shell
+  createdb --username=<USERNAME> my_hebrew_dates
+  ```
+
+6. Create Env Files and add these:
+  ```shell
+  DATABASE_URL=postgres://<USERNAME>:<PASSWORD>@127.0.0.1:5432/my_hebrew_dates
+  CELERY_BROKER_URL=redis://localhost:6379/0
+  ```
+
+7. Set up the database:
   ```shell
   python manage.py makemigrations
   python manage.py migrate
   ```
 
-5. Start the Server
+8. Start the Server
   ```shell
   python manage.py runserver
   ```
