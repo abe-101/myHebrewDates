@@ -7,11 +7,48 @@ MyHebrewDates is a web app for sharing Hebrew dates like birthdays, anniversarie
 
 License: MIT
 
+## Contributors
+      <div align="center">
+            <a href="https://github.com/abe-101/myHebrewDates/graphs/contributors">
+              <img src="https://contrib.rocks/image?repo=abe-101/myHebrewDates" />
+            </a>
+      </div>
+
 ## Settings
 
 Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
 
 ## Basic Commands
+
+## Installation
+
+1. Clone the repository:
+  ```shell
+  git clone https://github.com/abe-101/myHebrewDates.git
+  cd myHebrewDates
+  ```
+
+2. Create and activate a virtual environment:
+  ```shell
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
+
+3. Install the base dependencies:
+  ```shell
+  pip install -r requirements/base.txt
+  ```
+
+4. Set up the database:
+  ```shell
+  python manage.py makemigrations
+  python manage.py migrate
+  ```
+
+5. Start the Server
+  ```shell
+  python manage.py runserver
+  ```
 
 ### Setting Up Your Users
 
