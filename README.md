@@ -8,11 +8,11 @@ MyHebrewDates is a web app for sharing Hebrew dates like birthdays, anniversarie
 License: MIT
 
 ## Contributors
-      <div align="center">
-            <a href="https://github.com/abe-101/myHebrewDates/graphs/contributors">
-              <img src="https://contrib.rocks/image?repo=abe-101/myHebrewDates" />
-            </a>
-      </div>
+<div align="center">
+<a href="https://github.com/abe-101/myHebrewDates/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=abe-101/myHebrewDates" />
+</a>
+</div>
 
 ## Settings
 
