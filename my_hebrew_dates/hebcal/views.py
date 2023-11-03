@@ -217,7 +217,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 def calendar_file(request, uuid: UUID):
     # user = request.user
     # user_info = "Anonymous user"
-    # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
+    ip = request.META.get("REMOTE_ADDR", "Unknown IP")
     user_agent = request.headers.get("user-agent", "Unknown Agent")
     alarm_trigger_hours = request.GET.get("alarm", "9")
     try:
@@ -227,6 +227,11 @@ def calendar_file(request, uuid: UUID):
 
     # if user.is_authenticated:
     #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
+
+    if alarm_trigger_hours != "9":
+        logger.info(
+            f"Calendar file requested for uuid: {uuid} by {ip}, User-Agent: {user_agent}, Alarm: {alarm_trigger}"
+        )
 
     # logger.info(
     #    "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
