@@ -8,15 +8,15 @@ from .models import Calendar as ModelCalendar
 from .models import HebrewDate
 
 
-def generate_ical(modelCalendar: ModelCalendar, user_agent: str = "") -> str:
+def generate_ical(
+    modelCalendar: ModelCalendar, user_agent: str = "", alarm_triger: timedelta = timedelta(hours=9)
+) -> str:
     newcal = Calendar()
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
     newcal.add("x-wr-calname", modelCalendar.name)
     newcal.add("x-wr-timezone", modelCalendar.timezone)  # It is good to add this as well.
-    newcal.add(
-        "x-wr-caldesc", "Created by MyHebrewDates.com"
-    )  # You can add this for additional information about the calendar.
+    newcal.add("x-wr-caldesc", "Created by MyHebrewDates.com")
 
     newcal.add("method", "PUBLISH")
 
@@ -72,7 +72,7 @@ def generate_ical(modelCalendar: ModelCalendar, user_agent: str = "") -> str:
             alarm.add("action", "DISPLAY")
             alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
 
-            alarm.add("trigger", timedelta(hours=9))
+            alarm.add("trigger", alarm_triger)
             event.add_component(alarm)
 
             events.append(event)

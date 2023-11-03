@@ -219,6 +219,11 @@ def calendar_file(request, uuid: UUID):
     # user_info = "Anonymous user"
     # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
     user_agent = request.headers.get("user-agent", "Unknown Agent")
+    alarm_trigger_hours = request.GET.get("alarm", "9")
+    try:
+        alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
+    except ValueError:
+        logger.warning(f"Invalid alarm trigger value: {alarm_trigger_hours}")
 
     # if user.is_authenticated:
     #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
@@ -228,7 +233,7 @@ def calendar_file(request, uuid: UUID):
     # )
 
     calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
-    calendar_str: str = generate_ical(modelCalendar=calendar, user_agent=user_agent)
+    calendar_str: str = generate_ical(modelCalendar=calendar, user_agent=user_agent, alarm_trigger=alarm_trigger)
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
     response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
