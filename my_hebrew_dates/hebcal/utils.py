@@ -9,7 +9,7 @@ from .models import HebrewDate
 
 
 def generate_ical(
-    modelCalendar: ModelCalendar, user_agent: str = "", alarm_triger: timedelta = timedelta(hours=9)
+    modelCalendar: ModelCalendar, user_agent: str = "", alarm_trigger: timedelta = timedelta(hours=9)
 ) -> str:
     newcal = Calendar()
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
@@ -72,7 +72,7 @@ def generate_ical(
             alarm.add("action", "DISPLAY")
             alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
 
-            alarm.add("trigger", alarm_triger)
+            alarm.add("trigger", alarm_trigger)
             event.add_component(alarm)
 
             events.append(event)
