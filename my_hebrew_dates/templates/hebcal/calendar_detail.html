@@ -19,20 +19,34 @@
       <p>
       By clicking the "Add To Calendar" button, you can choose your preferred calendar client and effortlessly sync the hebrew events with your personal calendar. Select your preferred platform from the list and follow the instructions to subscribe to this calendar.
       </p>
+    <!-- Alarm Time Selection Form with htmx -->
 
-      <p>
-      <button class="szButtonSmall btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
-        Add To Calendar
-      </button>
-      </p>
-      <div class="collapse" id="addToCalendar">
-        <ul class="list-group mt-3">
-          <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}" class="szLink ">Apple</a></li>
-          <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Google</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Office 365</a></li>
-          <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}"class="szLink">Outlook.com</a></li>
-        </ul>
-      </div>
+    <div id="alarmTimeSelector" class="mb-2">
+      <label for="alarmTime">Set an alarm reminder:</label>
+      <select name="alarm" id="alarmTime" class="form-select"
+              hx-get="{% url 'hebcal:update_calendar_links_htmx' calendar.uuid %}"
+              hx-target="#calendarLinks"
+              hx-swap="outerHTML"
+              hx-trigger="change from:#alarmTime">
+        <option value="-5">7 PM (previous day)</option>
+        <option value="-4">8 PM (previous day)</option>
+        <option value="-3">9 PM (previous day)</option>
+        <option value="-2">10 PM (previous day)</option>
+        <option value="-1">11 PM (previous day)</option>
+        <option value="0">12 AM</option>
+        <option value="5">5 AM</option>
+        <option value="6">6 AM</option>
+        <option value="7">7 AM</option>
+        <option value="8">8 AM</option>
+        <option selected value="9">9 AM</option>
+        <option value="10">10 AM</option>
+        <option value="11">11 AM</option>
+        <option value="12">12 PM</option>
+      </select>
+    </div>
+
+
+    {% include "hebcal/_calendar_links.html" %}
     </div>
     <div class="card-footer">
       <a class="szLink text-white" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">

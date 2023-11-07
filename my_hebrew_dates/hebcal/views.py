@@ -8,8 +8,9 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 from django.db import transaction
+from django.http import HttpRequest
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 
 # from django.utils.decorators import method_decorator
@@ -17,6 +18,7 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
+from .decorators import requires_htmx
 from .forms import HebrewDateFormSet
 from .models import Calendar
 from .utils import generate_ical
@@ -99,6 +101,7 @@ class CalendarDetailView(DetailView):
         # Sort events by start date and time
         events.sort(key=lambda e: e["start"])
         context["events"] = events
+        context["alarm_time"] = self.request.GET.get("alarm", "9")
 
         return context
 
@@ -244,3 +247,19 @@ def calendar_file(request, uuid: UUID):
     response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
 
     return response
+
+
+@requires_htmx
+def update_calendar_links_htmx(request: HttpRequest, calendar_uuid):
+    alarm_time = request.GET.get("alarm", "9")  # Default to 9 AM
+
+    # Fetch the specific calendar by UUID
+    calendar = get_object_or_404(Calendar, uuid=calendar_uuid)
+    domain_name = Site.objects.get_current().domain
+
+    context = {
+        "calendar": calendar,
+        "domain_name": domain_name,
+        "alarm_time": alarm_time,
+    }
+    return render(request, "hebcal/_calendar_links.html", context)

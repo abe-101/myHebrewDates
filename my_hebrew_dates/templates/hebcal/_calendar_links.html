@@ -1,0 +1,15 @@
+<div id="calendarLinks">
+  <p>
+  <button class="szButtonSmall btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#addToCalendar" aria-expanded="false" aria-controls="collapseExample">
+    Add To Calendar
+  </button>
+  </p>
+  <div class="collapse" id="addToCalendar">
+    <ul class="list-group mt-3">
+      <li class="list-group-item"><i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{alarm_time}}" class="szLink ">Apple</a></li>
+      <li class="list-group-item"><i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{alarm_time}}"class="szLink">Google</a></li>
+      <li class="list-group-item"><i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{alarm_time}}"class="szLink">Office 365</a></li>
+      <li class="list-group-item"><i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{alarm_time}}"class="szLink">Outlook.com</a></li>
+    </ul>
+  </div>
+</div>
