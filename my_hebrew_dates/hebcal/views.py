@@ -223,7 +223,10 @@ def calendar_file(request, uuid: UUID):
     # user = request.user
     # user_info = "Anonymous user"
     # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
-    user_agent = request.headers.get("user-agent", "Unknown Agent")
+
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
+    user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm", "9")
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
@@ -236,7 +239,7 @@ def calendar_file(request, uuid: UUID):
 
     if alarm_trigger_hours != "9":
         logger.info(
-            f"Calendar file requested for {calendar.name} with User-Agent: {user_agent}, Alarm: {alarm_trigger}"
+            f"Calendar file requested for {calendar.name} with ip {ip} User-Agent {user_agent}, Alarm: {alarm_trigger}"
         )
 
     # logger.info(
