@@ -73,9 +73,11 @@ class CalendarDetailView(DetailView):
 
         # Log whether the user is authenticated or not
         if self.request.user.is_authenticated:
-            logger.info(f"Authenticated user {self.request.user} accessed Calendar {self.object.uuid}")
+            logger.info(
+                f"Authenticated user {self.request.user} accessed Calendar {self.object.uuid}: {self.object.name}"
+            )
         else:
-            logger.info(f"Unauthenticated user accessed calendar {self.object.uuid}")
+            logger.info(f"Unauthenticated user accessed calendar {self.object.uuid}: {self.object.name}")
 
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
@@ -142,7 +144,7 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
                 return self.render_to_response(self.get_context_data(form=form))
 
         generate_ical(self.object)
-        logger.info(f"iCal generated for Calendar: {self.object.uuid}")
+        logger.info(f"iCal generated for Calendar {self.object.uuid}: {self.object.name}")
         messages.success(self.request, "Calendar created successfully.")
         return super().form_valid(form)
 
@@ -220,7 +222,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 def calendar_file(request, uuid: UUID):
     # user = request.user
     # user_info = "Anonymous user"
-    ip = request.META.get("REMOTE_ADDR", "Unknown IP")
+    # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
     user_agent = request.headers.get("user-agent", "Unknown Agent")
     alarm_trigger_hours = request.GET.get("alarm", "9")
     try:
@@ -230,21 +232,21 @@ def calendar_file(request, uuid: UUID):
 
     # if user.is_authenticated:
     #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
+    calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
 
     if alarm_trigger_hours != "9":
         logger.info(
-            f"Calendar file requested for uuid: {uuid} by {ip}, User-Agent: {user_agent}, Alarm: {alarm_trigger}"
+            f"Calendar file requested for {calendar.name} with User-Agent: {user_agent}, Alarm: {alarm_trigger}"
         )
 
     # logger.info(
     #    "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
     # )
 
-    calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
     calendar_str: str = generate_ical(modelCalendar=calendar, user_agent=user_agent, alarm_trigger=alarm_trigger)
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
-    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
+    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'  # noqa E702
 
     return response
 
