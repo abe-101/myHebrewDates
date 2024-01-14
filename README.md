@@ -8,60 +8,68 @@ MyHebrewDates is a web app for sharing Hebrew dates like birthdays, anniversarie
 License: MIT
 
 ## Contributors
+
 <div align="center">
 <a href="https://github.com/abe-101/myHebrewDates/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=abe-101/myHebrewDates" />
 </a>
 </div>
 
-
 ## Basic Commands
 
 ## Installation
 
 1. Clone the repository:
-  ```shell
-  git clone https://github.com/abe-101/myHebrewDates.git
-  cd myHebrewDates
-  ```
+
+```shell
+git clone https://github.com/abe-101/myHebrewDates.git
+cd myHebrewDates
+```
 
 2. Create and activate a virtual environment:
-  ```shell
-  python3 -m venv venv
-  source venv/bin/activate
-  ```
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
 
 3. Install the local dependencies:
-  ```shell
-  pip install -r requirements/local.txt
-  ```
+
+```shell
+pip install -r requirements/local.txt
+```
 
 4. Pre-Commit Install:
-  ```shell
-  pre-commit install
-  ```
+
+```shell
+pre-commit install
+```
 
 5. Create Database:
-  ```shell
-  createdb --username=<USERNAME> my_hebrew_dates
-  ```
+
+```shell
+createdb --username=<USERNAME> my_hebrew_dates
+```
 
 6. Create `.env` File and add these:
-  ```shell
-  DATABASE_URL=postgres://<USERNAME>:<PASSWORD>@127.0.0.1:5432/my_hebrew_dates
-  CELERY_BROKER_URL=redis://localhost:6379/0
-  ```
+
+```shell
+DATABASE_URL=postgres://<USERNAME>:<PASSWORD>@127.0.0.1:5432/my_hebrew_dates
+CELERY_BROKER_URL=redis://localhost:6379/0
+```
 
 7. Set up the database:
-  ```shell
-  python manage.py makemigrations
-  python manage.py migrate
-  ```
+
+```shell
+python manage.py makemigrations
+python manage.py migrate
+```
 
 8. Start the Server
-  ```shell
-  python manage.py runserver
-  ```
+
+```shell
+python manage.py runserver
+```
 
 ### Setting Up Your Users
 
