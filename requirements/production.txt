@@ -3,7 +3,8 @@
 -r base.txt
 
 gunicorn==21.2.0  # https://github.com/benoitc/gunicorn
-psycopg2==2.9.9  # https://github.com/psycopg/psycopg2
+# psycopg2==2.9.9  # https://github.com/psycopg/psycopg2
+psycopg2-binary==2.9.9  # https://pypi.org/project/psycopg2-binary/
 
 # Django
 # ------------------------------------------------------------------------------
