@@ -138,7 +138,7 @@ LOGGING = {
         #            "formatter": "verbose",
         #        },
     },
-    "root": {"level": "INFO", "handlers": ["console", "file"]},
+    "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
         "django.request": {
             "handlers": ["mail_admins"],
