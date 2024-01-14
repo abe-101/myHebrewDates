@@ -62,7 +62,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # MEDIA
 # ------------------------------------------------------------------------------
 DEFAULT_FILE_STORAGE = "my_hebrew_dates.utils.storages.MediaRootGoogleCloudStorage"
-MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"
+MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/media/"  # noqa: E231
 
 # EMAIL
 # ------------------------------------------------------------------------------
@@ -129,14 +129,14 @@ LOGGING = {
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": LOG_FILE,
-            "maxBytes": 1024 * 1024 * 5,  # 5 MB
-            "backupCount": 15,  # keep the last 5 log files
-            "formatter": "verbose",
-        },
+        #        "file": {
+        #            "level": "DEBUG",
+        #            "class": "logging.handlers.RotatingFileHandler",
+        #            "filename": LOG_FILE,
+        #            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+        #            "backupCount": 15,  # keep the last 5 log files
+        #            "formatter": "verbose",
+        #        },
     },
     "root": {"level": "INFO", "handlers": ["console", "file"]},
     "loggers": {
