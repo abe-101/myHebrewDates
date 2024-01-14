@@ -76,6 +76,8 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "django_celery_beat",
+    "django_htmx",
+    "django_extensions",
 ]
 
 LOCAL_APPS = [
@@ -84,7 +86,6 @@ LOCAL_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
     # Your stuff: custom apps go here
-    "django_htmx",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
