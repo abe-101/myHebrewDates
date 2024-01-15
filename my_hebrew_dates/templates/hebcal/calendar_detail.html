@@ -61,28 +61,39 @@
     </div>
   </div>
   <div class="card mb-4">
+    <div class="card-header">
+      <h5 class="card-title szCaps"><i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}</h5>
+    </div>
 
     <div class="card-body">
-      <ul class="list-group">
-        {% for event in events %}
-        <li class="list-group-item">
-          <div class="row align-items-center">
-            <div class="col-1 text-center">
-              <span class="dot">&#11044;</span>
-            </div>
-            <div class="col-2 szWider">
-              <p class="mb-1 text-center" style="font-size: 1.25rem;"><strong>{{ event.start|date:"d" }}</strong></p>
-              <p class="mb-0 text-center">{{ event.start|date:"M" }}</p>
-            </div>
-            <div class="col">
-              <p class="mb-1"><strong>{{ event.summary }}</strong></p>
-              <p class="mb-0">{{ event.description }}</p>
-            </div>
-            <div class="col"></div> <!-- Empty column to occupy remaining space -->
-          </div>
-        </li>
-        {% endfor %}
-      </ul>
+        <div id='calendar'></div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                themeSystem: 'bootstrap5',
+                headerToolbar: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'dayGridMonth,timeGridWeek,listMonth,listYear'
+                },
+                dayMaxEvents: true,
+                initialView: 'listYear',
+                eventSources: [
+                    {
+                        url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
+                        format: 'ics',
+                    },
+                ]
+                // Additional FullCalendar options can go here
+            });
+            calendar.render();
+        });
+    </script>
+
     </div>
   </div>
 </div>

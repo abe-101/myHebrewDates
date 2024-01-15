@@ -1,9 +1,8 @@
 import base64
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from uuid import UUID
 
-import icalendar
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
@@ -81,28 +80,28 @@ class CalendarDetailView(DetailView):
 
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
-        cal = icalendar.Calendar.from_ical(generate_ical(self.object))
-        # Get the current date
-        current_date = datetime.now().date()
+        # cal = icalendar.Calendar.from_ical(generate_ical(self.object))
+        # # Get the current date
+        # current_date = datetime.now().date()
 
-        # Calculate the date range for the events (from current date to one year from now)
-        one_year_from_now = current_date + timedelta(days=395)
+        # # Calculate the date range for the events (from current date to one year from now)
+        # one_year_from_now = current_date + timedelta(days=395)
 
-        events = []
-        for component in cal.walk():
-            if component.name == "VEVENT":
-                event = {
-                    "summary": component.get("summary"),
-                    "description": component.get("description")[:-54],
-                    "start": component.get("dtstart").dt,
-                    "end": component.get("dtend").dt,
-                }
-                if current_date <= event["start"] <= one_year_from_now:
-                    events.append(event)
+        # events = []
+        # for component in cal.walk():
+        #     if component.name == "VEVENT":
+        #         event = {
+        #             "summary": component.get("summary"),
+        #             "description": component.get("description")[:-54],
+        #             "start": component.get("dtstart").dt,
+        #             "end": component.get("dtend").dt,
+        #         }
+        #         if current_date <= event["start"] <= one_year_from_now:
+        #             events.append(event)
 
-        # Sort events by start date and time
-        events.sort(key=lambda e: e["start"])
-        context["events"] = events
+        # # Sort events by start date and time
+        # events.sort(key=lambda e: e["start"])
+        # context["events"] = events
         context["alarm_time"] = self.request.GET.get("alarm", "9")
 
         return context
