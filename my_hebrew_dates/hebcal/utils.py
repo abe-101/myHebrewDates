@@ -36,8 +36,9 @@ def generate_ical(
             ).digest()
             uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
-            event.add("summary", f"{hebrewDate.get_hebrew_date()} | {hebrewDate.event_type} {hebrewDate.name}")
-            base_description = hebrewDate.get_hebrew_date() + "\n\nhttps://myhebrewdates.com"
+            title = f"{hebrewDate.get_hebrew_date()} | {hebrewDate.event_type} {hebrewDate.name}"
+            event.add("summary", title)
+            base_description = title + "\n\nhttps://myhebrewdates.com"
             # if "Google-Calendar-Importer" in user_agent:
             # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
             #     base_description += (
@@ -48,7 +49,7 @@ def generate_ical(
             #     )
             event.add("description", base_description)
             html_description = (
-                f"{hebrewDate.get_hebrew_date()}<br>"
+                f"{title}<br>"
                 f"Delivered to you by: <a href='https://myhebrewdates.com'>"  # noqa E231
                 "MyHebrewDates.com</a><br>"
                 f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' "  # noqa E231
