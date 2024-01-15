@@ -36,7 +36,7 @@ def generate_ical(
             ).digest()
             uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
             event = Event()
-            event.add("summary", hebrewDate.event_type + " " + hebrewDate.name)
+            event.add("summary", f"{hebrewDate.get_hebrew_date()} | {hebrewDate.event_type} {hebrewDate.name}")
             base_description = hebrewDate.get_hebrew_date() + "\n\nhttps://myhebrewdates.com"
             # if "Google-Calendar-Importer" in user_agent:
             # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
