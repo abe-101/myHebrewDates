@@ -18,5 +18,5 @@ django-allauth==0.58.2  # https://github.com/pennersr/django-allauth
 django-crispy-forms==2.1  # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap5==2023.10  # https://github.com/django-crispy-forms/crispy-bootstrap5
 django-redis==5.4.0  # https://github.com/jazzband/django-redis
-django-htmx==1.17.0  # https://github.com/adamchainz/django-htmx
+django-htmx==1.17.2  # https://github.com/adamchainz/django-htmx
 django-extensions==3.2.3  # https://github.com/django-extensions/django-extensions
