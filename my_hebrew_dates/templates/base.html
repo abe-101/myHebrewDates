@@ -65,7 +65,7 @@
 
   </head>
 
-  <body class="d-flex flex-column min-vh-100">
+  <body class="d-flex flex-column min-vh-100" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="container flex-grow-1 mb-5">
       <div class="mb-1">
         <nav class="navbar navbar-expand-md">

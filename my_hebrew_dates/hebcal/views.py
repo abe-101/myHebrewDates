@@ -4,6 +4,7 @@ from datetime import timedelta
 from uuid import UUID
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 from django.db import transaction
@@ -17,9 +18,10 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
+from my_hebrew_dates.hebcal.forms import HebrewDateFormSet
+from my_hebrew_dates.hebcal.models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
+
 from .decorators import requires_htmx
-from .forms import HebrewDateFormSet
-from .models import Calendar
 from .utils import generate_ical
 
 # Setup logger
@@ -148,6 +150,57 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@login_required
+def calendar_edit_view(request: HttpRequest, uuid: UUID):
+    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
+    month_values = request.GET.getlist("month")
+    day_values = request.GET.getlist("day")
+
+    month_choices = HebrewMonthEnum.choices
+    day_choices = HebrewDayEnum.choices
+    event_choices = HebrewDate.EVENT_CHOICES
+
+    sort_by = request.GET.get("sort", "day")
+    order = request.GET.get("order", "asc")
+
+    # Determine if current sort is descending
+    dayDesc = sort_by == "day" and order == "desc"
+    monthDesc = sort_by == "month" and order == "desc"
+
+    # Apply sorting to your queryset
+    sort_order = f"-{sort_by}" if order == "desc" else sort_by
+    hebrew_dates = calendar.calendarOf.all().order_by(sort_order)
+
+    # Filter by month if provided
+    if "month" in request.GET:
+        hebrew_dates = hebrew_dates.filter(month__in=month_values)
+
+    # Filter by day if provided
+    if "day" in request.GET:
+        hebrew_dates = hebrew_dates.filter(day__in=day_values)
+
+    # Additional filters can be added similarly
+    if request.POST:
+        search_query = request.POST.get("search", "")
+        hebrew_dates = hebrew_dates.filter(name__icontains=search_query)
+
+    context = {
+        "calendar": calendar,
+        "month_choices": month_choices,
+        "day_choices": day_choices,
+        "event_choices": event_choices,
+        "hebrew_dates": hebrew_dates,
+        "selected_months": month_values,
+        "selected_days": day_values,
+        "dayDesc": dayDesc,
+        "monthDesc": monthDesc,
+    }
+
+    if request.htmx:
+        return render(request, "hebcal/_calendar_table.html", context)
+    return render(request, "hebcal/calendar_edit.html", context)
+
+
 class CalendarUpdateView(LoginRequiredMixin, UpdateView):
     model = Calendar
     login_url = reverse_lazy("users:redirect")
@@ -254,11 +307,11 @@ def calendar_file(request, uuid: UUID):
 
 
 @requires_htmx
-def update_calendar_links_htmx(request: HttpRequest, calendar_uuid):
+def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
     alarm_time = request.GET.get("alarm", "9")  # Default to 9 AM
 
     # Fetch the specific calendar by UUID
-    calendar = get_object_or_404(Calendar, uuid=calendar_uuid)
+    calendar = get_object_or_404(Calendar, uuid=uuid)
     domain_name = Site.objects.get_current().domain
 
     context = {
@@ -267,3 +320,46 @@ def update_calendar_links_htmx(request: HttpRequest, calendar_uuid):
         "alarm_time": alarm_time,
     }
     return render(request, "hebcal/_calendar_links.html", context)
+
+
+@login_required
+def calendar_detail_view(request: HttpRequest, uuid: UUID):
+    # Fetch the specific calendar by UUID
+    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
+
+    # if request.HTMX:
+    #     form = CalendarForm2(request.POST or None, instance=calendar)
+    #     if request.method == "POST":
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, "Calendar updated successfully.")
+    #             return render(request, "hebcal/_calendar_detail.html", {"calendar": calendar})
+    #         else:
+    #             messages.error(request, "Please correct the errors in the form.")
+
+    context = {
+        "calendar": calendar,
+    }
+
+    return render(request, "hebcal/calendar_detail.html", context)
+
+
+# @login_required
+# @requires_htmx
+# def edit_calendar_htmx(request: HttpRequest, uuid: UUID):
+#     # Fetch the specific calendar by UUID
+#     calendar = get_object_or_404(Calendar, user=request.user, uuid=uuid: UUID)
+#     form = CalendarForm2(request.POST or None, instance=calendar)
+#     if request.method == "POST":
+#         if form.is_valid():
+#             form.save()
+#             messages.success(request, "Calendar updated successfully.")
+#             return render(request, "hebcal/_calendar_detail.html", {"calendar": calendar})
+#         else:
+#             messages.error(request, "Please correct the errors in the form.")
+#
+#     context = {
+#         "calendar": calendar,
+#     }
+#
+#     return render(request, "hebcal/_calendar_edit_form.html", context)
