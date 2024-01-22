@@ -1,12 +1,12 @@
 from django.urls import path
 
 from .views import (
-    CalendarCreateView,
     CalendarDeleteView,
     CalendarListView,
     calendar_detail_view,
     calendar_edit_view,
     calendar_file,
+    create_calendar_view,
     create_hebrew_date_htmx,
     delete_hebrew_date_htmx,
     edit_hebrew_date_htmx,
@@ -34,7 +34,7 @@ urlpatterns = [
         name="create_hebrew_date_htmx",
     ),
     path("<uuid:uuid>/delete/", CalendarDeleteView.as_view(), name="calendar_delete"),
-    path("new/", CalendarCreateView.as_view(), name="calendar_new"),
+    path("new/", create_calendar_view, name="calendar_new"),
     path("", CalendarListView.as_view(), name="calendar_list"),
     path("<uuid:uuid>/", calendar_detail_view, name="calendar_detail"),
     path("<uuid:uuid>.ical", calendar_file, name="legacy_calendar_file"),

@@ -10,7 +10,7 @@ from django.contrib.sites.models import Site
 from django.db import transaction
 from django.http import HttpRequest
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
 # from django.utils.decorators import method_decorator
@@ -19,7 +19,7 @@ from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from my_hebrew_dates.hebcal.decorators import requires_htmx
-from my_hebrew_dates.hebcal.forms import HebrewDateForm, HebrewDateFormSet
+from my_hebrew_dates.hebcal.forms import CalendarForm, HebrewDateForm, HebrewDateFormSet
 from my_hebrew_dates.hebcal.models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
 
@@ -116,6 +116,28 @@ class CalendarCreateView(LoginRequiredMixin, CreateView):
         logger.info(f"iCal generated for Calendar {self.object.uuid}: {self.object.name}")
         messages.success(self.request, "Calendar created successfully.")
         return super().form_valid(form)
+
+
+@login_required
+def create_calendar_view(request: HttpRequest):
+    if request.method == "POST":
+        form = CalendarForm(request.POST)
+        if form.is_valid():
+            calendar = form.save(commit=False)
+            calendar.owner = request.user
+            calendar.save()
+            messages.success(request, "Calendar created successfully.")
+            return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
+        else:
+            messages.error(request, "Please correct the errors in the form.")
+    else:
+        form = CalendarForm()
+
+    context = {
+        "form": form,
+    }
+
+    return render(request, "hebcal/calendar_new.html", context)
 
 
 @login_required
