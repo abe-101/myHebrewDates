@@ -194,8 +194,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
 
     if request.htmx:
         logger.info(
-            f"Search query: {search_query} | Month values: {month_values} | ",
-            f"Day values: {day_values} | Sort: {sort_by} | Order: {order}",
+            f"Search query: {search_query} | Month values: {month_values} | Day values: {day_values} | Sort: {sort_by} | Order: {order}",  # noqa E501
         )
         return render(request, "hebcal/_calendar_table.html", context)
     return render(request, "hebcal/calendar_edit.html", context)
