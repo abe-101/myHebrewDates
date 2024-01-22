@@ -4,12 +4,12 @@ from django.test import SimpleTestCase
 from django.urls import resolve, reverse
 
 from my_hebrew_dates.hebcal.views import (
-    CalendarCreateView,
     CalendarDeleteView,
-    CalendarDetailView,
     CalendarListView,
-    CalendarUpdateView,
+    calendar_detail_view,
+    calendar_edit_view,
     calendar_file,
+    create_calendar_view,
 )
 
 
@@ -21,7 +21,7 @@ class TestUrls(SimpleTestCase):
     def test_calendar_edit_url(self):
         uuid = self.generate_uuid()
         url = reverse("hebcal:calendar_edit", args=[uuid])
-        self.assertEqual(resolve(url).func.view_class, CalendarUpdateView)
+        self.assertEqual(resolve(url).func, calendar_edit_view)
 
     def test_calendar_delete_url(self):
         uuid = self.generate_uuid()
@@ -30,7 +30,7 @@ class TestUrls(SimpleTestCase):
 
     def test_calendar_new_url(self):
         url = reverse("hebcal:calendar_new")
-        self.assertEqual(resolve(url).func.view_class, CalendarCreateView)
+        self.assertEqual(resolve(url).func, create_calendar_view)
 
     def test_calendar_list_url(self):
         url = reverse("hebcal:calendar_list")
@@ -39,7 +39,7 @@ class TestUrls(SimpleTestCase):
     def test_calendar_detail_url(self):
         uuid = self.generate_uuid()
         url = reverse("hebcal:calendar_detail", args=[uuid])
-        self.assertEqual(resolve(url).func.view_class, CalendarDetailView)
+        self.assertEqual(resolve(url).func, calendar_detail_view)
 
     def test_legacy_calendar_file_url(self):
         uuid = self.generate_uuid()

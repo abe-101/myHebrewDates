@@ -59,13 +59,14 @@
       <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js" integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons=" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js" integrity="sha256-J37ZtjEw94oWBNZ9w/XC73raGXE9t10//XHJfKz2QCM=" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js" integrity="sha256-io4G+JpruJtt8SoSUOgLQrhBj/YtQXFgIvkGzBxQAUQ=" crossorigin="anonymous"></script>
+      <script defer src="{% static 'js/toasts.js' %}"></script>
 
 
       {% endblock javascript %}
 
   </head>
 
-  <body class="d-flex flex-column min-vh-100">
+  <body class="d-flex flex-column min-vh-100" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="container flex-grow-1 mb-5">
       <div class="mb-1">
         <nav class="navbar navbar-expand-md">
@@ -134,14 +135,7 @@
 
       <div class="container">
 
-        {% if messages %}
-        {% for message in messages %}
-        <div class="alert alert-dismissible {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
-        {% endif %}
+        {% include 'toasts.html' %}
 
         {% block content %}
         <p>Use this document as a way to quick start any new project.</p>

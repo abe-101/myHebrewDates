@@ -1,0 +1,49 @@
+<div id="calendar-table" class="fade-me-in>
+  <!-- Calendar Table -->
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Hebrew Day
+            <button hx-get=""
+              class="btn btn-sm"
+              hx-vals='{"sort": "day", "order": "{% if dayDesc %}asc{% else %}desc{% endif %}"}'
+              hx-target="#calendar-table"
+              hx-push-url="true">
+              <i class="bi bi-arrow-{% if dayDesc %}down{% else %}up{% endif %}"></i>
+            </button>
+          </th>
+          <th>Hebrew Month
+            <button hx-get=""
+              class="btn btn-sm"
+              hx-vals='{"sort": "month", "order": "{% if monthDesc %}asc{% else %}desc{% endif %}"}'
+              hx-target="#calendar-table"
+              hx-push-url="true">
+              <i class="bi bi-arrow-{% if monthDesc %}down{% else %}up{% endif %}"></i>
+            </button>
+          </th>
+
+          <th>Event Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for hebrew_date in hebrew_dates %}
+          {% include 'hebcal/_hebrew_date_row.html' %}
+        {% endfor %}
+        <tr id="new-date-button">
+          <td colspan="5">
+            <button type="button"
+              hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
+              hx-target="closest tr"
+              hx-swap="beforebegin settle:1s"
+              class="btn btn-sm btn-primary">
+              <i class="bi bi-plus"></i> Add Hebrew Date
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

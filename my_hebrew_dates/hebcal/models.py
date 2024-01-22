@@ -7,54 +7,54 @@ from django.urls import reverse
 
 from .hebrew_date import hebrew_to_english_dict
 
-hebrew_month_name = {
-    1: "ניסן",
-    2: "אייר",
-    3: "סיון",
-    4: "תמוז",
-    5: "אב",
-    6: "אלול",
-    7: "תשרי",
-    8: "חשון",
-    9: "כסלו",
-    10: "טבת",
-    11: "שבט",
-    12: "אדר א׳",
-    13: "אדר ב׳",
-}
 
-hebrew_day_name = {
-    1: "א",
-    2: "ב",
-    3: "ג",
-    4: "ד",
-    5: "ה",
-    6: "ו",
-    7: "ז",
-    8: "ח",
-    9: "ט",
-    10: "י",
-    11: "יא",
-    12: "יב",
-    13: "יג",
-    14: "יד",
-    15: "טו",
-    16: "טז",
-    17: "יז",
-    18: "יח",
-    19: "יט",
-    20: "כ",
-    21: "כא",
-    22: "כב",
-    23: "כג",
-    24: "כד",
-    25: "כה",
-    26: "כו",
-    27: "כז",
-    28: "כח",
-    29: "כט",
-    30: "ל",
-}
+class HebrewMonthEnum(models.IntegerChoices):
+    NISAN = 1, "ניסן"
+    IYAR = 2, "אייר"
+    SIVAN = 3, "סיון"
+    TAMMUZ = 4, "תמוז"
+    AV = 5, "אב"
+    ELUL = 6, "אלול"
+    TISHREI = 7, "תשרי"
+    CHESHVAN = 8, "חשון"
+    KISLEV = 9, "כסלו"
+    TEVET = 10, "טבת"
+    SHEVAT = 11, "שבט"
+    ADAR_A = 12, "אדר א׳"
+    ADAR_B = 13, "אדר ב׳"
+
+
+class HebrewDayEnum(models.IntegerChoices):
+    ALEPH = 1, "א"
+    BET = 2, "ב"
+    GIMEL = 3, "ג"
+    DALET = 4, "ד"
+    HE = 5, "ה"
+    VAV = 6, "ו"
+    ZAYIN = 7, "ז"
+    CHET = 8, "ח"
+    TET = 9, "ט"
+    YUD = 10, "י"
+    YUD_ALEPH = 11, "יא"
+    YUD_BET = 12, "יב"
+    YUD_GIMEL = 13, "יג"
+    YUD_DALET = 14, "יד"
+    TET_VAV = 15, "טו"
+    TET_ZAYIN = 16, "טז"
+    YUD_ZAYIN = 17, "יז"
+    YUD_CHET = 18, "יח"
+    YUD_TET = 19, "יט"
+    KAF = 20, "כ"
+    KAF_ALEPH = 21, "כא"
+    KAF_BET = 22, "כב"
+    KAF_GIMEL = 23, "כג"
+    KAF_DALET = 24, "כד"
+    KAF_HE = 25, "כה"
+    KAF_VAV = 26, "כו"
+    KAF_ZAYIN = 27, "כז"
+    KAF_CHET = 28, "כח"
+    KAF_TET = 29, "כט"
+    LAMED = 30, "ל"
 
 
 class Calendar(models.Model):
@@ -78,25 +78,8 @@ class Calendar(models.Model):
 
 class HebrewDate(models.Model):
     name = models.CharField(max_length=64)
-
-    MONTH_CHOICES = [
-        (1, "Nissan"),
-        (2, "Iyar"),
-        (3, "Sivan"),
-        (4, "Tammuz"),
-        (5, "Av"),
-        (6, "Elul"),
-        (7, "Tishrei"),
-        (8, "Cheshvan"),
-        (9, "Kislev"),
-        (10, "Tevet"),
-        (11, "Shevat"),
-        (12, "Adar I"),
-        (13, "Adar II"),
-    ]
-    month = models.PositiveSmallIntegerField(choices=MONTH_CHOICES)
-    DAY_CHOICES = [(i, i) for i in range(1, 31)]
-    day = models.PositiveSmallIntegerField(choices=DAY_CHOICES)
+    month = models.IntegerField(choices=HebrewMonthEnum.choices)
+    day = models.IntegerField(choices=HebrewDayEnum.choices)
     EVENT_CHOICES = [
         ("🎂", "Birthday"),
         ("💍", "Anniversary"),
@@ -107,7 +90,9 @@ class HebrewDate(models.Model):
     calendar = models.ForeignKey("hebcal.Calendar", on_delete=models.CASCADE, related_name="calendarOf")
 
     def get_hebrew_date(self):
-        return f"{hebrew_day_name.get(self.day)} {hebrew_month_name.get(self.month)}"
+        hebrew_month = self.get_month_display()
+        hebrew_day = self.get_day_display()
+        return f"{hebrew_day} {hebrew_month}"
 
     def get_english_dates(self):
         hebrew_str = f"{self.month}-{self.day}"

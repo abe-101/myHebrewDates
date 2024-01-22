@@ -11,6 +11,21 @@
   border-color: #eed3d7;
 }
 
+.smooth {
+  transition: all 1s ease-in;
+}
+.fade-me-out.htmx-swapping {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+.fade-me-in.htmx-added {
+  opacity: 0;
+}
+.fade-me-in {
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+}
+
 /* Shira Zacks edits begin here */
 
 /* Colors for the site */

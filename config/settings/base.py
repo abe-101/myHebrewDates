@@ -4,6 +4,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 
 import environ
+from django.contrib import messages
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # my_hebrew_dates/
@@ -142,6 +143,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
+    "config.middleware.HtmxMessageMiddleware",
 ]
 
 # STATIC
@@ -311,3 +313,11 @@ SOCIALACCOUNT_FORMS = {"signup": "my_hebrew_dates.users.forms.UserSocialSignupFo
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "bg-secondary bg-opacity-25 text-dark",
+    messages.INFO: "bg-info bg-opacity-25 text-dark",
+    messages.SUCCESS: "bg-success bg-opacity-25 text-dark",
+    messages.WARNING: "bg-warning bg-opacity-25 text-dark",
+    messages.ERROR: "bg-danger bg-opacity-25 text-dark",
+}
