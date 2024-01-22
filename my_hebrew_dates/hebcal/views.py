@@ -180,7 +180,6 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         form = HebrewDateForm(request.POST, instance=hebrew_date)
         if form.is_valid():
             form.save()
-            messages.success(request, "Hebrew date updated successfully.")
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
             messages.error(request, "Please correct the errors in the form.")
@@ -209,7 +208,6 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
             hebrew_date = form.save(commit=False)
             hebrew_date.calendar = calendar
             hebrew_date.save()
-            messages.success(request, "Hebrew date created successfully.")
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
             messages.error(request, "Please correct the errors in the form.")
