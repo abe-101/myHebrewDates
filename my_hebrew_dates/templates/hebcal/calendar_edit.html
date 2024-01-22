@@ -5,28 +5,26 @@
 {% block content %}
 
 <div class="container mt-4">
-  <h1 class="mb-4">{{ calendar.name }}</h1>
+  <h1 class="mb-4">Manage Your Calendar: {{ calendar.name }}</h1>
 
-  <div class="row mb-3">
-    <div class="col-lg-4">
-      <input class="form-control" type="search"
-             name="search" placeholder="Begin Typing To Search {{ calendar.name }} Calendar..."
-             hx-post="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-             hx-trigger="input changed delay:500ms, search"
-             hx-target="#calendar-table"
-             hx-indicator=".htmx-indicator">
-
-
-    </div>
-    <div class="col-lg-8">
+  <div class="row mb-4">
+    <div class="col">
       <form id="filter-form"
-            class="d-flex justify-content-end"
-            hx-get="{{ request.path }}"
-            hx-target="#calendar-table"
-            hx-params="*"
-            hx-trigger="change"
-            hx-indicator=".htmx-indicator"
-            hx-push-url="true">
+        class="d-flex justify-content-end"
+        hx-get="{{ request.path }}"
+        hx-target="#calendar-table"
+        hx-params="*"
+        hx-swap="outerHTML settle:1s"
+        hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
+        hx-indicator=".htmx-indicator"
+        hx-push-url="true">
+
+        <div class="me-2">
+          <input class="search-box form-control rounded"
+          type="search"
+          name="search"
+          placeholder="Begin Typing To Search {{ calendar.name }} Calendar..."/>
+        </div>
 
         <!-- Month Filter Dropdown -->
         <div class="dropdown me-1">
@@ -38,7 +36,7 @@
             <li>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="month" value="{{ value }}" id="month-{{ value }}"
-                      {% if value|stringformat:"s" in selected_months %}checked{% endif %}>
+                {% if value|stringformat:"s" in selected_months %}checked{% endif %}>
                 <label class="form-check-label" for="month-{{ value }}">
                   {{ name }}
                 </label>
@@ -54,15 +52,15 @@
           </button>
           <ul class="dropdown-menu p-2" aria-labelledby="dropdownDayButton">
             {% for value, name in day_choices %}
-              <li>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" name="day" value="{{ value }}" id="day-{{ value }}"
-                      {% if value|stringformat:"s" in selected_days %}checked{% endif %}>
-                  <label class="form-check-label" for="day-{{ value }}">
-                    {{ name }}
-                  </label>
-                </div>
-              </li>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="day" value="{{ value }}" id="day-{{ value }}"
+                {% if value|stringformat:"s" in selected_days %}checked{% endif %}>
+                <label class="form-check-label" for="day-{{ value }}">
+                  {{ name }}
+                </label>
+              </div>
+            </li>
             {% endfor %}
           </ul>
         </div>
@@ -74,14 +72,14 @@
           </button>
           <ul class="dropdown-menu p-2" aria-labelledby="dropdownEventTypeButton">
             {% for value, name in event_choices %}
-              <li>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="{{ value }}" id="event-type-{{ value }}">
-                  <label class="form-check-label" for="event-type-{{ value }}">
-                    {{ name }}
-                  </label>
-                </div>
-              </li>
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="{{ value }}" id="event-type-{{ value }}">
+                <label class="form-check-label" for="event-type-{{ value }}">
+                  {{ name }}
+                </label>
+              </div>
+            </li>
             {% endfor %}
           </ul>
         </div>
@@ -89,21 +87,11 @@
       </form>
     </div>
   </div>
-      <h3>
-        <span class="htmx-indicator">
-            <img src="{% static 'images/bars.svg' %}" alt="loading bar" />
-         </span>
-      </h3>
+  <div class="htmx-indicator d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
   {% include "hebcal/_calendar_table.html" %}
-
-
 </div>
-
-<script>
-  function constructMonthFilterValues() {
-    let checkedValues = Array.from(document.querySelectorAll('.month-checkbox:checked')).map(checkbox => checkbox.value);
-    return JSON.stringify({ 'month': checkedValues });
-  }
-</script>
-
 {% endblock %}

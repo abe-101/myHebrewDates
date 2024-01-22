@@ -18,11 +18,10 @@ from django.urls import reverse_lazy
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
-from my_hebrew_dates.hebcal.forms import HebrewDateFormSet
+from my_hebrew_dates.hebcal.decorators import requires_htmx
+from my_hebrew_dates.hebcal.forms import HebrewDateForm, HebrewDateFormSet
 from my_hebrew_dates.hebcal.models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
-
-from .decorators import requires_htmx
-from .utils import generate_ical
+from my_hebrew_dates.hebcal.utils import generate_ical
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -59,15 +58,6 @@ class CalendarDetailView(DetailView):
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
-    # @method_decorator(cache_page(60 * 15))  # Cache the dispatch method for 15 minutes
-    # def dispatch(self, request, *args, **kwargs):
-    #    return super().dispatch(request, *args, **kwargs)
-
-    # def get_object(self, queryset=None):
-    #    # Retrieve the calendar by uuid
-    #    queryset = self.get_queryset()
-    #    return queryset.filter(uuid=self.kwargs["uuid"]).first()
-
     def get_context_data(self, **kwargs):
         # Call the parent implementation to get the default context
         context = super().get_context_data(**kwargs)
@@ -82,28 +72,6 @@ class CalendarDetailView(DetailView):
 
         # Add the domain_name to the context
         context["domain_name"] = Site.objects.get_current().domain
-        # cal = icalendar.Calendar.from_ical(generate_ical(self.object))
-        # # Get the current date
-        # current_date = datetime.now().date()
-
-        # # Calculate the date range for the events (from current date to one year from now)
-        # one_year_from_now = current_date + timedelta(days=395)
-
-        # events = []
-        # for component in cal.walk():
-        #     if component.name == "VEVENT":
-        #         event = {
-        #             "summary": component.get("summary"),
-        #             "description": component.get("description")[:-54],
-        #             "start": component.get("dtstart").dt,
-        #             "end": component.get("dtend").dt,
-        #         }
-        #         if current_date <= event["start"] <= one_year_from_now:
-        #             events.append(event)
-
-        # # Sort events by start date and time
-        # events.sort(key=lambda e: e["start"])
-        # context["events"] = events
         context["alarm_time"] = self.request.GET.get("alarm", "9")
 
         return context
@@ -155,6 +123,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
     month_values = request.GET.getlist("month")
     day_values = request.GET.getlist("day")
+    search_query = request.GET.get("search", None)
 
     month_choices = HebrewMonthEnum.choices
     day_choices = HebrewDayEnum.choices
@@ -180,8 +149,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         hebrew_dates = hebrew_dates.filter(day__in=day_values)
 
     # Additional filters can be added similarly
-    if request.POST:
-        search_query = request.POST.get("search", "")
+    if search_query:
         hebrew_dates = hebrew_dates.filter(name__icontains=search_query)
 
     context = {
@@ -199,6 +167,74 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     if request.htmx:
         return render(request, "hebcal/_calendar_table.html", context)
     return render(request, "hebcal/calendar_edit.html", context)
+
+
+@login_required
+@requires_htmx
+def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
+    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
+    hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
+    cancel = request.GET.get("cancel", False)
+
+    if request.method == "POST":
+        form = HebrewDateForm(request.POST, instance=hebrew_date)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Hebrew date updated successfully.")
+            return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
+        else:
+            messages.error(request, "Please correct the errors in the form.")
+    else:
+        form = HebrewDateForm(instance=hebrew_date)
+
+    context = {
+        "calendar": calendar,
+        "hebrew_date": hebrew_date,
+        "form": form,
+    }
+    if cancel:
+        return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
+
+    return render(request, "hebcal/_hebrew_date_form.html", context)
+
+
+@login_required
+@requires_htmx
+def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
+    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
+
+    if request.method == "POST":
+        form = HebrewDateForm(request.POST)
+        if form.is_valid():
+            hebrew_date = form.save(commit=False)
+            hebrew_date.calendar = calendar
+            hebrew_date.save()
+            messages.success(request, "Hebrew date created successfully.")
+            return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
+        else:
+            messages.error(request, "Please correct the errors in the form.")
+    else:
+        form = HebrewDateForm()
+
+    context = {
+        "calendar": calendar,
+        "form": form,
+        "new": True,
+    }
+
+    return render(request, "hebcal/_hebrew_date_form.html", context)
+
+
+@login_required
+@requires_htmx
+def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
+    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
+    hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
+
+    if request.method == "POST":
+        hebrew_date.delete()
+        messages.success(request, "Hebrew date deleted successfully.")
+        return HttpResponse()
 
 
 class CalendarUpdateView(LoginRequiredMixin, UpdateView):

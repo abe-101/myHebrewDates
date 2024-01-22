@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+
+<tr class="justify-content-between align-items-center">
+  <form
+    {% if new %}
+      hx-post="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
+    {% else %}
+      hx-post="{% url 'hebcal:edit_hebrew_date_htmx' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}"
+    {% endif %}
+    hx-target="closest tr"
+    hx-swap="outerHTML swap:1s"
+    class="d-flex justify-content-between align-items-center">
+    {% crispy form form.helper %}
+  </form>
+</tr>

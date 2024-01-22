@@ -7,6 +7,9 @@ from .views import (
     calendar_detail_view,
     calendar_edit_view,
     calendar_file,
+    create_hebrew_date_htmx,
+    delete_hebrew_date_htmx,
+    edit_hebrew_date_htmx,
     serve_pixel,
     update_calendar_links_htmx,
 )
@@ -15,6 +18,21 @@ app_name = "hebcal"
 
 urlpatterns = [
     path("<uuid:uuid>/edit/", calendar_edit_view, name="calendar_edit"),
+    path(
+        "<uuid:uuid>/edit-hebrew-date-htmx/<int:pk>/",
+        edit_hebrew_date_htmx,
+        name="edit_hebrew_date_htmx",
+    ),
+    path(
+        "<uuid:uuid>/delete-hebrew-date-htmx/<int:pk>/",
+        delete_hebrew_date_htmx,
+        name="delete_hebrew_date_htmx",
+    ),
+    path(
+        "<uuid:uuid>/create-hebrew-date-htmx/",
+        create_hebrew_date_htmx,
+        name="create_hebrew_date_htmx",
+    ),
     path("<uuid:uuid>/delete/", CalendarDeleteView.as_view(), name="calendar_delete"),
     path("new/", CalendarCreateView.as_view(), name="calendar_new"),
     path("", CalendarListView.as_view(), name="calendar_list"),
