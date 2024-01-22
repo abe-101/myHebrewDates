@@ -127,6 +127,9 @@ def create_calendar_view(request: HttpRequest):
             calendar.owner = request.user
             calendar.save()
             messages.success(request, "Calendar created successfully.")
+            logger.info(
+                f"Calendar created by user: {request.user} with UUID: {calendar.uuid} and name: {calendar.name}"
+            )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
         else:
             messages.error(request, "Please correct the errors in the form.")
@@ -136,6 +139,7 @@ def create_calendar_view(request: HttpRequest):
     context = {
         "form": form,
     }
+    logger.info(f"New CalendarForm initialized by user: {request.user}")
 
     return render(request, "hebcal/calendar_new.html", context)
 
@@ -186,7 +190,13 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "monthDesc": monthDesc,
     }
 
+    logger.info(f"Calendar edit view accessed by user: {request.user} for calendar: {calendar.name} ({calendar.uuid})")
+
     if request.htmx:
+        logger.info(
+            f"Search query: {search_query} | Month values: {month_values} | ",
+            f"Day values: {day_values} | Sort: {sort_by} | Order: {order}",
+        )
         return render(request, "hebcal/_calendar_table.html", context)
     return render(request, "hebcal/calendar_edit.html", context)
 
@@ -202,8 +212,10 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         form = HebrewDateForm(request.POST, instance=hebrew_date)
         if form.is_valid():
             form.save()
+            logger.info(f"HebrewDate object updated: {hebrew_date.pk}, Name: {hebrew_date.name}")
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
+            logger.warning(f"Error in form submission by user: {request.user}. Errors: {form.errors}")
             messages.error(request, "Please correct the errors in the form.")
     else:
         form = HebrewDateForm(instance=hebrew_date)
@@ -214,8 +226,10 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         "form": form,
     }
     if cancel:
+        logger.info(f"Edit HebrewDate cancelled by user: {request.user}")
         return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
 
+    logger.info(f"Edit HebrewDate form initialized by user: {request.user} for HebrewDate: {hebrew_date.name} ({pk})")
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
@@ -230,6 +244,7 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
             hebrew_date = form.save(commit=False)
             hebrew_date.calendar = calendar
             hebrew_date.save()
+            logger.info(f"HebrewDate object created: {hebrew_date.pk}, Name: {hebrew_date.name}")
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
             messages.error(request, "Please correct the errors in the form.")
@@ -242,6 +257,7 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
         "new": True,
     }
 
+    logger.info(f"New HebrewDate form initialized by user: {request.user} for Calendar: {calendar.name} ({uuid})")
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
@@ -253,6 +269,7 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
 
     if request.method == "POST":
         hebrew_date.delete()
+        logger.info(f"HebrewDate object deleted: {hebrew_date.pk}, Name: {hebrew_date.name}")
         messages.success(request, "Hebrew date deleted successfully.")
         return HttpResponse()
 
@@ -349,6 +366,8 @@ def calendar_file(request, uuid: UUID):
         logger.info(
             f"Calendar file requested for {calendar.name} with ip {ip} User-Agent {user_agent}, Alarm: {alarm_trigger}"
         )
+    else:
+        logger.info(f"Calendar file requested for {calendar.name} with ip {ip} User-Agent {user_agent}")
 
     # logger.info(
     #    "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
@@ -375,6 +394,7 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
+    logger.info(f"Calendar links updated for {calendar.name} with alarm time {alarm_time}")
     return render(request, "hebcal/_calendar_links.html", context)
 
 
@@ -396,6 +416,9 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
     context = {
         "calendar": calendar,
     }
+    logger.info(
+        f"Calendar detail view accessed by user: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
+    )
 
     return render(request, "hebcal/calendar_detail.html", context)
 
