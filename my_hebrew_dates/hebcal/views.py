@@ -397,20 +397,8 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/_calendar_links.html", context)
 
 
-@login_required
 def calendar_detail_view(request: HttpRequest, uuid: UUID):
-    # Fetch the specific calendar by UUID
-    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-
-    # if request.HTMX:
-    #     form = CalendarForm2(request.POST or None, instance=calendar)
-    #     if request.method == "POST":
-    #         if form.is_valid():
-    #             form.save()
-    #             messages.success(request, "Calendar updated successfully.")
-    #             return render(request, "hebcal/_calendar_detail.html", {"calendar": calendar})
-    #         else:
-    #             messages.error(request, "Please correct the errors in the form.")
+    calendar = get_object_or_404(Calendar, uuid=uuid)
 
     context = {
         "calendar": calendar,
