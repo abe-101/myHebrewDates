@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 
 # from django.utils.decorators import method_decorator
-# from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView, ListView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
@@ -346,7 +346,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-# @cache_page(60 * 15)  # Cache the page for 15 minutes
+@cache_page(60 * 15)  # Cache the page for 15 minutes
 def calendar_file(request, uuid: UUID):
     # user = request.user
     # user_info = "Anonymous user"
