@@ -9,8 +9,7 @@
             <button hx-get=""
               class="btn btn-sm"
               hx-vals='{"sort": "day", "order": "{% if dayDesc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table"
-              hx-push-url="true">
+              hx-target="#calendar-table">
               <i class="bi bi-arrow-{% if dayDesc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
@@ -18,8 +17,7 @@
             <button hx-get=""
               class="btn btn-sm"
               hx-vals='{"sort": "month", "order": "{% if monthDesc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table"
-              hx-push-url="true">
+              hx-target="#calendar-table">
               <i class="bi bi-arrow-{% if monthDesc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
