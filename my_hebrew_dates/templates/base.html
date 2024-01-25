@@ -8,8 +8,16 @@
     <title>{% block title %}My Hebrew Dates{% endblock title %}</title>
     <meta property="og:title" content="My Hebrew Dates">
     <meta property="og:description" content="{% block og_description %}📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈{% endblock og_description %}">
-    <meta property="og:image" content="{% static 'images/favicon.jpeg' %}">
+    <meta property="og:image" content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}">
     <meta property="og:url" content="https://www.MyHebrewDates.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter-specific tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="My Hebrew Dates">
+    <meta name="twitter:description" content="📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈">
+    <meta name="twitter:image" content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈">
     <meta name="author" content="Abe Hanoka">
