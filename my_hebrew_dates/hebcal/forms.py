@@ -59,11 +59,7 @@ class HebrewDateForm(forms.ModelForm):
         # Conditionally add the delete button if the instance exists
         if self.instance and self.instance.pk:
             delete_button = HTML(
-                '<button type="button" class="btn btn-danger mb-0 ms-1" '
-                "hx-post=\"{% url 'hebcal:delete_hebrew_date_htmx' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}\" "  # noqa E501
-                'hx-confirm="Are you sure you want to delete this Hebrew date?" '
-                'hx-target="closest tr" hx-swap="outerHTML settle:1s">'
-                '<i class="bi bi-trash"></i> Delete</button>'
+                '<button type="button" class="btn btn-danger mb-0 ms-1" hx-get="{% url \'hebcal:edit_hebrew_date_htmx\' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}?cancel=True" hx-target="closest tr" hx-swap="outerHTML settle:1s"><i class="bi bi-x-square"></i></button>'  # noqa E501
             )
             # Append the delete button to the button div
             button_div.append(delete_button)
