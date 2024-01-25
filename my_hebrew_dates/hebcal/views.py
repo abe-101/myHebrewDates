@@ -216,7 +216,6 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         if form.is_valid():
             form.save()
             logger.info(f"HebrewDate object updated: {hebrew_date.pk}, Name: {hebrew_date.name}")
-            messages.success(request, "Hebrew date updated successfully.")
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
             logger.warning(f"Error in form submission by user: {request.user}. Errors: {form.errors}")
