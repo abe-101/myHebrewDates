@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 
 # from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from my_hebrew_dates.hebcal.decorators import requires_htmx
@@ -27,29 +27,26 @@ from my_hebrew_dates.hebcal.utils import generate_ical
 logger = logging.getLogger(__name__)
 
 
-class CalendarListView(LoginRequiredMixin, ListView):
-    model = Calendar
-    login_url = reverse_lazy("users:redirect")
-    template_name = "hebcal/calendar_list.html"
+@login_required
+def calendar_list_view(request):
+    # Fetch calendars owned by the user
+    user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
-    def get_queryset(self):
-        # Retrieve the calendars belonging to the current user
-        queryset = super().get_queryset()
-        user_owned_calendars = queryset.filter(owner=self.request.user)
+    if not user_owned_calendars.exists():
+        logger.info(f"User {request.user} accessed CalendarListView. No calendars owned by user.")
+        return redirect("hebcal:calendar_new")
 
-        logger.info(
-            f"User {self.request.user} accessed CalendarListView. "
-            f"Total calendars owned by user: {user_owned_calendars.count()}"
-        )
-        return user_owned_calendars
+    # Logging
+    logger.info(
+        f"User {request.user} accessed CalendarListView. "
+        f"Total calendars owned by user: {user_owned_calendars.count()}"
+    )
 
-    def get_context_data(self, **kwargs):
-        # Call the parent implementation to get the default context
-        context = super().get_context_data(**kwargs)
-        # Add the domain_name to the context
-        context["domain_name"] = Site.objects.get_current().domain
+    # Context data
+    context = {"calendar_list": user_owned_calendars, "domain_name": Site.objects.get_current().domain}
 
-        return context
+    # Render and return the template
+    return render(request, "hebcal/calendar_list.html", context)
 
 
 class CalendarDetailView(DetailView):
