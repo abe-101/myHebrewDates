@@ -5,7 +5,6 @@ from django.urls import resolve, reverse
 
 from my_hebrew_dates.hebcal.views import (
     CalendarDeleteView,
-    CalendarListView,
     calendar_detail_view,
     calendar_edit_view,
     calendar_file,
@@ -31,10 +30,6 @@ class TestUrls(SimpleTestCase):
     def test_calendar_new_url(self):
         url = reverse("hebcal:calendar_new")
         self.assertEqual(resolve(url).func, create_calendar_view)
-
-    def test_calendar_list_url(self):
-        url = reverse("hebcal:calendar_list")
-        self.assertEqual(resolve(url).func.view_class, CalendarListView)
 
     def test_calendar_detail_url(self):
         uuid = self.generate_uuid()
