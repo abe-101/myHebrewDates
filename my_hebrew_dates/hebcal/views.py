@@ -259,10 +259,14 @@ def calendar_file(request, uuid: UUID):
     ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm", "9")
+    if alarm_trigger_hours == "":
+        alarm_trigger_hours = "9"
+    print(alarm_trigger_hours)
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
     except ValueError:
         logger.warning(f"Invalid alarm trigger value: {alarm_trigger_hours}")
+        alarm_trigger = timedelta(hours=9)
 
     # if user.is_authenticated:
     #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
