@@ -1,8 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.models import Calendar, HebrewDate
-from my_hebrew_dates.users.models import User
+
+User = get_user_model()
 
 
 class CalendarModelTest(TestCase):

@@ -9,6 +9,11 @@ from my_hebrew_dates.hebcal.views import (
     calendar_edit_view,
     calendar_file,
     create_calendar_view,
+    create_hebrew_date_htmx,
+    delete_hebrew_date_htmx,
+    edit_hebrew_date_htmx,
+    serve_pixel,
+    update_calendar_links_htmx,
 )
 
 
@@ -45,3 +50,31 @@ class TestUrls(SimpleTestCase):
         uuid = self.generate_uuid()
         url = reverse("hebcal:calendar_file", args=[uuid])
         self.assertEqual(resolve(url).func, calendar_file)
+
+    def test_edit_hebrew_date_htmx_url(self):
+        uuid = self.generate_uuid()
+        pk = 1  # Example primary key
+        url = reverse("hebcal:edit_hebrew_date_htmx", args=[uuid, pk])
+        self.assertEqual(resolve(url).func, edit_hebrew_date_htmx)
+
+    def test_delete_hebrew_date_htmx_url(self):
+        uuid = self.generate_uuid()
+        pk = 1  # Example primary key
+        url = reverse("hebcal:delete_hebrew_date_htmx", args=[uuid, pk])
+        self.assertEqual(resolve(url).func, delete_hebrew_date_htmx)
+
+    def test_create_hebrew_date_htmx_url(self):
+        uuid = self.generate_uuid()
+        url = reverse("hebcal:create_hebrew_date_htmx", args=[uuid])
+        self.assertEqual(resolve(url).func, create_hebrew_date_htmx)
+
+    def test_serve_pixel_url(self):
+        uuid = self.generate_uuid()
+        pk = 1  # Example primary key
+        url = reverse("hebcal:serve_pixel", args=[uuid, pk])
+        self.assertEqual(resolve(url).func, serve_pixel)
+
+    def test_update_calendar_links_htmx_url(self):
+        uuid = self.generate_uuid()
+        url = reverse("hebcal:update_calendar_links_htmx", args=[uuid])
+        self.assertEqual(resolve(url).func, update_calendar_links_htmx)

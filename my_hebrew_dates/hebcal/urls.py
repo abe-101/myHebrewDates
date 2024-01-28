@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import (
+from my_hebrew_dates.hebcal.views import (
     CalendarDeleteView,
     calendar_detail_view,
     calendar_edit_view,
