@@ -7,19 +7,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
-from django.db import transaction
 from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-
-# from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.generic import DetailView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.decorators.http import require_POST
+from django.views.generic.edit import DeleteView
 
 from my_hebrew_dates.hebcal.decorators import requires_htmx
-from my_hebrew_dates.hebcal.forms import CalendarForm, HebrewDateForm, HebrewDateFormSet
+from my_hebrew_dates.hebcal.forms import CalendarForm, HebrewDateForm
 from my_hebrew_dates.hebcal.models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
 
@@ -29,90 +26,31 @@ logger = logging.getLogger(__name__)
 
 @login_required
 def calendar_list_view(request):
-    # Fetch calendars owned by the user
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
     if not user_owned_calendars.exists():
-        logger.info(f"User {request.user} accessed CalendarListView. No calendars owned by user.")
+        logger.info(f"{calendar_list_view.__name__}: {request.user} has no calendars. Redirecting to create calendar.")
         return redirect("hebcal:calendar_new")
 
-    # Logging
-    logger.info(
-        f"User {request.user} accessed CalendarListView. "
-        f"Total calendars owned by user: {user_owned_calendars.count()}"
-    )
+    logger.info(f"{calendar_list_view.__name__}: {request.user} with calendars: {user_owned_calendars}")
 
-    # Context data
     context = {"calendar_list": user_owned_calendars, "domain_name": Site.objects.get_current().domain}
 
-    # Render and return the template
     return render(request, "hebcal/calendar_list.html", context)
 
 
-class CalendarDetailView(DetailView):
-    model = Calendar
-    template_name = "hebcal/calendar_detail.html"
-    slug_field = "uuid"
-    slug_url_kwarg = "uuid"
+def calendar_detail_view(request: HttpRequest, uuid: UUID):
+    calendar = get_object_or_404(Calendar, uuid=uuid)
 
-    def get_context_data(self, **kwargs):
-        # Call the parent implementation to get the default context
-        context = super().get_context_data(**kwargs)
+    context = {
+        "calendar": calendar,
+        "domain_name": Site.objects.get_current().domain,
+    }
+    logger.info(
+        f"{calendar_detail_view.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})",
+    )
 
-        # Log whether the user is authenticated or not
-        if self.request.user.is_authenticated:
-            logger.info(
-                f"Authenticated user {self.request.user} accessed Calendar {self.object.uuid}: {self.object.name}"
-            )
-        else:
-            logger.info(f"Unauthenticated user accessed calendar {self.object.uuid}: {self.object.name}")
-
-        # Add the domain_name to the context
-        context["domain_name"] = Site.objects.get_current().domain
-        context["alarm_time"] = self.request.GET.get("alarm", "9")
-
-        return context
-
-
-class CalendarCreateView(LoginRequiredMixin, CreateView):
-    model = Calendar
-    login_url = reverse_lazy("users:redirect")
-    template_name = "hebcal/calendar_edit.html"
-    fields = ["name", "timezone"]
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["hebrewDates"] = HebrewDateFormSet(self.request.POST)
-            logger.info("HebrewDateFormSet initialized with POST data.")
-        else:
-            data["hebrewDates"] = HebrewDateFormSet()
-            logger.info("New HebrewDateFormSet initialized.")
-        data["domain_name"] = Site.objects.get_current().domain
-        return data
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        hebrewDates = context["hebrewDates"]
-        with transaction.atomic():
-            self.object = form.save(commit=False)
-            self.object.owner = self.request.user  # Set the owner field
-
-            if hebrewDates.is_valid():
-                self.object.save()
-                hebrewDates.instance = self.object
-                hebrewDates.save()
-                logger.info(f"Calendar object saved: {self.object.uuid}, Owner: {self.request.user}")
-            else:
-                # Display error messages and rerender the form with user data
-                messages.error(self.request, "Please correct the errors in the form.")
-                logger.warning(f"Error in form submission by user: {self.request.user}. Errors: {hebrewDates.errors}")
-                return self.render_to_response(self.get_context_data(form=form))
-
-        generate_ical(self.object)
-        logger.info(f"iCal generated for Calendar {self.object.uuid}: {self.object.name}")
-        messages.success(self.request, "Calendar created successfully.")
-        return super().form_valid(form)
+    return render(request, "hebcal/calendar_detail.html", context)
 
 
 @login_required
@@ -125,18 +63,21 @@ def create_calendar_view(request: HttpRequest):
             calendar.save()
             messages.success(request, "Calendar created successfully.")
             logger.info(
-                f"Calendar created by user: {request.user} with UUID: {calendar.uuid} and name: {calendar.name}"
+                f"{create_calendar_view.__name__}: {request.user} created Calendar: {calendar.name} ({calendar.uuid})",
             )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
         else:
             messages.error(request, "Please correct the errors in the form.")
+            logger.warning(
+                f"{create_calendar_view.__name__}: {request.user} Error in form submission. Errors: {form.errors}"
+            )
     else:
         form = CalendarForm()
 
     context = {
         "form": form,
     }
-    logger.info(f"New CalendarForm initialized by user: {request.user}")
+    logger.info(f"{create_calendar_view.__name__}: {request.user} accessed Calendar_create_view.")
 
     return render(request, "hebcal/calendar_new.html", context)
 
@@ -191,7 +132,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "monthDesc": monthDesc,
     }
 
-    logger.info(f"Calendar edit view accessed by user: {request.user} for calendar: {calendar.name} ({calendar.uuid})")
+    logger.info(f"{calendar_edit_view.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})")
 
     if request.htmx:
         logger.info(
@@ -212,10 +153,14 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         form = HebrewDateForm(request.POST, instance=hebrew_date)
         if form.is_valid():
             form.save()
-            logger.info(f"HebrewDate object updated: {hebrew_date.pk}, Name: {hebrew_date.name}")
+            logger.info(
+                f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate updated: {hebrew_date.name} ({pk})"
+            )
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
-            logger.warning(f"Error in form submission by user: {request.user}. Errors: {form.errors}")
+            logger.warning(
+                f"{edit_hebrew_date_htmx.__name__}: {request.user} Error in form submission. Errors: {form.errors}",
+            )
             messages.error(request, "Please correct the errors in the form.")
     else:
         form = HebrewDateForm(instance=hebrew_date)
@@ -226,10 +171,14 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         "form": form,
     }
     if cancel:
-        logger.info(f"Edit HebrewDate cancelled by user: {request.user}")
+        logger.info(
+            f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate edit cancelled: {hebrew_date.name} ({pk})"
+        )
         return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
 
-    logger.info(f"Edit HebrewDate form initialized by user: {request.user} for HebrewDate: {hebrew_date.name} ({pk})")
+    logger.info(
+        f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate edit initialized: {hebrew_date.name} ({pk})"
+    )
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
@@ -244,7 +193,9 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
             hebrew_date = form.save(commit=False)
             hebrew_date.calendar = calendar
             hebrew_date.save()
-            logger.info(f"HebrewDate object created: {hebrew_date.pk}, Name: {hebrew_date.name}")
+            logger.info(
+                f"{create_hebrew_date_htmx.__name__}: {request.user} HebrewDate created: {hebrew_date.name} ({hebrew_date.pk})"  # noqa E501
+            )
             return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
         else:
             messages.error(request, "Please correct the errors in the form.")
@@ -257,11 +208,12 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
         "new": True,
     }
 
-    logger.info(f"New HebrewDate form initialized by user: {request.user} for Calendar: {calendar.name} ({uuid})")
+    logger.info(f"{create_hebrew_date_htmx.__name__}: {request.user} HebrewDate create initialized.")
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
 @login_required
+@require_POST
 @requires_htmx
 def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
@@ -269,56 +221,11 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
 
     if request.method == "POST":
         hebrew_date.delete()
-        logger.info(f"HebrewDate object deleted: {hebrew_date.pk}, Name: {hebrew_date.name}")
+        logger.info(
+            f"{delete_hebrew_date_htmx.__name__}: {request.user} HebrewDate deleted: {hebrew_date.name} ({pk})"
+        )
         messages.success(request, "Hebrew date deleted successfully.")
         return HttpResponse()
-
-
-class CalendarUpdateView(LoginRequiredMixin, UpdateView):
-    model = Calendar
-    login_url = reverse_lazy("users:redirect")
-    template_name = "hebcal/calendar_edit.html"
-    fields = ["name", "timezone"]
-    slug_field = "uuid"
-    slug_url_kwarg = "uuid"
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        if self.request.POST:
-            data["hebrewDates"] = HebrewDateFormSet(self.request.POST, instance=self.object)
-            logger.info("HebrewDateFormSet initialized with POST data.")
-        else:
-            data["hebrewDates"] = HebrewDateFormSet(instance=self.object)
-            logger.info("New HebrewDateFormSet initialized.")
-        return data
-
-    def form_valid(self, form):
-        context = self.get_context_data()
-        hebrewDates = context["hebrewDates"]
-        with transaction.atomic():
-            self.object = form.save(commit=False)
-            self.object.owner = self.request.user  # Set the owner field
-
-            if hebrewDates.is_valid():
-                self.object.save()
-                hebrewDates.instance = self.object
-                hebrewDates.save()
-                logger.info(
-                    f"Calendar object updated: {self.object.uuid}, "
-                    f"Owner={self.request.user}, "
-                    f"Name={self.object.name}, "
-                    f"Timezone={self.object.timezone}"
-                )
-            else:
-                # Display error messages and rerender the form with user data
-                messages.error(self.request, "Please correct the errors in the form.")
-                logger.warning(f"Form submission error by user {self.request.user}: " f"{hebrewDates.errors}")
-                return self.render_to_response(self.get_context_data(form=form))
-
-        generate_ical(self.object)
-        logger.info(f"iCal generated for Calendar: {self.object.uuid}")
-        messages.success(self.request, "Calendar updated successfully.")
-        return super().form_valid(form)
 
 
 class CalendarDeleteView(LoginRequiredMixin, DeleteView):
@@ -394,39 +301,7 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
-    logger.info(f"Calendar links updated for {calendar.name} with alarm time {alarm_time}")
-    return render(request, "hebcal/_calendar_links.html", context)
-
-
-def calendar_detail_view(request: HttpRequest, uuid: UUID):
-    calendar = get_object_or_404(Calendar, uuid=uuid)
-
-    context = {
-        "calendar": calendar,
-    }
     logger.info(
-        f"Calendar detail view accessed by user: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
+        "{update_calendar_links_htmx.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
     )
-
-    return render(request, "hebcal/calendar_detail.html", context)
-
-
-# @login_required
-# @requires_htmx
-# def edit_calendar_htmx(request: HttpRequest, uuid: UUID):
-#     # Fetch the specific calendar by UUID
-#     calendar = get_object_or_404(Calendar, user=request.user, uuid=uuid: UUID)
-#     form = CalendarForm2(request.POST or None, instance=calendar)
-#     if request.method == "POST":
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, "Calendar updated successfully.")
-#             return render(request, "hebcal/_calendar_detail.html", {"calendar": calendar})
-#         else:
-#             messages.error(request, "Please correct the errors in the form.")
-#
-#     context = {
-#         "calendar": calendar,
-#     }
-#
-#     return render(request, "hebcal/_calendar_edit_form.html", context)
+    return render(request, "hebcal/_calendar_links.html", context)
