@@ -1,16 +1,20 @@
+import logging
 from base64 import urlsafe_b64encode
 from datetime import date, datetime, timedelta
 from hashlib import sha1
 
 from icalendar import Alarm, Calendar, Event, Timezone
 
-from .models import Calendar as ModelCalendar
-from .models import HebrewDate
+from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
+from my_hebrew_dates.hebcal.models import HebrewDate
+
+logger = logging.getLogger(__name__)
 
 
 def generate_ical(
     modelCalendar: ModelCalendar, user_agent: str = "", alarm_trigger: timedelta = timedelta(hours=9)
 ) -> str:
+    logger.info(f"Generating iCal for {modelCalendar.name} with user agent {user_agent}")
     newcal = Calendar()
     newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
@@ -85,4 +89,5 @@ def generate_ical(
     cal_bye_str = newcal.to_ical()
     modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
     modelCalendar.save()
+    logger.info(f"Finished generating iCal for {modelCalendar.name}")
     return cal_bye_str.decode("utf8")
