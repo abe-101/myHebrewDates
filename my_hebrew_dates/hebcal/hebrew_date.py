@@ -1,10 +1,15 @@
+import logging
+
 from pyluach import dates
 from pyluach.utils import _is_leap as is_leap
+
+logger = logging.getLogger(__name__)
 
 lengths_of_months = [0, 30, 29, 30, 29, 30, 29, 30, 30, 30, 29, 30, 30, 29]
 
 
 def create_hebrew_to_english_dict():
+    logger.info("Creating hebrew_to_english_dict")
     hebrew_to_english_dict = {}
     today_year = dates.HebrewDate.today().year
 
@@ -21,6 +26,7 @@ def create_hebrew_to_english_dict():
                 english_date = hebrew_date.to_pydate()
                 hebrew_to_english_dict.setdefault(f"{mstring}-{day}", []).append(english_date)
 
+    logger.info("Finished creating hebrew_to_english_dict")
     return hebrew_to_english_dict
 
 

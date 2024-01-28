@@ -11,6 +11,11 @@
   border-color: #eed3d7;
 }
 
+span.asteriskField {
+  color: red;
+  margin-left: 0.25em; /* This adds a space before the asterisk */
+}
+
 .smooth {
   transition: all 1s ease-in;
 }
