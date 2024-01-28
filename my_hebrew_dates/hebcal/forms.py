@@ -3,31 +3,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML, Div, Layout, Row
 from django import forms
 
-from .models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
-
-
-class oldCalendarForm(forms.ModelForm):
-    class Meta:
-        model = Calendar
-        fields = ["name", "timezone"]
-        labels = {
-            "name": "Name",
-            "timezone": "Timezone",
-        }
-        widgets = {
-            "timezone": forms.Select(choices=Calendar.TIMEZONE_CHOICES),
-        }
-
-
-class OldHebrewDateForm(forms.ModelForm):
-    class Meta:
-        model = HebrewDate
-        fields = ["name", "month", "day", "event_type"]
-        widgets = {
-            "month": forms.Select(choices=HebrewMonthEnum),
-            "day": forms.Select(choices=HebrewDayEnum),
-            "event_type": forms.Select(choices=HebrewDate.EVENT_CHOICES),
-        }
+from .models import Calendar, HebrewDate
 
 
 class CalendarForm(forms.ModelForm):
@@ -77,6 +53,3 @@ class HebrewDateForm(forms.ModelForm):
         )
 
         self.helper.form_show_labels = False
-
-
-HebrewDateFormSet = forms.inlineformset_factory(Calendar, HebrewDate, form=HebrewDateForm, extra=3)

@@ -61,7 +61,7 @@ def create_calendar_view(request: HttpRequest):
             calendar = form.save(commit=False)
             calendar.owner = request.user
             calendar.save()
-            messages.success(request, "Calendar created successfully.")
+            messages.success(request, f"{calendar.name} created successfully.")
             logger.info(
                 f"{create_calendar_view.__name__}: {request.user} created Calendar: {calendar.name} ({calendar.uuid})",
             )
@@ -218,13 +218,12 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
 def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
     hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
+    formatted_name = hebrew_date.get_formatted_name()
 
     if request.method == "POST":
         hebrew_date.delete()
-        logger.info(
-            f"{delete_hebrew_date_htmx.__name__}: {request.user} HebrewDate deleted: {hebrew_date.name} ({pk})"
-        )
-        messages.success(request, "Hebrew date deleted successfully.")
+        logger.info(f"{delete_hebrew_date_htmx.__name__}: {request.user} HebrewDate deleted: {formatted_name} ({pk})")
+        messages.success(request, f"{formatted_name} deleted successfully.")
         return HttpResponse()
 
 
