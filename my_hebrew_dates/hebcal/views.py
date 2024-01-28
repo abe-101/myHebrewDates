@@ -302,6 +302,6 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "alarm_time": alarm_time,
     }
     logger.info(
-        "{update_calendar_links_htmx.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
+        f"{update_calendar_links_htmx.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
     )
     return render(request, "hebcal/_calendar_links.html", context)
