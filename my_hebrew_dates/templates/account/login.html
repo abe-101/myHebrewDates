@@ -25,9 +25,22 @@
 
   <div class="socialaccount_ballot">
 
-    <ul class="socialaccount_providers">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </ul>
+      <ul class="socialaccount_providers">
+        {% load socialaccount %} {% for provider in socialaccount.providers %} {% if provider.id == "openid" %} {% for brand in provider.get_brands %}
+        <li>
+          <a title="{{ brand.name }}" class="btn btn-block btn-social btn-md btn-{{ provider.id }} socialaccount_provider {{ brand.id }}" href="{% provider_login_url provider.id openid=brand.openid_url process=" login " %}">
+            <i class="bi bi-{{ provider.id }}"></i>Log in with {{ brand.name }}
+          </a>
+        </li>
+        {% endfor %} {% endif %}
+        <li>
+          <a title="{{ provider.name }}" class="btn btn-block btn-social btn-md socialaccount_provider btn-{{ provider.id }}" href="{% provider_login_url provider.id process=" login " %}">
+            <i class="bi bi-{{ provider.id }}"></i>Log in with {{ provider.name }}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+
 
     {# <div class="login-or">{% translate "or" %}</div> #}
 
