@@ -1,5 +1,6 @@
-<li>
-    <a title="{{ attrs.name }}" href="{{ attrs.href }}">
-      <i class="bi bi-{{ attrs.name }}"></i>
-    </a
-</li>
+{% load allauth %}
+{% load socialaccount %}
+<a href="{{ href }}" class="btn btn-block btn-social {% if provider_id == 'google' %}btn-google{% elif provider_id == 'github' %}btn-github{% endif %}">
+    <i class="bi {% if provider_id == 'google' %}bi-google{% elif provider_id == 'github' %}bi-github{% endif %}"></i>
+    Sign in with {{ name }}
+</a>
