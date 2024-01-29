@@ -13,12 +13,12 @@
 <p>{% blocktranslate %}Already have an account? Then please <a class="szLink" href="{{ login_url }}">sign in</a>.{% endblocktranslate %}</p>
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
-<p>{% blocktranslate %}You can also sign in with your social account.{% endblocktranslate %}</p>
+<p>{% blocktranslate %}You can also sign in with your social account:{% endblocktranslate %}</p>
 <div class="socialaccount_ballot">
 
-  <ul class="socialaccount_providers">
+  <div class="socialaccount_providers d-flex justify-content-start me-3">
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-  </ul>
+  </div>
 
   {# <div class="login-or">{% translate "or" %}</div>#}
 
