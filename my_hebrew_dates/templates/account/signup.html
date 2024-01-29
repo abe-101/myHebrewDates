@@ -11,16 +11,17 @@
 <h1>{% translate "Sign Up" %}</h1>
 
 <p>{% blocktranslate %}Already have an account? Then please <a class="szLink" href="{{ login_url }}">sign in</a>.{% endblocktranslate %}</p>
+{% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
-  <div class="socialaccount_ballot">
+<div class="socialaccount_ballot">
 
-    <ul class="socialaccount_providers">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </ul>
+  <ul class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </ul>
 
-    {# <div class="login-or">{% translate "or" %}</div>#}
+  {# <div class="login-or">{% translate "or" %}</div>#}
 
-  </div>
+</div>
 {% endif %}
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
