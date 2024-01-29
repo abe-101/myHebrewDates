@@ -13,6 +13,7 @@
 <p>{% blocktranslate %}Already have an account? Then please <a class="szLink" href="{{ login_url }}">sign in</a>.{% endblocktranslate %}</p>
 {% get_providers as socialaccount_providers %}
 {% if socialaccount_providers %}
+<p>{% blocktranslate %}You can also sign in with your social account.{% endblocktranslate %}</p>
 <div class="socialaccount_ballot">
 
   <ul class="socialaccount_providers">
