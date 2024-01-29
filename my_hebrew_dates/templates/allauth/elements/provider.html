@@ -1,11 +1,10 @@
 {% load socialaccount %}
-<li class="list-group-item bg-transparent border-0 p-2">
-    <a class="btn btn-lg btn-block d-flex align-items-center justify-content-start {% if "Google" in attrs.name %}btn-outline-danger{% elif "GitHub" in attrs.name %}btn-outline-secondary{% endif %}" title="{{ attrs.name }}" href="{{ attrs.href }}" role="button">
-        {% if "Google" in attrs.name %}
-            <i class="bi bi-google" aria-hidden="true"></i>
-        {% elif "GitHub" in attrs.name %}
-            <i class="bi bi-github" aria-hidden="true"></i>
-        {% endif %}
-        <span class="ml-2">{{ attrs.name }}</span>
-    </a>
-</li>
+<div class="d-flex justify-content-around">
+  <a class="btn btn-lg {% if "Google" in attrs.name %}btn-outline-danger{% elif "GitHub" in attrs.name %}btn-outline-secondary{% endif %}" title="{{ attrs.name }}" href="{{ attrs.href }}" role="button">
+      {% if "Google" in attrs.name %}
+          <i class="bi bi-google" aria-hidden="true"></i>
+      {% elif "GitHub" in attrs.name %}
+          <i class="bi bi-github" aria-hidden="true"></i>
+      {% endif %}
+  </a>
+</div>
