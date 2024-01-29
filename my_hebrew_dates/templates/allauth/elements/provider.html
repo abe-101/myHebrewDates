@@ -1,6 +1,6 @@
 {% load socialaccount %}
-<div class="d-flex justify-content-around">
-  <a class="btn btn-lg {% if "Google" in attrs.name %}btn-outline-danger{% elif "GitHub" in attrs.name %}btn-outline-secondary{% endif %}" title="{{ attrs.name }}" href="{{ attrs.href }}" role="button">
+<div class="d-flex justify-content-start">
+  <a class="btn btn-lg btn-outline-danger me-3" title="{{ attrs.name }}" href="{{ attrs.href }}" role="button">
       {% if "Google" in attrs.name %}
           <i class="bi bi-google" aria-hidden="true"></i>
       {% elif "GitHub" in attrs.name %}
