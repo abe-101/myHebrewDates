@@ -315,9 +315,9 @@ SOCIALACCOUNT_FORMS = {"signup": "my_hebrew_dates.users.forms.UserSocialSignupFo
 # ------------------------------------------------------------------------------
 
 MESSAGE_TAGS = {
-    messages.DEBUG: "bg-secondary bg-opacity-25 text-dark",
-    messages.INFO: "bg-info bg-opacity-25 text-dark",
-    messages.SUCCESS: "bg-success bg-opacity-25 text-dark",
-    messages.WARNING: "bg-warning bg-opacity-25 text-dark",
-    messages.ERROR: "bg-danger bg-opacity-25 text-dark",
+    messages.DEBUG: "bg-secondary bg-opacity-65 text-dark",
+    messages.INFO: "bg-info bg-opacity-65 text-dark",
+    messages.SUCCESS: "bg-success bg-opacity-65 text-dark",
+    messages.WARNING: "bg-warning bg-opacity-65 text-dark",
+    messages.ERROR: "bg-danger bg-opacity-65 text-dark",
 }
