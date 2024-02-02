@@ -87,7 +87,7 @@ def generate_ical(
         newcal.add_component(event)
 
     cal_bye_str = newcal.to_ical()
-    modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
-    modelCalendar.save()
+    # modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
+    # modelCalendar.save()
     logger.info(f"Finished generating iCal for {modelCalendar.name}")
     return cal_bye_str.decode("utf8")
