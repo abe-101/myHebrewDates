@@ -42,7 +42,7 @@ def generate_ical(
             event = Event()
             title = f"{hebrewDate.get_hebrew_date()} | {hebrewDate.event_type} {hebrewDate.name}"
             event.add("summary", title)
-            base_description = title + "\n\nhttps://myhebrewdates.com"
+            base_description = title + "\n\nThis event is powered by: https://myhebrewdates.com"
             # if "Google-Calendar-Importer" in user_agent:
             # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
             #     base_description += (
@@ -52,24 +52,36 @@ def generate_ical(
             #         "width='1' height='1'>"
             #     )
             event.add("description", base_description)
-            html_description = (
-                f"{title}<br>"
-                f"Delivered to you by: <a href='https://myhebrewdates.com'>"  # noqa E231
-                "MyHebrewDates.com</a><br>"
-                f"<img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' "  # noqa E231
-                "width='1' height='1'>"
-            )
 
+            html_description = f"""
+            <html>
+            <body>
+                {title}<br>
+                Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>
+                <img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' width='1' height='1'>
+            </body>
+            </html>
+            """  # noqa E222
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
             event.add("dtstamp", datetime.utcnow())  # Set DTSTAMP to the current UTC time
             event.add("dtstart", engDate)
-            event.add("dtend", engDate + timedelta(days=1))
+            event.add("transp", "TRANSPARENT")
             event.add("uid", uid)
-            event.add("categories", str(hebrewDate.get_event_type_display()))
+            event.add("categories", ["Hebrew Date", str(hebrewDate.get_event_type_display())])
             event.add("transp", "TRANSPARENT")
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
+
+            event.add(
+                "attach",
+                [
+                    {
+                        "fmttype": "image/png",
+                        "value": f"https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}",  # noqa E501
+                    }
+                ],
+            )
 
             # Add alarm to the event
             alarm = Alarm()
