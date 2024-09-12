@@ -1,0 +1,65 @@
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+<nav class="navbar navbar-expand-md">
+  <div class="container-fluid">
+    <div class="szflex">
+      <button class="navbar-toggler navbar-toggler-right"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="{% url 'home' %}">My Hebrew Dates</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'home' %}">Home <span class="visually-hidden">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}">About</a>
+        </li>
+        {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'hebcal:calendar_list' %}">Calendars</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+               href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
+          </li>
+          <li class="nav-item">
+            {# URL provided by django-allauth/account/urls.py #}
+            <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+          </li>
+        {% else %}
+          {% if ACCOUNT_ALLOW_REGISTRATION %}
+            <li class="nav-item">
+              {# URL provided by django-allauth/account/urls.py #}
+              <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+            </li>
+          {% endif %}
+          <li class="nav-item">
+            {# URL provided by django-allauth/account/urls.py #}
+            <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+          </li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav ms-md-auto">
+        <li class="nav-item col-6 col-lg-auto">
+          <a class="nav-link" href="https://discord.gg/2vqUzSpt6N"><i class="bi bi-discord"></i></a>
+        </li>
+        <li class="nav-item col-6 col-lg-auto">
+          <a class="nav-link"
+             href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"><i class="bi bi-envelope"></i></a>
+        </li>
+        <li class="nav-item col-6 col-lg-auto">
+          <a class="nav-link" href="https://github.com/abe-101/myhebrewdates"><i class="bi bi-github"></i></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

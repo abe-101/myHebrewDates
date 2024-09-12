@@ -1,17 +1,23 @@
+from http import HTTPStatus
+
 import pytest
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest
+from django.http import HttpResponseRedirect
 from django.test import RequestFactory
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
 from my_hebrew_dates.users.forms import UserAdminChangeForm
 from my_hebrew_dates.users.models import User
 from my_hebrew_dates.users.tests.factories import UserFactory
-from my_hebrew_dates.users.views import UserRedirectView, UserUpdateView, user_detail_view
+from my_hebrew_dates.users.views import UserRedirectView
+from my_hebrew_dates.users.views import UserUpdateView
+from my_hebrew_dates.users.views import user_detail_view
 
 pytestmark = pytest.mark.django_db
 
@@ -63,7 +69,7 @@ class TestUserUpdateView:
         view.form_valid(form)
 
         messages_sent = [m.message for m in messages.get_messages(request)]
-        assert messages_sent == ["Information successfully updated"]
+        assert messages_sent == [_("Information successfully updated")]
 
 
 class TestUserRedirectView:
@@ -82,7 +88,7 @@ class TestUserDetailView:
         request.user = UserFactory()
         response = user_detail_view(request, username=user.username)
 
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
 
     def test_not_authenticated(self, user: User, rf: RequestFactory):
         request = rf.get("/fake-url/")
@@ -91,5 +97,5 @@ class TestUserDetailView:
         login_url = reverse(settings.LOGIN_URL)
 
         assert isinstance(response, HttpResponseRedirect)
-        assert response.status_code == 302
+        assert response.status_code == HTTPStatus.FOUND
         assert response.url == f"{login_url}?next=/fake-url/"

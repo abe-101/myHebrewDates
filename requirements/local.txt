@@ -1,38 +1,37 @@
--r base.txt
+-r production.txt
 
-Werkzeug[watchdog]==3.0.1 # https://github.com/pallets/werkzeug
+watchdog==4.0.2 # https://github.com/gorakhargosh/watchdog
+Werkzeug[watchdog]==3.0.4 # https://github.com/pallets/werkzeug
 ipdb==0.13.13  # https://github.com/gotcha/ipdb
-psycopg2-binary==2.9.9  # https://github.com/psycopg/psycopg2
-watchfiles==0.21.0  # https://github.com/samuelcolvin/watchfiles
+psycopg[binary]==3.2.1  # https://github.com/psycopg/psycopg
+watchfiles==0.24.0  # https://github.com/samuelcolvin/watchfiles
 
 # Testing
 # ------------------------------------------------------------------------------
-mypy==1.8.0  # https://github.com/python/mypy
-django-stubs==4.2.7  # https://github.com/typeddjango/django-stubs
-pytest==8.0.0  # https://github.com/pytest-dev/pytest
-pytest-sugar==0.9.7  # https://github.com/Frozenball/pytest-sugar
+mypy==1.11.2  # https://github.com/python/mypy
+django-stubs[compatible-mypy]==5.0.4  # https://github.com/typeddjango/django-stubs
+pytest==8.3.3  # https://github.com/pytest-dev/pytest
+pytest-sugar==1.0.0  # https://github.com/Frozenball/pytest-sugar
+djangorestframework-stubs==3.15.0  # https://github.com/typeddjango/djangorestframework-stubs
 
 # Documentation
 # ------------------------------------------------------------------------------
-sphinx==7.2.6  # https://github.com/sphinx-doc/sphinx
-sphinx-autobuild==2021.3.14 # https://github.com/GaretJax/sphinx-autobuild
+sphinx==7.4.7  # https://github.com/sphinx-doc/sphinx
+sphinx-autobuild==2024.9.3 # https://github.com/GaretJax/sphinx-autobuild
 
 # Code quality
 # ------------------------------------------------------------------------------
-flake8==6.1.0  # https://github.com/PyCQA/flake8
-flake8-isort==6.1.1  # https://github.com/gforcada/flake8-isort
-coverage==7.4.1  # https://github.com/nedbat/coveragepy
-black==24.1.1  # https://github.com/psf/black
-pylint-django==2.5.5  # https://github.com/PyCQA/pylint-django
-pylint-celery==0.3  # https://github.com/PyCQA/pylint-celery
-pre-commit==3.6.0  # https://github.com/pre-commit/pre-commit
+ruff==0.6.4  # https://github.com/astral-sh/ruff
+coverage==7.6.1  # https://github.com/nedbat/coveragepy
+djlint==1.35.2  # https://github.com/Riverside-Healthcare/djLint
+pre-commit==3.8.0  # https://github.com/pre-commit/pre-commit
 
 # Django
 # ------------------------------------------------------------------------------
-factory-boy==3.3.0  # https://github.com/FactoryBoy/factory_boy
+factory-boy==3.3.1  # https://github.com/FactoryBoy/factory_boy
 
-django-debug-toolbar==4.2.0  # https://github.com/jazzband/django-debug-toolbar
-# django-extensions==3.2.3  # https://github.com/django-extensions/django-extensions
+django-debug-toolbar==4.4.6  # https://github.com/jazzband/django-debug-toolbar
+django-extensions==3.2.3  # https://github.com/django-extensions/django-extensions
 django-coverage-plugin==3.1.0  # https://github.com/nedbat/django_coverage_plugin
-pytest-django==4.7.0  # https://github.com/pytest-dev/pytest-django
 django-browser-reload==1.12.1 # https://github.com/adamchainz/django-browser-reload
+pytest-django==4.9.0  # https://github.com/pytest-dev/pytest-django

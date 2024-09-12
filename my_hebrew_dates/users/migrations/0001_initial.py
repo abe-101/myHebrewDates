@@ -1,7 +1,8 @@
 import django.contrib.auth.models
 import django.contrib.auth.validators
-from django.db import migrations, models
 import django.utils.timezone
+from django.db import migrations
+from django.db import models
 
 import my_hebrew_dates.users.models
 
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
                 (
                     "last_login",
                     models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
+                        blank=True, null=True, verbose_name="last login",
                     ),
                 ),
                 (
@@ -59,7 +60,7 @@ class Migration(migrations.Migration):
                 (
                     "email",
                     models.EmailField(
-                        blank=True, max_length=254, verbose_name="email address"
+                        blank=True, max_length=254, verbose_name="email address",
                     ),
                 ),
                 (
@@ -81,13 +82,13 @@ class Migration(migrations.Migration):
                 (
                     "date_joined",
                     models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
+                        default=django.utils.timezone.now, verbose_name="date joined",
                     ),
                 ),
                 (
                     "name",
                     models.CharField(
-                        blank=True, max_length=255, verbose_name="Name of User"
+                        blank=True, max_length=255, verbose_name="Name of User",
                     ),
                 ),
                 (
