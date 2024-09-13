@@ -1,185 +1,139 @@
-{% load static i18n %}
+{% load static i18n compress %}
+
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{% block title %}My Hebrew Dates{% endblock title %}</title>
-    <meta property="og:title" content="My Hebrew Dates">
-    <meta property="og:description" content="{% block og_description %}📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈{% endblock og_description %}">
-    <meta property="og:image" content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}">
-    <meta property="og:url" content="https://www.MyHebrewDates.com">
-    <meta property="og:type" content="website">
-
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>
+      {% block title %}
+        My Hebrew Dates
+      {% endblock title %}
+    </title>
+    <meta property="og:title" content="My Hebrew Dates" />
+    <meta property="og:description"
+          content="{% block og_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock og_description %}" />
+    <meta property="og:image"
+          content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}" />
+    <meta property="og:url" content="https://www.MyHebrewDates.com" />
+    <meta property="og:type" content="website" />
     <!-- Twitter-specific tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="My Hebrew Dates">
-    <meta name="twitter:description" content="📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈">
-    <meta name="twitter:image" content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="📅 MyHebrewDates makes it easy to get reminded about Hebrew events like birthdays or anniversaries! 🎉🎂🎈">
-    <meta name="author" content="Abe Hanoka">
-
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
-
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="My Hebrew Dates" />
+    <meta name="twitter:description"
+          content="Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar." />
+    <meta name="twitter:image"
+          content="https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+          content="Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar." />
+    <meta name="author" content="Abe Hanoka" />
+    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     {% block css %}
-    <!-- Latest compiled and minified Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
-    crossorigin="anonymous">
-    <!-- Your stuff: Third-party CSS libraries go here -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-    <!-- This file stores project-specific CSS -->
-    <link href="{% static 'css/project.css' %}" rel="stylesheet">
-    {% endblock %}
+      <!-- Latest compiled and minified Bootstrap CSS -->
+      <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+            crossorigin="anonymous" />
+      <!-- Your stuff: Third-party CSS libraries go here -->
+      <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+      <!-- Your stuff: Third-party CSS libraries go here -->
+      <!-- This file stores project-specific CSS -->
+      {% compress css %}
+        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+      {% endcompress %}
+    {% endblock css %}
     <!-- Le javascript
-      ================================================== -->
-      {# Placed at the top of the document so pages load faster with defer #}
-      {% block javascript %}
-      <!-- Bootstrap JS -->
+    ================================================== -->
+    {# Placed at the top of the document so pages load faster with defer #}
+    {% block javascript %}
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
-    crossorigin="anonymous"></script>
+              integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+              crossorigin="anonymous"></script>
       <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- SHIRA's Google Fonts -->
-      <link rel="preconnect" href="https://fonts.googleapis.com">
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link
-      href="https://fonts.googleapis.com/css2?family=David+Libre&family=Oleo+Script&family=Ubuntu:wght@300;400&family=Yatra+One&display=swap"
-      rel="stylesheet">
-
-      <!-- place project specific Javascript in this file -->
-      <script defer src="{% static 'js/project.js' %}"></script>
-      <script src="{% static 'js/htmx.min.js' %}"></script>
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+      <link href="https://fonts.googleapis.com/css2?family=David+Libre&family=Oleo+Script&family=Ubuntu:wght@300;400&family=Yatra+One&display=swap"
+            rel="stylesheet" />
+      <!-- Your stuff: Third-party javascript libraries go here -->
       <!-- Google tag (gtag.js) -->
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-MLL490GGCR"></script>
       <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+
+        function gtag() {
+          dataLayer.push(arguments);
+        }
         gtag('js', new Date());
 
         gtag('config', 'G-MLL490GGCR');
       </script>
       <!-- ICAL.js Library -->
-      <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js" integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons=" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js" integrity="sha256-J37ZtjEw94oWBNZ9w/XC73raGXE9t10//XHJfKz2QCM=" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js" integrity="sha256-io4G+JpruJtt8SoSUOgLQrhBj/YtQXFgIvkGzBxQAUQ=" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
+              integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons="
+              crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"
+              integrity="sha256-J37ZtjEw94oWBNZ9w/XC73raGXE9t10//XHJfKz2QCM="
+              crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js"
+              integrity="sha256-io4G+JpruJtt8SoSUOgLQrhBj/YtQXFgIvkGzBxQAUQ="
+              crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <script defer src="{% static 'js/toasts.js' %}"></script>
-
-
-      {% endblock javascript %}
-
+      <!-- place project specific Javascript in this file -->
+      {% compress js %}
+        <script defer src="{% static 'js/project.js' %}"></script>
+        <script src="{% static 'js/htmx.min.js' %}"></script>
+        <script defer src="{% static 'js/toasts.js' %}"></script>
+      {% endcompress %}
+    {% endblock javascript %}
   </head>
-
-  <body class="d-flex flex-column min-vh-100" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <body class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
     <div class="container flex-grow-1 mb-5">
       <div class="mb-1">
-        <nav class="navbar navbar-expand-md">
-          <div class="container-fluid"><div class="szflex">
-              <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <a class="navbar-brand" href="{% url 'home' %}">My Hebrew Dates</a>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'home' %}">Home <span
-                      class="visually-hidden">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'about' %}">About</a>
-                </li>
-                {% if request.user.is_authenticated %}
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'hebcal:calendar_list' %}">Calendars</a>
-                </li>
-
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'users:detail' request.user.username %}">{% translate "My Profile" %}</a>
-                </li>
-                <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
-                </li>
-                {% else %}
-                {% if ACCOUNT_ALLOW_REGISTRATION %}
-                <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                  {# URL provided by django-allauth/account/urls.py #}
-                  <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
-                </li>
-                {% endif %}
-              </ul>
-              <ul class="navbar-nav ms-md-auto">
-                <li class="nav-item col-6 col-lg-auto">
-                  <a class="nav-link" href="https://discord.gg/2vqUzSpt6N"><i class="bi bi-discord"></i></a>
-                </li>
-                <li class="nav-item col-6 col-lg-auto">
-                  <a class="nav-link"
-                    href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"><i
-                      class="bi bi-envelope"></i></a>
-                </li>
-                <li class="nav-item col-6 col-lg-auto">
-                  <a class="nav-link" href="https://github.com/abe-101/myhebrewdates"><i
-                      class="bi bi-github"></i></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
+        {% include '_navbar.html' %}
         <div class="szPlaceholder"></div>
-
       </div>
-
       <div class="container">
-
         {% include 'toasts.html' %}
-
-        {% block content %}
-        <p>Use this document as a way to quick start any new project.</p>
-        {% endblock content %}
-
-      </div> <!-- /container -->
-    </div> <!-- flex-shrink-0 container -->
-
-    <footer class="bg-dark py-3 text-center">
-      <div class="container">
-        <p class="text-white mb-0">&copy; <span id="currentYear"></span> My Hebrew Dates. All rights reserved.</p>
+        {% block body %}
+          {% block main %}
+            {% block content %}
+              <p>Use this document as a way to quick start any new project.</p>
+            {% endblock content %}
+          {% endblock main %}
+        {% endblock body %}
       </div>
-      <script>
-        // Get the current year
-        const currentYear = new Date().getFullYear();
-        // Set the current year in the footer
-        document.getElementById("currentYear").innerText = currentYear;
-      </script>
-    </footer>
-
-
-    {% block modal %}{% endblock modal %}
-
+      <!-- /container -->
+    </div>
+    <!-- flex-shrink-0 container -->
+    {% include '_footer.html' %}
+    <!-- /container -->
+    {% block modal %}
+    {% endblock modal %}
     {% block inline_javascript %}
-    {% comment %}
+      {% comment %}
     Script tags with only code, no src (defer by default). To run
     with a "defer" so that you run inline code:
     <script>
-      window.addEventListener('DOMContentLoaded', () => {/* Run whatever you want */ });
+      window.addEventListener('DOMContentLoaded', () => {
+        /* Run whatever you want */
+      });
     </script>
-    {% endcomment %}
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-      data-id="abe101" data-description="Support me on Buy me a coffee!" data-message="" data-color="#ff813f"
-    data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+      {% endcomment %}
+      <script data-name="BMC-Widget"
+              data-cfasync="false"
+              src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+              data-id="abe101"
+              data-description="Support me on Buy me a coffee!"
+              data-message=""
+              data-color="#ff813f"
+              data-position="Right"
+              data-x_margin="18"
+              data-y_margin="18"></script>
     {% endblock inline_javascript %}
   </body>
-
 </html>

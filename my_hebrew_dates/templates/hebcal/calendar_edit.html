@@ -1,97 +1,107 @@
 {% extends "base.html" %}
+
 {% load static %}
 
-{% block title %}Calendars{% endblock title %}
+{% block title %}
+  Calendars
+{% endblock title %}
 {% block content %}
-
-<div class="container mt-4">
-  <h1 class="mb-4">Manage Your Calendar: {{ calendar.name }}</h1>
-
-  <div class="row mb-4">
-    <div class="col">
-      <form id="filter-form"
-        class="d-flex justify-content-end"
-        hx-get="{{ request.path }}"
-        hx-target="#calendar-table"
-        hx-params="*"
-        hx-swap="outerHTML settle:1s"
-        hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
-        hx-indicator=".htmx-indicator"
-        hx-push-url="true">
-
-        <div class="me-2">
-          <input class="search-box form-control rounded"
-          type="search"
-          name="search"
-          placeholder="Begin Typing To Search {{ calendar.name }} Calendar..."/>
-        </div>
-
-        <!-- Month Filter Dropdown -->
-        <div class="dropdown me-1">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMonthButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Month
-          </button>
-          <ul class="dropdown-menu p-2" aria-labelledby="dropdownMonthButton">
-            {% for value, name in month_choices %}
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="month" value="{{ value }}" id="month-{{ value }}"
-                {% if value|stringformat:"s" in selected_months %}checked{% endif %}>
-                <label class="form-check-label" for="month-{{ value }}">
-                  {{ name }}
-                </label>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <!-- Day Filter Dropdown -->
-        <div class="dropdown me-1">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownDayButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Day
-          </button>
-          <ul class="dropdown-menu p-2" aria-labelledby="dropdownDayButton">
-            {% for value, name in day_choices %}
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="day" value="{{ value }}" id="day-{{ value }}"
-                {% if value|stringformat:"s" in selected_days %}checked{% endif %}>
-                <label class="form-check-label" for="day-{{ value }}">
-                  {{ name }}
-                </label>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-
-        <!-- Event Type Filter Dropdown -->
-        <div class="dropdown me-1">
-          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownEventTypeButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Event Type
-          </button>
-          <ul class="dropdown-menu p-2" aria-labelledby="dropdownEventTypeButton">
-            {% for value, name in event_choices %}
-            <li>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="{{ value }}" name="event_type" id="event-type-{{ value }}">
-                <label class="form-check-label" for="event-type-{{ value }}">
-                  {{ name }}
-                </label>
-              </div>
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        <a href="{{ request.path }}" class="btn btn-secondary">Clear</a>
-      </form>
+  <div class="container mt-4">
+    <h1 class="mb-4">Manage Your Calendar: {{ calendar.name }}</h1>
+    <div class="row mb-4">
+      <div class="col">
+        <form id="filter-form"
+              class="d-flex justify-content-end"
+              hx-get="{{ request.path }}"
+              hx-target="#calendar-table"
+              hx-params="*"
+              hx-swap="outerHTML settle:1s"
+              hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
+              hx-indicator=".htmx-indicator"
+              hx-push-url="true">
+          <div class="me-2">
+            <input class="search-box form-control rounded"
+                   type="search"
+                   name="search"
+                   placeholder="Begin Typing To Search {{ calendar.name }} Calendar..." />
+          </div>
+          <!-- Month Filter Dropdown -->
+          <div class="dropdown me-1">
+            <button class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownMonthButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">Month</button>
+            <ul class="dropdown-menu p-2" aria-labelledby="dropdownMonthButton">
+              {% for value, name in month_choices %}
+                <li>
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="month"
+                           value="{{ value }}"
+                           id="month-{{ value }}"
+                           {% if value|stringformat:"s" in selected_months %}checked{% endif %} />
+                    <label class="form-check-label" for="month-{{ value }}">{{ name }}</label>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!-- Day Filter Dropdown -->
+          <div class="dropdown me-1">
+            <button class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownDayButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">Day</button>
+            <ul class="dropdown-menu p-2" aria-labelledby="dropdownDayButton">
+              {% for value, name in day_choices %}
+                <li>
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="day"
+                           value="{{ value }}"
+                           id="day-{{ value }}"
+                           {% if value|stringformat:"s" in selected_days %}checked{% endif %} />
+                    <label class="form-check-label" for="day-{{ value }}">{{ name }}</label>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <!-- Event Type Filter Dropdown -->
+          <div class="dropdown me-1">
+            <button class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="dropdownEventTypeButton"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">Event Type</button>
+            <ul class="dropdown-menu p-2" aria-labelledby="dropdownEventTypeButton">
+              {% for value, name in event_choices %}
+                <li>
+                  <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           value="{{ value }}"
+                           name="event_type"
+                           id="event-type-{{ value }}" />
+                    <label class="form-check-label" for="event-type-{{ value }}">{{ name }}</label>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <a href="{{ request.path }}" class="btn btn-secondary">Clear</a>
+        </form>
+      </div>
     </div>
-  </div>
-  <div class="htmx-indicator d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+    <div class="htmx-indicator d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
+    {% include "hebcal/_calendar_table.html" %}
   </div>
-  {% include "hebcal/_calendar_table.html" %}
-</div>
-{% endblock %}
+{% endblock content %}

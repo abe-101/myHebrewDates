@@ -2,11 +2,11 @@
 
 -r base.txt
 
-gunicorn==21.2.0  # https://github.com/benoitc/gunicorn
-# psycopg2==2.9.9  # https://github.com/psycopg/psycopg2
-psycopg2-binary==2.9.9  # https://pypi.org/project/psycopg2-binary/
+gunicorn==23.0.0  # https://github.com/benoitc/gunicorn
+psycopg[c]==3.2.1  # https://github.com/psycopg/psycopg
+sentry-sdk==2.14.0  # https://github.com/getsentry/sentry-python
 
 # Django
 # ------------------------------------------------------------------------------
-django-storages[google]==1.14.2  # https://github.com/jschneier/django-storages
-django-anymail[sendgrid]==10.2  # https://github.com/anymail/django-anymail
+django-storages[s3]==1.14.4  # https://github.com/jschneier/django-storages
+django-anymail[mailjet]==12.0  # https://github.com/anymail/django-anymail

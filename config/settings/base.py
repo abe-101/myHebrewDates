@@ -1,6 +1,6 @@
-"""
-Base settings to build other settings files upon.
-"""
+# ruff: noqa: ERA001, E501
+"""Base settings to build other settings files upon."""
+
 from pathlib import Path
 
 import environ
@@ -27,6 +27,13 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 TIME_ZONE = "UTC"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
+# https://docs.djangoproject.com/en/dev/ref/settings/#languages
+# from django.utils.translation import gettext_lazy as _
+# LANGUAGES = [
+#     ('en', _('English')),
+#     ('fr-fr', _('French')),
+#     ('pt-br', _('Portuguese')),
+# ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = 1
 # https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
@@ -75,10 +82,14 @@ THIRD_PARTY_APPS = [
     "crispy_bootstrap5",
     "allauth",
     "allauth.account",
+    "allauth.mfa",
     "allauth.socialaccount",
     "django_celery_beat",
     "django_htmx",
-    "django_extensions",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "corsheaders",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
@@ -103,6 +114,13 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+MFA_SUPPORTED_TYPES = [
+    "webauthn",
+    "totp",
+    "recovery_codes",
+]
+MFA_PASSKEY_LOGIN_ENABLED = True
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
@@ -122,7 +140,9 @@ PASSWORD_HASHERS = [
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -133,6 +153,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -149,7 +170,7 @@ MIDDLEWARE = [
 # STATIC
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = "/var/www/myHebrewDates/staticfiles"
+STATIC_ROOT = str(BASE_DIR / "staticfiles")
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
@@ -192,7 +213,7 @@ TEMPLATES = [
                 "my_hebrew_dates.users.context_processors.allauth_settings",
             ],
         },
-    }
+    },
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
@@ -234,6 +255,9 @@ ADMIN_URL = "admin/"
 ADMINS = [("""Abe Hanoka""", "support@MyHebrewDates.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
 MANAGERS = ADMINS
+# https://cookiecutter-django.readthedocs.io/en/latest/settings.html#other-environment-settings
+# Force the `admin` sign in process to go through the `django-allauth` workflow
+DJANGO_ADMIN_FORCE_ALLAUTH = env.bool("DJANGO_ADMIN_FORCE_ALLAUTH", default=False)
 
 # LOGGING
 # ------------------------------------------------------------------------------
@@ -253,7 +277,7 @@ LOGGING = {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
-        }
+        },
     },
     "root": {"level": "INFO", "handlers": ["console"]},
 }
@@ -295,25 +319,51 @@ CELERY_TASK_SEND_SENT_EVENT = True
 # django-allauth
 # ------------------------------------------------------------------------------
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
+# https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
+# https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_REQUIRED = True
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
+# https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
+# https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "my_hebrew_dates.users.adapters.AccountAdapter"
-# https://django-allauth.readthedocs.io/en/latest/forms.html
+# https://docs.allauth.org/en/latest/account/forms.html
 ACCOUNT_FORMS = {"signup": "my_hebrew_dates.users.forms.UserSignupForm"}
-# https://django-allauth.readthedocs.io/en/latest/configuration.html
+# https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_ADAPTER = "my_hebrew_dates.users.adapters.SocialAccountAdapter"
-# https://django-allauth.readthedocs.io/en/latest/forms.html
+# https://docs.allauth.org/en/latest/socialaccount/configuration.html
 SOCIALACCOUNT_FORMS = {"signup": "my_hebrew_dates.users.forms.UserSocialSignupForm"}
+# django-compressor
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+INSTALLED_APPS += ["compressor"]
+STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+# django-rest-framework
+# -------------------------------------------------------------------------------
+# django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
 
+# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
+CORS_URLS_REGEX = r"^/api/.*$"
 
+# By Default swagger ui is available only to admin user(s). You can change permission classes to change that
+# See more configuration options at https://drf-spectacular.readthedocs.io/en/latest/settings.html#settings
+SPECTACULAR_SETTINGS = {
+    "TITLE": "My Hebrew Dates API",
+    "DESCRIPTION": "Documentation of API endpoints of My Hebrew Dates",
+    "VERSION": "1.0.0",
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SCHEMA_PATH_PREFIX": "/api/",
+}
 # Your stuff...
 # ------------------------------------------------------------------------------
-
 MESSAGE_TAGS = {
     messages.DEBUG: "bg-secondary bg-opacity-65 text-dark",
     messages.INFO: "bg-info bg-opacity-65 text-dark",
@@ -321,3 +371,6 @@ MESSAGE_TAGS = {
     messages.WARNING: "bg-warning bg-opacity-65 text-dark",
     messages.ERROR: "bg-danger bg-opacity-65 text-dark",
 }
+
+# django-libsass
+COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)

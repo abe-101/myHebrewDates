@@ -1,10 +1,14 @@
 {% load socialaccount %}
+
 <div class="d-flex justify-content-start">
-  <a class="btn btn-lg btn-outline-secondary mb-2" title="{{ attrs.name }}" href="{{ attrs.href }}" role="button">
-      {% if "Google" in attrs.name %}
-          <i class="bi bi-google" aria-hidden="true"></i> Google
-      {% elif "GitHub" in attrs.name %}
-          <i class="bi bi-github" aria-hidden="true"></i> GitHub
-      {% endif %}
+  <a class="btn btn-lg btn-outline-secondary mb-2"
+     title="{{ attrs.name }}"
+     href="{{ attrs.href }}"
+     role="button">
+    {% if "Google" in attrs.name %}
+      <i class="bi bi-google" aria-hidden="true"></i> Google
+    {% elif "GitHub" in attrs.name %}
+      <i class="bi bi-github" aria-hidden="true"></i> GitHub
+    {% endif %}
   </a>
 </div>

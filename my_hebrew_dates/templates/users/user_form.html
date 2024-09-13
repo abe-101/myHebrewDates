@@ -1,22 +1,26 @@
 {% extends "base.html" %}
+
 {% load crispy_forms_tags %}
 
-{% block title %}{{ user.username }}{% endblock %}
-
+{% block title %}
+  {{ user.username }}
+{% endblock title %}
 {% block content %}
-<div class="text-center">
-<div class="szPlaceholder"></div>
-  <h1 class="szCaps">~ {{ user.username }} ~</h1>
-  <hr>
-  <br>
-  <form class="form-horizontal szSmallerSection" method="post" action="{% url 'users:update' %}">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <div class="control-group">
-      <div class="controls">
-        <button type="submit" class="szButtonSmall btn btn-primary">Update Name</button>
+  <div class="text-center">
+    <div class="szPlaceholder"></div>
+    <h1 class="szCaps">~ {{ user.username }} ~</h1>
+    <hr />
+    <br />
+    <form class="form-horizontal szSmallerSection"
+          method="post"
+          action="{% url 'users:update' %}">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="control-group">
+        <div class="controls">
+          <button type="submit" class="szButtonSmall btn btn-primary">Update Name</button>
+        </div>
       </div>
-    </div>
-  </form>
-</div>
-{% endblock %}
+    </form>
+  </div>
+{% endblock content %}
