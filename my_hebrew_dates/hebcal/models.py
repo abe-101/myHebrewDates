@@ -1,3 +1,4 @@
+# ruff: noqa: RUF001, DJ001
 import uuid
 import zoneinfo
 
@@ -59,23 +60,21 @@ class HebrewDayEnum(models.IntegerChoices):
 
 class Calendar(models.Model):
     name = models.CharField(max_length=255)
-    name = models.CharField(
-        max_length=255,
-        help_text="Enter a name for your calendar. This could be something like 'Family Hebrew Birthdays' or 'Family Yartzeit'.",  # noqa E501
-    )
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
     # https://stackoverflow.com/a/70251235
-    TIMEZONE_CHOICES = ((x, x) for x in sorted(zoneinfo.available_timezones(), key=str.lower))
+    TIMEZONE_CHOICES = (
+        (x, x) for x in sorted(zoneinfo.available_timezones(), key=str.lower)
+    )
     timezone = models.CharField(
         "Timezone",
         choices=TIMEZONE_CHOICES,
         max_length=250,
         default="America/New_York",
-        help_text="Select the timezone that matches your local time. This ensures your events show up at the correct times.",  # noqa E501
+        help_text="Select the timezone that matches your local time. This ensures your events show up at the correct times.",  # noqa: E501
     )
     calendar_file_str = models.TextField(blank=True, null=True)
 
@@ -87,12 +86,17 @@ class Calendar(models.Model):
 
 
 class HebrewDate(models.Model):
-    name = models.CharField(max_length=64, help_text="Enter the name of the person associated with this event.")
+    name = models.CharField(
+        max_length=64,
+        help_text="Enter the name of the person associated with this event.",
+    )
     month = models.IntegerField(
-        choices=HebrewMonthEnum.choices, help_text="Select the month of the event according to the Hebrew calendar."
+        choices=HebrewMonthEnum.choices,
+        help_text="Select the month of the event according to the Hebrew calendar.",
     )
     day = models.IntegerField(
-        choices=HebrewDayEnum.choices, help_text="Select the day of the event according to the Hebrew calendar."
+        choices=HebrewDayEnum.choices,
+        help_text="Select the day of the event according to the Hebrew calendar.",
     )
 
     EVENT_CHOICES = [
@@ -103,7 +107,8 @@ class HebrewDate(models.Model):
     event_type = models.CharField(
         max_length=20,
         choices=EVENT_CHOICES,
-        help_text="Choose the type of event, such as a Birthday, Anniversary, or Yartzeit.",
+        help_text="Choose the type of event, such as a Birthday, Anniversary, "
+        "or Yartzeit.",
     )
 
     calendar = models.ForeignKey(
@@ -112,6 +117,12 @@ class HebrewDate(models.Model):
         related_name="calendarOf",
         help_text="Select the calendar to which this event belongs.",
     )
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
 
     def get_hebrew_date(self):
         hebrew_month = self.get_month_display()
@@ -123,13 +134,8 @@ class HebrewDate(models.Model):
         return hebrew_to_english_dict.get(hebrew_str)
 
     def get_formatted_name(self):
-        capitalized_date = " ".join(word.capitalize() for word in self.name.split()) + "'s"
+        capitalized_date = (
+            " ".join(word.capitalize() for word in self.name.split()) + "'s"
+        )
         event_type = dict(self.EVENT_CHOICES).get(self.event_type)
-        formatted_event_name = capitalized_date + " " + event_type.capitalize()
-        return formatted_event_name
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
+        return capitalized_date + " " + event_type.capitalize()

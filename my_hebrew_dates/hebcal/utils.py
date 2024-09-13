@@ -1,54 +1,78 @@
+# ruff: noqa: S324, ERA001
 import logging
 from base64 import urlsafe_b64encode
-from datetime import date, datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from hashlib import sha1
+from zoneinfo import ZoneInfo
 
-from icalendar import Alarm, Calendar, Event, Timezone
+from icalendar import Alarm
+from icalendar import Calendar
+from icalendar import Event
+from icalendar import Timezone
 
 from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
-from my_hebrew_dates.hebcal.models import HebrewDate
 
 logger = logging.getLogger(__name__)
 
 
 def generate_ical(
-    modelCalendar: ModelCalendar, user_agent: str = "", alarm_trigger: timedelta = timedelta(hours=9)
+    model_calendar: ModelCalendar,
+    user_agent: str = "",
+    alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    logger.info(f"Generating iCal for {modelCalendar.name} with user agent {user_agent}")
+    logger.info(
+        "Generating iCal for %s with user agent %s",
+        model_calendar.name,
+        user_agent,
+    )
     newcal = Calendar()
-    newcal.add("prodid", "-//" + modelCalendar.name + "//MyHebrewDates.com//")
+    newcal.add("prodid", "-//" + model_calendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
-    newcal.add("x-wr-calname", modelCalendar.name)
-    newcal.add("x-wr-timezone", modelCalendar.timezone)  # It is good to add this as well.
+    newcal.add("x-wr-calname", model_calendar.name)
+    newcal.add(
+        "x-wr-timezone",
+        model_calendar.timezone,
+    )  # It is good to add this as well.
     newcal.add("x-wr-caldesc", "Created by MyHebrewDates.com")
 
     newcal.add("method", "PUBLISH")
 
     newtimezone = Timezone()
-    newtimezone.add("tzid", modelCalendar.timezone)
+    newtimezone.add("tzid", model_calendar.timezone)
     newcal.add_component(newtimezone)
 
     events = []
 
-    for hebrewDate in modelCalendar.calendarOf.all():
-        hebrewDate: HebrewDate = hebrewDate
-        for engDate in hebrewDate.get_english_dates():
-            engDate: date = engDate
-
-            eventHash = sha1(
-                (hebrewDate.event_type + hebrewDate.name + hebrewDate.get_hebrew_date()).encode("utf-8")
+    for hebrew_date in model_calendar.calendarOf.all():
+        for eng_date in hebrew_date.get_english_dates():
+            event_hash = sha1(
+                (
+                    hebrew_date.event_type
+                    + hebrew_date.name
+                    + hebrew_date.get_hebrew_date()
+                ).encode("utf-8"),
             ).digest()
-            uid = engDate.isoformat() + urlsafe_b64encode(eventHash).decode("ascii") + "@myhebrewdates.com"
+            uid = (
+                eng_date.isoformat()
+                + urlsafe_b64encode(event_hash).decode("ascii")
+                + "@myhebrewdates.com"
+            )
             event = Event()
-            title = f"{hebrewDate.get_hebrew_date()} | {hebrewDate.event_type} {hebrewDate.name}"
+            title = (
+                f"{hebrew_date.get_hebrew_date()} | "
+                f"{hebrew_date.event_type} {hebrew_date.name}"
+            )
             event.add("summary", title)
-            base_description = title + "\n\nThis event is powered by: https://myhebrewdates.com"
+            base_description = (
+                title + "\n\nThis event is powered by: https://myhebrewdates.com"
+            )
             # if "Google-Calendar-Importer" in user_agent:
             # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
             #     base_description += (
             #         "\n"
             #         f"<img src='https://myhebrewdates.com/calendars/serve-ima
-            # ge/{modelCalendar.uuid}/{hebrewDate.pk}' "
+            # ge/{model_calendar.uuid}/{hebrew_date.pk}' "
             #         "width='1' height='1'>"
             #     )
             event.add("description", base_description)
@@ -58,17 +82,24 @@ def generate_ical(
             <body>
                 {title}<br>
                 Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>
-                <img src='https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}' width='1' height='1'>
+                <img src='https://myhebrewdates.com/calendars/serve-image
+                /{model_calendar.uuid}/{hebrew_date.pk}' width='1' height='1'>
             </body>
             </html>
-            """  # noqa E222
+            """
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
-            event.add("dtstamp", datetime.utcnow())  # Set DTSTAMP to the current UTC time
-            event.add("dtstart", engDate)
+            event.add(
+                "dtstamp",
+                datetime.now(tz=ZoneInfo(model_calendar.timezone)),
+            )  # Set DTSTAMP to the current UTC time
+            event.add("dtstart", eng_date)
             event.add("transp", "TRANSPARENT")
             event.add("uid", uid)
-            event.add("categories", ["Hebrew Date", str(hebrewDate.get_event_type_display())])
+            event.add(
+                "categories",
+                ["Hebrew Date", str(hebrew_date.get_event_type_display())],
+            )
             event.add("transp", "TRANSPARENT")
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
@@ -78,15 +109,21 @@ def generate_ical(
                 [
                     {
                         "fmttype": "image/png",
-                        "value": f"https://myhebrewdates.com/calendars/serve-image/{modelCalendar.uuid}/{hebrewDate.pk}",  # noqa E501
-                    }
+                        "value": f"https://myhebrewdates.com/calendars/serve-image/{model_calendar.uuid}/{hebrew_date.pk}",
+                    },
                 ],
             )
 
             # Add alarm to the event
             alarm = Alarm()
             alarm.add("action", "DISPLAY")
-            alarm.add("description", hebrewDate.name + "'s " + hebrewDate.get_event_type_display() + " is today!")
+            alarm.add(
+                "description",
+                hebrew_date.name
+                + "'s "
+                + hebrew_date.get_event_type_display()
+                + " is today!",
+            )
 
             alarm.add("trigger", alarm_trigger)
             event.add_component(alarm)
@@ -99,7 +136,5 @@ def generate_ical(
         newcal.add_component(event)
 
     cal_bye_str = newcal.to_ical()
-    # modelCalendar.calendar_file_str = cal_bye_str.decode("utf8")
-    # modelCalendar.save()
-    logger.info(f"Finished generating iCal for {modelCalendar.name}")
+    logger.info("Finished generating iCal for %s", model_calendar.name)
     return cal_bye_str.decode("utf8")

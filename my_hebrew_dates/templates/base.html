@@ -92,25 +92,25 @@
   </head>
   <body class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}"
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    {% block body %}
-      <div class="container flex-grow-1 mb-5">
-        <div class="mb-1">
-          {% include '_navbar.html' %}
-          <div class="szPlaceholder"></div>
-        </div>
-        <div class="container">
-          {% include 'toasts.html' %}
+    <div class="container flex-grow-1 mb-5">
+      <div class="mb-1">
+        {% include '_navbar.html' %}
+        <div class="szPlaceholder"></div>
+      </div>
+      <div class="container">
+        {% include 'toasts.html' %}
+        {% block body %}
           {% block main %}
             {% block content %}
               <p>Use this document as a way to quick start any new project.</p>
             {% endblock content %}
           {% endblock main %}
-        </div>
-        <!-- /container -->
+        {% endblock body %}
       </div>
-      <!-- flex-shrink-0 container -->
-      {% include '_footer.html' %}
-    {% endblock body %}
+      <!-- /container -->
+    </div>
+    <!-- flex-shrink-0 container -->
+    {% include '_footer.html' %}
     <!-- /container -->
     {% block modal %}
     {% endblock modal %}

@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Calendars{% endblock title %}
-
+{% block title %}
+  Calendars
+{% endblock title %}
 {% block content %}
   <div class="container mt-5">
     <div class="row">
@@ -9,11 +10,11 @@
         <div class="row position-relative">
           <h1 class="text-center col-11">My Calendars</h1>
           <div class="col-1 align-items-center align-self-center align-content-center justify-content-center">
-            <a href="{% url 'hebcal:calendar_new' %}" class="szButton btn btn-success">New</a>
+            <a href="{% url 'hebcal:calendar_new' %}"
+               class="szButton btn btn-success">New</a>
           </div>
         </div>
-
-        <hr>
+        <hr />
         <table class="w-100 text-center">
           <thead>
             <tr>
@@ -25,35 +26,44 @@
           </thead>
           <tbody>
             {% for calendar in calendar_list %}
-            <tr>
-              <td class="py-3"><a class="szLink szCaps fs-6" href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{calendar.name}}</a></td>
-              <td class="py-3 text-muted hideSmall">{{calendar.timezone}}</td>
-              <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
-              <td class="py-3 text-center">
-                <input hidden id="calendar_file_url{{calendar.uuid}}"
-                value="https://{{domain_name}}{% url 'hebcal:calendar_detail' calendar.uuid %}">
-                <button onclick="shareFile('{{calendar.uuid}}')" class="szButtonSmall btn btn-success py-1 px-2 mx-1" type="button"
-                  title="Share with friends and family">
-                  <i class="bi bi-share"></i>
-                </button>
-                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}" title="Edit this calendar" class="szButtonSmall btn btn-primary py-1 px-2 mx-1">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-                <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}" title="Delete this calendar" class="szButtonSmall btn btn-danger py-1 px-2 mx-1">
-                  <i class="bi bi-trash"></i>
-                </a>
-              </td>
-            </tr>
+              <tr>
+                <td class="py-3">
+                  <a class="szLink szCaps fs-6"
+                     href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{ calendar.name }}</a>
+                </td>
+                <td class="py-3 text-muted hideSmall">{{ calendar.timezone }}</td>
+                <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
+                <td class="py-3 text-center">
+                  <input hidden
+                         id="calendar_file_url{{ calendar.uuid }}"
+                         value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
+                  <button onclick="shareFile('{{ calendar.uuid }}')"
+                          class="szButtonSmall btn btn-success py-1 px-2 mx-1"
+                          type="button"
+                          title="Share with friends and family">
+                    <i class="bi bi-share"></i>
+                  </button>
+                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+                     title="Edit this calendar"
+                     class="szButtonSmall btn btn-primary py-1 px-2 mx-1">
+                    <i class="bi bi-pencil-square"></i>
+                  </a>
+                  <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
+                     title="Delete this calendar"
+                     class="szButtonSmall btn btn-danger py-1 px-2 mx-1">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </td>
+              </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   </div>
-
   <script>
-    (function () {
+    (function() {
       $('[data-toggle="tooltip"]').tooltip()
     })
   </script>
-  {% endblock content %}
+{% endblock content %}

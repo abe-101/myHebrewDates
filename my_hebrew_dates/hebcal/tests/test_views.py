@@ -1,10 +1,14 @@
+# ruff: noqa: S106
+from http import HTTPStatus
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
-from django.test import Client, TestCase
+from django.test import Client
+from django.test import TestCase
 from django.urls import reverse
 
-from my_hebrew_dates.hebcal.models import Calendar, HebrewDate
+from my_hebrew_dates.hebcal.models import Calendar
+from my_hebrew_dates.hebcal.models import HebrewDate
 
 User = get_user_model()
 
@@ -31,7 +35,7 @@ class CalendarListViewTest(BaseTest):
         response = self.client.get(self.url)
 
         self.assertContains(response, self.calendar.name)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == HTTPStatus.OK
         self.assertTemplateUsed(response, "hebcal/calendar_list.html")
 
     def test_no_calendars_redirects_to_create(self):
@@ -41,7 +45,11 @@ class CalendarListViewTest(BaseTest):
 
     def test_only_user_owned_calendars_are_listed(self):
         self.client.login(username="testuser", password="password")
-        other_user = User.objects.create_user("otheruser", "other@example.com", "password")
+        other_user = User.objects.create_user(
+            "otheruser",
+            "other@example.com",
+            "password",
+        )
         Calendar.objects.create(name="Other User's Calendar", owner=other_user)
         self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
 
@@ -58,22 +66,30 @@ class CreateCalendarViewTest(BaseTest):
 
     def test_get_create_calendar_form(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == HTTPStatus.OK
         self.assertTemplateUsed(response, "hebcal/calendar_new.html")
 
     def test_valid_calendar_creation(self):
         data = {"name": "New Test Calendar", "timezone": "America/New_York"}
         response = self.client.post(self.url, data)
-        self.assertEqual(Calendar.objects.count(), 1)
+        assert Calendar.objects.count() == 1
         self.assertRedirects(
-            response, expected_url=reverse("hebcal:calendar_edit", args=[Calendar.objects.first().uuid])
+            response,
+            expected_url=reverse(
+                "hebcal:calendar_edit",
+                args=[Calendar.objects.first().uuid],
+            ),
         )
 
     def test_invalid_calendar_creation(self):
         data = {"name": "", "timezone": "America/New_York"}
         response = self.client.post(self.url, data)
-        self.assertEqual(Calendar.objects.count(), 0)
-        self.assertFormError(response.context["form"], "name", "This field is required.")
+        assert Calendar.objects.count() == 0
+        self.assertFormError(
+            response.context["form"],
+            "name",
+            "This field is required.",
+        )
 
 
 class CalendarDetailViewTest(BaseTest):
@@ -85,14 +101,14 @@ class CalendarDetailViewTest(BaseTest):
 
     def test_calendar_detail_view_with_valid_uuid(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == HTTPStatus.OK
         self.assertContains(response, self.calendar.name)
 
     def test_calendar_detail_view_with_invalid_uuid(self):
         non_existent_uuid = uuid4()
         invalid_url = reverse("hebcal:calendar_detail", args=[non_existent_uuid])
         response = self.client.get(invalid_url)
-        self.assertEqual(response.status_code, 404)
+        assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 class CalendarEditViewTest(BaseTest):
@@ -102,25 +118,40 @@ class CalendarEditViewTest(BaseTest):
         self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
         self.url = reverse("hebcal:calendar_edit", args=[self.calendar.uuid])
         self.hebrew_date1 = HebrewDate.objects.create(
-            name="Test Hebrew Date 1", month=1, day=1, event_type="🎂", calendar=self.calendar
+            name="Test Hebrew Date 1",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
         )
         self.hebrew_date2 = HebrewDate.objects.create(
-            name="Test Hebrew Date 2", month=2, day=2, event_type="🎂", calendar=self.calendar
+            name="Test Hebrew Date 2",
+            month=2,
+            day=2,
+            event_type="🎂",
+            calendar=self.calendar,
         )
         self.hebrew_date3 = HebrewDate.objects.create(
-            name="Test Hebrew Date 3", month=3, day=3, event_type="🕯️", calendar=self.calendar
+            name="Test Hebrew Date 3",
+            month=3,
+            day=3,
+            event_type="🕯️",
+            calendar=self.calendar,
         )
 
     def test_access_to_view(self):
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == HTTPStatus.OK
 
     def test_unauthorized_access(self):
         self.client.logout()
         response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 302)
+        assert response.status_code == HTTPStatus.FOUND
         # redirect to login page
-        self.assertRedirects(response, f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/")
+        self.assertRedirects(
+            response,
+            f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/",
+        )
 
     def test_view_renders_correctly(self):
         response = self.client.get(self.url)
@@ -128,7 +159,10 @@ class CalendarEditViewTest(BaseTest):
 
     def test_filter_by_month(self):
         response = self.client.get(self.url, {"month": "1"})
-        self.assertContains(response, self.hebrew_date1.name)  # Adjust based on how months are displayed
+        self.assertContains(
+            response,
+            self.hebrew_date1.name,
+        )  # Adjust based on how months are displayed
 
     def test_filter_by_day(self):
         response = self.client.get(self.url, {"day": "2"})

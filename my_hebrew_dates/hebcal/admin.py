@@ -3,7 +3,8 @@ from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import Calendar, HebrewDate
+from .models import Calendar
+from .models import HebrewDate
 
 
 class HebrewDateInline(admin.TabularInline):
@@ -19,9 +20,9 @@ class CalendarAdmin(admin.ModelAdmin):
     def owner_email(self, obj):
         return obj.owner.email
 
-    @admin.display(ordering="_events_count")
+    @admin.display(ordering="events_count")
     def events_count(self, obj):
-        return obj._events_count
+        return obj.events_count
 
     def display_uuid(self, obj):
         url = reverse("hebcal:calendar_detail", args=[obj.uuid])
@@ -29,17 +30,28 @@ class CalendarAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request).prefetch_related("owner")
-        queryset = queryset.annotate(_events_count=Count("calendarOf")).order_by(
-            "-_events_count"
-        )  # Default descending order
-        return queryset
+        return queryset.annotate(events_count=Count("calendarOf")).order_by(
+            "-events_count",
+        )
 
 
 @admin.register(HebrewDate)
 class HebrewDateAdmin(admin.ModelAdmin):
-    list_display = ("name", "month", "day", "event_type", "link_to_calendar", "formatted_event_date")
+    list_display = (
+        "name",
+        "month",
+        "day",
+        "event_type",
+        "link_to_calendar",
+        "formatted_event_date",
+    )
     list_filter = ("event_type", "calendar", "month", "day")
-    search_fields = ("name", "calendar__name", "calendar__owner__email", "calendar__uuid")
+    search_fields = (
+        "name",
+        "calendar__name",
+        "calendar__owner__email",
+        "calendar__uuid",
+    )
 
     @admin.display(description="Calendar")
     def link_to_calendar(self, obj):

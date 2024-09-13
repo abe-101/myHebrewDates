@@ -9,15 +9,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
 from django.http import HttpRequest
 from django.http.response import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 
 from my_hebrew_dates.hebcal.decorators import requires_htmx
-from my_hebrew_dates.hebcal.forms import CalendarForm, HebrewDateForm
-from my_hebrew_dates.hebcal.models import Calendar, HebrewDate, HebrewDayEnum, HebrewMonthEnum
+from my_hebrew_dates.hebcal.forms import CalendarForm
+from my_hebrew_dates.hebcal.forms import HebrewDateForm
+from my_hebrew_dates.hebcal.models import Calendar
+from my_hebrew_dates.hebcal.models import HebrewDate
+from my_hebrew_dates.hebcal.models import HebrewDayEnum
+from my_hebrew_dates.hebcal.models import HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
 
 # Setup logger
@@ -29,12 +35,18 @@ def calendar_list_view(request):
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
     if not user_owned_calendars.exists():
-        logger.info(f"{calendar_list_view.__name__}: {request.user} has no calendars. Redirecting to create calendar.")
         return redirect("hebcal:calendar_new")
 
-    logger.info(f"{calendar_list_view.__name__}: {request.user} with calendars: {user_owned_calendars}")
+    logger.info(
+        "Calendar list view called for user: %s with calendars: %s",
+        request.user,
+        user_owned_calendars,
+    )
 
-    context = {"calendar_list": user_owned_calendars, "domain_name": Site.objects.get_current().domain}
+    context = {
+        "calendar_list": user_owned_calendars,
+        "domain_name": Site.objects.get_current().domain,
+    }
 
     return render(request, "hebcal/calendar_list.html", context)
 
@@ -47,7 +59,10 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
         "domain_name": Site.objects.get_current().domain,
     }
     logger.info(
-        f"{calendar_detail_view.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})",
+        "user: %s accessed Calendar_detail_view for calendar: %s (%s)",
+        request.user,
+        calendar.name,
+        calendar.uuid,
     )
 
     return render(request, "hebcal/calendar_detail.html", context)
@@ -63,21 +78,32 @@ def create_calendar_view(request: HttpRequest):
             calendar.save()
             messages.success(request, f"{calendar.name} created successfully.")
             logger.info(
-                f"{create_calendar_view.__name__}: {request.user} created Calendar: {calendar.name} ({calendar.uuid})",
+                "user: %s created Calendar: %s (%s)",
+                request.user,
+                calendar.name,
+                calendar.uuid,
             )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
-        else:
-            messages.error(request, "Please correct the errors in the form.")
-            logger.warning(
-                f"{create_calendar_view.__name__}: {request.user} Error in form submission. Errors: {form.errors}"
-            )
+        messages.error(request, "Please correct the errors in the form.")
+        log_msg = (
+            "user: %s attempted to create a calendar with invalid form data. ",
+            "Errors: %s",
+        )
+        logger.warning(
+            log_msg,
+            request.user,
+            form.errors,
+        )
     else:
         form = CalendarForm()
 
     context = {
         "form": form,
     }
-    logger.info(f"{create_calendar_view.__name__}: {request.user} accessed Calendar_create_view.")
+    logger.info(
+        "user: %s accessed create_calendar_view",
+        request.user,
+    )
 
     return render(request, "hebcal/calendar_new.html", context)
 
@@ -98,8 +124,8 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     order = request.GET.get("order", "asc")
 
     # Determine if current sort is descending
-    dayDesc = sort_by == "day" and order == "desc"
-    monthDesc = sort_by == "month" and order == "desc"
+    day_desc = sort_by == "day" and order == "desc"
+    month_desc = sort_by == "month" and order == "desc"
 
     # Apply sorting to your queryset
     sort_order = f"-{sort_by}" if order == "desc" else sort_by
@@ -128,15 +154,26 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "hebrew_dates": hebrew_dates,
         "selected_months": month_values,
         "selected_days": day_values,
-        "dayDesc": dayDesc,
-        "monthDesc": monthDesc,
+        "day_desc": day_desc,
+        "month_desc": month_desc,
     }
 
-    logger.info(f"{calendar_edit_view.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})")
+    logger.info(
+        "user: %s accessed calendar_edit_view for calendar: %s (%s)",
+        request.user,
+        calendar.name,
+        calendar.uuid,
+    )
 
     if request.htmx:
+        log_msg = "search_query: %s | Month: %s | Day: %s | Sort: %s | Order: %s"
         logger.info(
-            f"Search query: {search_query} | Month values: {month_values} | Day values: {day_values} | Sort: {sort_by} | Order: {order}",  # noqa E501
+            log_msg,
+            search_query,
+            month_values,
+            day_values,
+            sort_by,
+            order,
         )
         return render(request, "hebcal/_calendar_table.html", context)
     return render(request, "hebcal/calendar_edit.html", context)
@@ -154,14 +191,29 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         if form.is_valid():
             form.save()
             logger.info(
-                f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate updated: {hebrew_date.name} ({pk})"
+                "user: %s updated HebrewDate: %s (%s)",
+                request.user,
+                hebrew_date.name,
+                pk,
             )
-            return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
-        else:
-            logger.warning(
-                f"{edit_hebrew_date_htmx.__name__}: {request.user} Error in form submission. Errors: {form.errors}",
+
+            return render(
+                request,
+                "hebcal/_hebrew_date_row.html",
+                {"hebrew_date": hebrew_date},
             )
-            messages.error(request, "Please correct the errors in the form.")
+        log_msg = (
+            "user: %s attempted to update HebrewDate: ",
+            "%s (%s) with invalid form data. ",
+        )
+        logger.warning(
+            log_msg,
+            request.user,
+            hebrew_date.name,
+            pk,
+            form.errors,
+        )
+        messages.error(request, "Please correct the errors in the form.")
     else:
         form = HebrewDateForm(instance=hebrew_date)
 
@@ -172,13 +224,25 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     }
     if cancel:
         logger.info(
-            f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate edit cancelled: {hebrew_date.name} ({pk})"
+            "user: %s cancelled edit for HebrewDate: %s (%s)",
+            request.user,
+            hebrew_date.name,
+            pk,
         )
-        return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
+
+        return render(
+            request,
+            "hebcal/_hebrew_date_row.html",
+            {"hebrew_date": hebrew_date},
+        )
 
     logger.info(
-        f"{edit_hebrew_date_htmx.__name__}: {request.user} HebrewDate edit initialized: {hebrew_date.name} ({pk})"
+        "user: %s initialized edit for HebrewDate: %s (%s)",
+        request.user,
+        hebrew_date.name,
+        pk,
     )
+
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
@@ -194,11 +258,18 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
             hebrew_date.calendar = calendar
             hebrew_date.save()
             logger.info(
-                f"{create_hebrew_date_htmx.__name__}: {request.user} HebrewDate created: {hebrew_date.name} ({hebrew_date.pk})"  # noqa E501
+                "user: %s created HebrewDate: %s (%s)",
+                request.user,
+                hebrew_date.name,
+                hebrew_date.pk,
             )
-            return render(request, "hebcal/_hebrew_date_row.html", {"hebrew_date": hebrew_date})
-        else:
-            messages.error(request, "Please correct the errors in the form.")
+
+            return render(
+                request,
+                "hebcal/_hebrew_date_row.html",
+                {"hebrew_date": hebrew_date},
+            )
+        messages.error(request, "Please correct the errors in the form.")
     else:
         form = HebrewDateForm()
 
@@ -208,7 +279,11 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
         "new": True,
     }
 
-    logger.info(f"{create_hebrew_date_htmx.__name__}: {request.user} HebrewDate create initialized.")
+    logger.info(
+        "user: %s initialized create for HebrewDate",
+        request.user,
+    )
+
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
@@ -222,9 +297,15 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
 
     if request.method == "POST":
         hebrew_date.delete()
-        logger.info(f"{delete_hebrew_date_htmx.__name__}: {request.user} HebrewDate deleted: {formatted_name} ({pk})")
+        logger.info(
+            "user: %s deleted HebrewDate: %s (%s)",
+            request.user,
+            hebrew_date.name,
+            pk,
+        )
         messages.success(request, f"{formatted_name} deleted successfully.")
         return HttpResponse()
+    return None
 
 
 class CalendarDeleteView(LoginRequiredMixin, DeleteView):
@@ -237,56 +318,75 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
 
 
 def serve_pixel(request, pixel_id: UUID, pk: int):
-    pixel_data = b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    pixel_data = (
+        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h",
+        "HgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+    )
 
     x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
+    ip = (
+        x_forwarded_for.split(",")[0]
+        if x_forwarded_for
+        else request.META.get("REMOTE_ADDR")
+    )
     user_agent = request.headers.get("user-agent", "")
 
     # Log the information along with the UUID
-    logger.info("Pixel requested. IP: %s, User Agent: %s, UUID: %s, PK: %s", ip, user_agent, str(pixel_id), str(pk))
+    logger.info(
+        "Pixel requested. IP: %s, User Agent: %s, UUID: %s, PK: %s",
+        ip,
+        user_agent,
+        str(pixel_id),
+        str(pk),
+    )
 
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
 @cache_page(60 * 60)  # Cache the page for 15 minutes
 def calendar_file(request, uuid: UUID):
-    # user = request.user
-    # user_info = "Anonymous user"
-    # ip = request.META.get("REMOTE_ADDR", "Unknown IP")
-
     x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.META.get("REMOTE_ADDR")
+    ip = (
+        x_forwarded_for.split(",")[0]
+        if x_forwarded_for
+        else request.META.get("REMOTE_ADDR")
+    )
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm", "9")
     if alarm_trigger_hours == "":
         alarm_trigger_hours = "9"
-    print(alarm_trigger_hours)
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
     except ValueError:
-        logger.warning(f"Invalid alarm trigger value: {alarm_trigger_hours}")
+        logger.warning("Invalid alarm trigger value: %s", alarm_trigger_hours)
         alarm_trigger = timedelta(hours=9)
 
-    # if user.is_authenticated:
-    #    user_info = f"user_id: {user.id}, username: {user.username}, email: {user.email}"
     calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
 
     if alarm_trigger_hours != "9":
         logger.info(
-            f"Calendar file requested for {calendar.name} with ip {ip} User-Agent {user_agent}, Alarm: {alarm_trigger}"
+            "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
+            calendar.name,
+            ip,
+            user_agent,
+            alarm_trigger,
         )
     else:
-        logger.info(f"Calendar file requested for {calendar.name} with ip {ip} User-Agent {user_agent}")
+        logger.info(
+            "Calendar file requested for %s with ip %s User-Agent %s",
+            calendar.name,
+            ip,
+            user_agent,
+        )
 
-    # logger.info(
-    #    "calendar_file function called for uuid: %s by %s, IP: %s, User-Agent: %s", uuid, user_info, ip, user_agent
-    # )
-
-    calendar_str: str = generate_ical(modelCalendar=calendar, user_agent=user_agent, alarm_trigger=alarm_trigger)
+    calendar_str: str = generate_ical(
+        model_calendar=calendar,
+        user_agent=user_agent,
+        alarm_trigger=alarm_trigger,
+    )
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
-    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'  # noqa E702
+    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
 
     return response
 
@@ -305,6 +405,10 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "alarm_time": alarm_time,
     }
     logger.info(
-        f"{update_calendar_links_htmx.__name__}: {request.user} for calendar: {calendar.name} ({calendar.uuid})"
+        "update_calendar_links_htmx: %s for calendar: %s (%s)",
+        request.user,
+        calendar.name,
+        calendar.uuid,
     )
+
     return render(request, "hebcal/_calendar_links.html", context)

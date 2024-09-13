@@ -1,18 +1,16 @@
 from django.urls import path
 
-from my_hebrew_dates.hebcal.views import (
-    CalendarDeleteView,
-    calendar_detail_view,
-    calendar_edit_view,
-    calendar_file,
-    calendar_list_view,
-    create_calendar_view,
-    create_hebrew_date_htmx,
-    delete_hebrew_date_htmx,
-    edit_hebrew_date_htmx,
-    serve_pixel,
-    update_calendar_links_htmx,
-)
+from my_hebrew_dates.hebcal.views import CalendarDeleteView
+from my_hebrew_dates.hebcal.views import calendar_detail_view
+from my_hebrew_dates.hebcal.views import calendar_edit_view
+from my_hebrew_dates.hebcal.views import calendar_file
+from my_hebrew_dates.hebcal.views import calendar_list_view
+from my_hebrew_dates.hebcal.views import create_calendar_view
+from my_hebrew_dates.hebcal.views import create_hebrew_date_htmx
+from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
+from my_hebrew_dates.hebcal.views import edit_hebrew_date_htmx
+from my_hebrew_dates.hebcal.views import serve_pixel
+from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
 
 app_name = "hebcal"
 

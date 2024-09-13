@@ -5,23 +5,24 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Hebrew Day
+          <th>
+            Hebrew Day
             <button hx-get=""
-              class="btn btn-sm"
-              hx-vals='{"sort": "day", "order": "{% if dayDesc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table">
-              <i class="bi bi-arrow-{% if dayDesc %}down{% else %}up{% endif %}"></i>
+                    class="btn btn-sm"
+                    hx-vals='{"sort": "day", "order": "{% if day_desc %}asc{% else %}desc{% endif %}"}'
+                    hx-target="#calendar-table">
+              <i class="bi bi-arrow-{% if day_desc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
-          <th>Hebrew Month
+          <th>
+            Hebrew Month
             <button hx-get=""
-              class="btn btn-sm"
-              hx-vals='{"sort": "month", "order": "{% if monthDesc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table">
-              <i class="bi bi-arrow-{% if monthDesc %}down{% else %}up{% endif %}"></i>
+                    class="btn btn-sm"
+                    hx-vals='{"sort": "month", "order": "{% if month_desc %}asc{% else %}desc{% endif %}"}'
+                    hx-target="#calendar-table">
+              <i class="bi bi-arrow-{% if month_desc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
-
           <th>Event Type</th>
           <th>Actions</th>
         </tr>
@@ -33,10 +34,10 @@
         <tr id="new-date-button">
           <td colspan="5">
             <button type="button"
-              hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
-              hx-target="closest tr"
-              hx-swap="beforebegin settle:1s"
-              class="btn btn-sm btn-primary">
+                    hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
+                    hx-target="closest tr"
+                    hx-swap="beforebegin settle:1s"
+                    class="btn btn-sm btn-primary">
               <i class="bi bi-plus"></i> Add Hebrew Date
             </button>
           </td>
@@ -44,4 +45,3 @@
       </tbody>
     </table>
   </div>
-</div>
