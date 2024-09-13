@@ -371,3 +371,6 @@ MESSAGE_TAGS = {
     messages.WARNING: "bg-warning bg-opacity-65 text-dark",
     messages.ERROR: "bg-danger bg-opacity-65 text-dark",
 }
+
+# django-libsass
+COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
