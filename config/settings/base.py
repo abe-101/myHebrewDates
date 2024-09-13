@@ -114,6 +114,13 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
+MFA_SUPPORTED_TYPES = [
+    "webauthn",
+    "totp",
+    "recovery_codes",
+]
+MFA_PASSKEY_LOGIN_ENABLED = True
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
