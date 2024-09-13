@@ -1,9 +1,6 @@
 exclude: '^docs/|/migrations/|devcontainer.json'
 default_stages: [commit]
 
-default_language_version:
-  python: python3.12
-
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -32,7 +29,7 @@ repos:
     hooks:
       # Linter
       - id: ruff
-        args: [--fix, --unsafe-fixes, --exit-non-zero-on-fix]
+        args: [--fix, --exit-non-zero-on-fix]
       # Formatter
       - id: ruff-format
 
