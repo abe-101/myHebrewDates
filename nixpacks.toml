@@ -1,0 +1,6 @@
+[phases.setup]
+aptPkgs = [
+    "libpq-dev",
+    "postgresql-client",
+    "postgresql-server-dev-all"
+]
