@@ -6,6 +6,8 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
+from my_hebrew_dates.core.models import TimeStampedModel
+
 from .hebrew_date import hebrew_to_english_dict
 
 
@@ -58,7 +60,7 @@ class HebrewDayEnum(models.IntegerChoices):
     LAMED = 30, "ל"
 
 
-class Calendar(models.Model):
+class Calendar(TimeStampedModel):
     name = models.CharField(max_length=255)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
@@ -85,7 +87,7 @@ class Calendar(models.Model):
         return reverse("hebcal:calendar_edit", kwargs={"uuid": self.uuid})
 
 
-class HebrewDate(models.Model):
+class HebrewDate(TimeStampedModel):
     name = models.CharField(
         max_length=64,
         help_text="Enter the name of the person associated with this event.",

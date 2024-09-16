@@ -8,6 +8,12 @@ from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from django.contrib.sitemaps.views import sitemap
+from my_hebrew_dates.core.sitemaps import StaticViewSitemap
+
+sitemaps = {
+    "static": StaticViewSitemap,
+}
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -34,6 +40,12 @@ urlpatterns = [
     path(
         "favicon.ico",
         RedirectView.as_view(url="static/images/favicons/favicon.ico", permanent=True),
+    ),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
     ),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),

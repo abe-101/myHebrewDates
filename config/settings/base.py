@@ -95,6 +95,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "my_hebrew_dates.users",
     "my_hebrew_dates.hebcal.apps.HebcalConfig",
+    "my_hebrew_dates.core.apps.CoreConfig",
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
     # Your stuff: custom apps go here

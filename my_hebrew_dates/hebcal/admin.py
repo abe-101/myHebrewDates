@@ -14,7 +14,15 @@ class HebrewDateInline(admin.TabularInline):
 @admin.register(Calendar)
 class CalendarAdmin(admin.ModelAdmin):
     inlines = [HebrewDateInline]
-    list_display = ("name", "owner_email", "display_uuid", "timezone", "events_count")
+    list_display = (
+        "name",
+        "owner_email",
+        "display_uuid",
+        "timezone",
+        "events_count",
+        "created",
+        "modified",
+    )
     search_fields = ("name", "uuid", "owner__email")
 
     def owner_email(self, obj):
@@ -44,6 +52,8 @@ class HebrewDateAdmin(admin.ModelAdmin):
         "event_type",
         "link_to_calendar",
         "formatted_event_date",
+        "created",
+        "modified",
     )
     list_filter = ("event_type", "calendar", "month", "day")
     search_fields = (
