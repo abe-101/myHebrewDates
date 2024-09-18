@@ -376,13 +376,6 @@ def calendar_file(request, uuid: UUID):
             user_agent,
             alarm_trigger,
         )
-    else:
-        logger.info(
-            "Calendar file requested for %s with ip %s User-Agent %s",
-            calendar.name,
-            ip,
-            user_agent,
-        )
 
     calendar_str: str = generate_ical(
         model_calendar=calendar,
@@ -421,6 +414,7 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
 
 def webhook_interest(request):
     if request.method == "POST":
+        logger.info("Webhook Interest form submitted")
         form = WebhookInterestForm(request.POST)
         if form.is_valid():
             webhook_url = settings.DISCORD_WEBHOOK_URL
@@ -460,6 +454,7 @@ def webhook_interest(request):
             return redirect("webhook_interest")
 
     else:
+        logger.info("Webhook Interest form accessed")
         form = WebhookInterestForm()
 
     return render(request, "hebcal/webhook_interest.html", {"form": form})
