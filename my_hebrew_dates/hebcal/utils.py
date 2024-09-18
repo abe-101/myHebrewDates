@@ -21,11 +21,6 @@ def generate_ical(
     user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    logger.info(
-        "Generating iCal for %s with user agent %s",
-        model_calendar.name,
-        user_agent,
-    )
     newcal = Calendar()
     newcal.add("prodid", "-//" + model_calendar.name + "//MyHebrewDates.com//")
     newcal.add("version", "2.0")
@@ -65,7 +60,8 @@ def generate_ical(
             )
             event.add("summary", title)
             base_description = (
-                title + "\n\nThis event is powered by: https://myhebrewdates.com"
+                title
+                + "\n\nHebrew date automation triggers: https://myhebrewdates.com/automation"
             )
             # if "Google-Calendar-Importer" in user_agent:
             # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
@@ -136,5 +132,4 @@ def generate_ical(
         newcal.add_component(event)
 
     cal_bye_str = newcal.to_ical()
-    logger.info("Finished generating iCal for %s", model_calendar.name)
     return cal_bye_str.decode("utf8")

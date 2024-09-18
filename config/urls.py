@@ -10,6 +10,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
+from my_hebrew_dates.hebcal.views import webhook_interest
 
 sitemaps = {
     "static": StaticViewSitemap,
@@ -30,6 +31,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
     path("calendars/", include("my_hebrew_dates.hebcal.urls", namespace="hebcal")),
+    path("automation/", webhook_interest, name="webhook_interest"),
     path(
         "robots.txt",
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),

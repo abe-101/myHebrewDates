@@ -3,10 +3,14 @@ import logging
 from datetime import timedelta
 from uuid import UUID
 
+from discord import Embed
+from discord import SyncWebhook
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.models import Site
+from django.core.mail import send_mail
 from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -20,6 +24,7 @@ from django.views.generic.edit import DeleteView
 from my_hebrew_dates.hebcal.decorators import requires_htmx
 from my_hebrew_dates.hebcal.forms import CalendarForm
 from my_hebrew_dates.hebcal.forms import HebrewDateForm
+from my_hebrew_dates.hebcal.forms import WebhookInterestForm
 from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.models import HebrewDate
 from my_hebrew_dates.hebcal.models import HebrewDayEnum
@@ -371,13 +376,6 @@ def calendar_file(request, uuid: UUID):
             user_agent,
             alarm_trigger,
         )
-    else:
-        logger.info(
-            "Calendar file requested for %s with ip %s User-Agent %s",
-            calendar.name,
-            ip,
-            user_agent,
-        )
 
     calendar_str: str = generate_ical(
         model_calendar=calendar,
@@ -412,3 +410,51 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
     )
 
     return render(request, "hebcal/_calendar_links.html", context)
+
+
+def webhook_interest(request):
+    if request.method == "POST":
+        logger.info("Webhook Interest form submitted")
+        form = WebhookInterestForm(request.POST)
+        if form.is_valid():
+            webhook_url = settings.DISCORD_WEBHOOK_URL
+            webhook = SyncWebhook.from_url(webhook_url)
+
+            embed = Embed(
+                title="New Hebrew Calendar Webhook Beta Sign-up",
+                color=0x00FF00,
+            )
+            for field, value in form.cleaned_data.items():
+                embed.add_field(name=field.capitalize(), value=value, inline=False)
+
+            webhook.send(embed=embed)
+            # Send email to user
+            user_email = form.cleaned_data.get("email")
+            msg = f"""
+                Dear {form.cleaned_data.get('name')},
+
+                Thank you for your interest in the Hebrew Calendar Webhook Beta.
+                We've received your sign-up and will keep you updated on our progress.
+
+                Best regards,
+                The My Hebrew Dates Team
+            """
+            send_mail(
+                subject="Thank you for your interest in Hebrew Calendar Webhook Beta",
+                message=msg,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[user_email],
+                fail_silently=False,
+            )
+
+            messages.success(
+                request,
+                "Form submitted successfully. We've sent you a confirmation email.",
+            )
+            return redirect("webhook_interest")
+
+    else:
+        logger.info("Webhook Interest form accessed")
+        form = WebhookInterestForm()
+
+    return render(request, "hebcal/webhook_interest.html", {"form": form})

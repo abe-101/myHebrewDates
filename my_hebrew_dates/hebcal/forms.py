@@ -3,8 +3,10 @@ from crispy_forms.bootstrap import StrictButton
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import HTML
 from crispy_forms.layout import Div
+from crispy_forms.layout import Field
 from crispy_forms.layout import Layout
 from crispy_forms.layout import Row
+from crispy_forms.layout import Submit
 from django import forms
 
 from .models import Calendar
@@ -65,3 +67,67 @@ class HebrewDateForm(forms.ModelForm):
         )
 
         self.helper.form_show_labels = False
+
+
+class WebhookInterestForm(forms.Form):
+    name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": "Your full name"}),
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={"placeholder": "your.email@example.com"}),
+    )
+    phone = forms.CharField(
+        max_length=20,
+        required=True,
+        widget=forms.TextInput(attrs={"placeholder": "Your phone number"}),
+    )
+    company = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={"placeholder": "Your company name (optional)"}),
+    )
+    role = forms.CharField(
+        max_length=100,
+        required=False,
+        label="Your Role (optional)",
+        widget=forms.TextInput(attrs={"placeholder": "e.g., Developer, Manager, etc."}),
+    )
+    use_case = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                "placeholder": "Describe how you plan to use Hebrew Calendar Webhooks",
+                "rows": 4,
+            },
+        ),
+        label="How do you plan to use Hebrew Calendar Webhooks?",
+        required=True,
+    )
+    experience = forms.ChoiceField(
+        choices=[
+            ("beginner", "Beginner - New to webhooks"),
+            ("intermediate", "Intermediate - Some experience with webhooks"),
+            ("advanced", "Advanced - Extensive webhook experience"),
+        ],
+        label="Webhook Experience",
+        required=True,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Field("name"),
+            Field("email"),
+            Field("phone"),
+            Field("company"),
+            Field("role"),
+            Field("use_case"),
+            Field("experience"),
+        )
+        self.helper.add_input(
+            Submit("submit", "Apply for Beta Access", css_class="btn-primary btn-lg"),
+        )
