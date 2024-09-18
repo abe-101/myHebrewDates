@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Automate Your Work with the Hebrew Calendar - Join Our Beta
+{% endblock title %}
+{% block og_title %}
+  Automate Your Work with the Hebrew Calendar - Join Our Beta | MyHebrewDates
+{% endblock og_title %}
+{% block og_description %}
+  Join our beta to explore Hebrew calendar automation. Connect Hebrew dates to your favorite tools, automate tasks, and streamline your workflows with MyHebrewDates.
+{% endblock og_description %}
+{% block og_url %}
+  https://www.MyHebrewDates.com/beta-signup/
+{% endblock og_url %}
+{% block twitter_title %}
+  Automate Your Work with the Hebrew Calendar - Join Our Beta | MyHebrewDates
+{% endblock twitter_title %}
+{% block twitter_description %}
+  Join our beta to explore Hebrew calendar automation. Connect Hebrew dates to your favorite tools, automate tasks, and streamline your workflows with MyHebrewDates.
+{% endblock twitter_description %}
+{% block meta_description %}
+  Join our beta to explore Hebrew calendar automation. Connect Hebrew dates to your favorite tools, automate tasks, and streamline your workflows with MyHebrewDates.
+{% endblock meta_description %}
+{% block meta_keywords %}
+  Hebrew calendar automation, webhook, Zapier, Pipedream, Jewish holidays, workflow automation, beta signup, MyHebrewDates
+{% endblock meta_keywords %}
+{% block content %}
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="mb-4">Automate Your Work with the Hebrew Calendar</h1>
+        <p class="lead mb-4">
+          Imagine triggering your workflows based on Hebrew dates. We're developing a system that sends webhooks for Hebrew calendar events, allowing you to automate tasks in tools like Zapier, Pipedream, and more. Be among the first to explore this unique integration of ancient wisdom and modern productivity.
+        </p>
+        <div class="card szColorBackground mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Perfect For:</h2>
+            <ul>
+              <li>Small business owners who need to schedule social media posts around Jewish holidays</li>
+              <li>Event organizers who want to automate reminders based on the Hebrew calendar</li>
+              <li>Educators looking to streamline lesson planning for Jewish studies</li>
+              <li>Non-profit organizations aiming to automate donation campaigns around significant Hebrew dates</li>
+              <li>E-commerce managers wanting to trigger promotions for Jewish holiday-related products</li>
+              <li>Anyone who uses automation tools and needs to align actions with the Hebrew calendar</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <h2 class="card-title">Why Join Our Beta?</h2>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                🔗 Connect Hebrew Dates to Your Favorite Tools: Use Zapier, Pipedream, or any platform that accepts webhooks
+              </li>
+              <li class="list-group-item">
+                ⚙️ Automate Jewish Holiday-Related Tasks: Set up workflows that trigger automatically on specific Hebrew dates
+              </li>
+              <li class="list-group-item">
+                🎯 Tailor to Your Needs: Help shape features that address your specific automation requirements
+              </li>
+              <li class="list-group-item">
+                🚀 Get a Head Start: Be the first to integrate Hebrew date-based automation into your workflows
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card szColorBackground mb-4">
+          <div class="card-body">
+            <h2 class="card-title">How It Works</h2>
+            <ol>
+              <li>Set up recurring events based on the Hebrew calendar in MyHebrewDates</li>
+              <li>Our system sends out a webhook when these events occur</li>
+              <li>Your automation tool (like Zapier or Pipedream) receives the webhook</li>
+              <li>This triggers your predefined workflow - send emails, post on social media, update your CRM, and more!</li>
+            </ol>
+            <p>
+              The possibilities are endless - limited only by your imagination and the capabilities of your chosen automation platform.
+            </p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title mb-4">Apply for Beta Access</h2>
+            <p>
+              Join us in exploring the potential of Hebrew Calendar automation. Your experience and feedback will be crucial in shaping this innovative tool.
+            </p>
+            <p>
+              <small>* Required fields</small>
+            </p>
+            <form method="post">
+              {% csrf_token %}
+              {% crispy form %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

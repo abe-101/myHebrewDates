@@ -376,3 +376,5 @@ MESSAGE_TAGS = {
 
 # django-libsass
 COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+
+DISCORD_WEBHOOK_URL = env("DISCORD_WEBHOOK_URL")

@@ -7,6 +7,17 @@
   <header>
     <div class="bg-light py-5">
       <div class="container text-center">
+        <div class="alert alert-primary alert-dismissible fade show text-center"
+             role="alert">
+          <div class="container">
+            <strong>Beta Program Now Open!</strong> Be the first to automate your work with Hebrew Calendar Webhooks.
+            <a href="{% url 'webhook_interest' %}" class="alert-link">Join the Beta</a>
+          </div>
+          <button type="button"
+                  class="btn-close"
+                  data-bs-dismiss="alert"
+                  aria-label="Close"></button>
+        </div>
         <h1 class="display-4">My Hebrew Dates</h1>
         <!-- <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p> -->
         <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
