@@ -184,18 +184,6 @@ def generate_ical_expirimental(
         )
         event.add("description", base_description)
 
-        html_description = f"""
-        <html>
-        <body>
-            {title}<br>
-            Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>
-            <img src='https://myhebrewdates.com/calendars/serve-image
-            /{model_calendar.uuid}/{hebrew_date.pk}' width='1' height='1'>
-        </body>
-        </html>
-        """
-        event.add("x-alt-desc;fmttype=text/html", html_description)
-
         event.add(
             "dtstamp",
             datetime.now(tz=ZoneInfo(model_calendar.timezone)),
@@ -208,18 +196,6 @@ def generate_ical_expirimental(
             ["Hebrew Date", str(hebrew_date.get_event_type_display())],
         )
         event.add("transp", "TRANSPARENT")
-        event.add("x-microsoft-cdo-alldayevent", "TRUE")
-        event.add("x-microsoft-cdo-busystatus", "FREE")
-
-        event.add(
-            "attach",
-            [
-                {
-                    "fmttype": "image/png",
-                    "value": f"https://myhebrewdates.com/calendars/serve-image/{model_calendar.uuid}/{hebrew_date.pk}",
-                },
-            ],
-        )
 
         # Add alarm to the event
         alarm = Alarm()
@@ -234,10 +210,6 @@ def generate_ical_expirimental(
 
         alarm.add("trigger", alarm_trigger)
         event.add_component(alarm)
-        next_year = hebrew_date.get_english_dates()[1]
-        two_year = hebrew_date.get_english_dates()[2]
-
-        event.add("rdate", [next_year, two_year])
         event.add(
             "rrule",
             {
