@@ -141,3 +141,31 @@ class HebrewDate(TimeStampedModel):
         )
         event_type = dict(self.EVENT_CHOICES).get(self.event_type)
         return capitalized_date + " " + event_type.capitalize()
+
+    @staticmethod
+    def _month_to_rfc(month: int) -> int | str:
+        """
+        Convert the application's month numbering to RFC 7529 month numbering.
+        """
+        mapping = {
+            1: 7,  # Nisan -> 7
+            2: 8,  # Iyar -> 8
+            3: 9,  # Sivan -> 9
+            4: 10,  # Tammuz -> 10
+            5: 11,  # Av -> 11
+            6: 12,  # Elul -> 12
+            7: 1,  # Tishrei -> 1
+            8: 2,  # Cheshvan -> 2
+            9: 3,  # Kislev -> 3
+            10: 4,  # Tevet -> 4
+            11: 5,  # Shevat -> 5
+            12: "5L",  # Adar I -> 5L (leap month)
+            13: 6,  # Adar II -> 6
+        }
+        return mapping[month]
+
+    def get_rfc7529_month(self) -> int | str:
+        """
+        Get the month number according to RFC 7529 specification.
+        """
+        return self._month_to_rfc(self.month)
