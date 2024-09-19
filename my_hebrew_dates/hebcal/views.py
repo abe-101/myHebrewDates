@@ -30,6 +30,7 @@ from my_hebrew_dates.hebcal.models import HebrewDate
 from my_hebrew_dates.hebcal.models import HebrewDayEnum
 from my_hebrew_dates.hebcal.models import HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
+from my_hebrew_dates.hebcal.utils import generate_ical_expirimental
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -376,12 +377,19 @@ def calendar_file(request, uuid: UUID):
             user_agent,
             alarm_trigger,
         )
-
-    calendar_str: str = generate_ical(
-        model_calendar=calendar,
-        user_agent=user_agent,
-        alarm_trigger=alarm_trigger,
-    )
+    expirimental = request.GET.get("expirimental", False)
+    if expirimental:
+        calendar_str: str = generate_ical_expirimental(
+            model_calendar=calendar,
+            user_agent=user_agent,
+            alarm_trigger=alarm_trigger,
+        )
+    else:
+        calendar_str: str = generate_ical(
+            model_calendar=calendar,
+            user_agent=user_agent,
+            alarm_trigger=alarm_trigger,
+        )
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
     response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
