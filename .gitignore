@@ -277,3 +277,4 @@ dump.rdb
 my_hebrew_dates/media/
 
 .pytest_cache/
+mailpit
