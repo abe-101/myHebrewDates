@@ -1,6 +1,6 @@
 {
   "template": "https://github.com/cookiecutter/cookiecutter-django",
-  "commit": "1f6b8b47910a9e1861b1af8a2c49711c70243fff",
+  "commit": "3ef84f1a2671954c03b913fe79ba2f0b3bd51b34",
   "checkout": null,
   "context": {
     "cookiecutter": {
@@ -31,7 +31,8 @@
       "ci_tool": "Github",
       "keep_local_envs_in_vcs": "n",
       "debug": "n",
-      "_template": "https://github.com/cookiecutter/cookiecutter-django"
+      "_template": "https://github.com/cookiecutter/cookiecutter-django",
+      "_commit": "3ef84f1a2671954c03b913fe79ba2f0b3bd51b34"
     }
   },
   "directory": null,
