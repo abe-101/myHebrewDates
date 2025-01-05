@@ -67,10 +67,11 @@ class Calendar(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    # https://stackoverflow.com/a/70251235
-    TIMEZONE_CHOICES = (
-        (x, x) for x in sorted(zoneinfo.available_timezones(), key=str.lower)
-    )
+    TIMEZONE_CHOICES = set(zoneinfo.available_timezones())
+    TIMEZONE_CHOICES.discard("Factory")
+    TIMEZONE_CHOICES.discard("localtime")
+    TIMEZONE_CHOICES = ((x, x) for x in sorted(TIMEZONE_CHOICES, key=str.lower))
+
     timezone = models.CharField(
         "Timezone",
         choices=TIMEZONE_CHOICES,
