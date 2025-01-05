@@ -1,62 +1,55 @@
-// Custom variables
-$primary: #9b7b8d;
-$link-color: #000;
-$link-hover-decoration: none;
-$navbar-dark-color: #fff;
-$navbar-dark-hover-color: #fff;
-$navbar-nav-link-padding-x: 0.8rem;
+// New theme palette
+$white: #ffffff;
 
-// Border radius
-$border-radius: 0.375rem;
-$border-radius-sm: 0.25rem;
-$border-radius-lg: 0.5rem;
+$theme-colors: (
+    "light":      #d4d9d5,
+    "dark":       #030100,
+    "primary":    #324189,
+    "secondary":  #1770c9,
+    "info":       #49bee8,
+    "success":    #0da862,
+    "warning":    #e3cc0d,
+    "danger":     #f21d04,
+);
 
-// Font families
-$font-family-base: 'Ubuntu', sans-serif;
-$headings-font-family: 'Oleo Script', cursive;
-
-// Import Bootstrap
+// Import Bootstrap and override defaults
 @import "bootstrap/bootstrap";
 
 
-// Custom styles that can't be handled by variables
-.fade-me-in {
-  opacity: 1;
-  transition: opacity 0.25s ease-out;
-
-  &.htmx-added {
-    opacity: 0;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body {
+  font-family: 'Inter', sans-serif;
 }
 
-.fade-me-out.htmx-swapping {
-  opacity: 0;
-  transition: opacity 1s ease-out;
+:root {
+    --gradient-primary: linear-gradient(135deg, #{map-get($theme-colors, "primary")}, #{map-get($theme-colors, "secondary")});
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
-.navbar {
-  box-shadow: 0 8px 6px -6px black;
+[data-bs-theme="dark"] {
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
 }
 
+// Button gradient enhancement
+.btn-primary {
+    background: var(--gradient-primary);
+    border: none;
 
-// Custom hover effects
-.hover-shadow:hover {
-  box-shadow: 0 0 11px $primary;
-  transition: box-shadow 0.3s ease;
+    &:hover {
+        background: var(--gradient-primary);
+        opacity: 0.9;
+    }
 }
 
-.hover-text-shadow:hover {
-  text-shadow: 1px 1px $primary;
-  transition: text-shadow 0.2s ease;
-}
+// Card hover enhancement
+.card {
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
 
-// Bootstrap utilities extension
-.min-vh-70 {
-  min-height: 70vh;
-}
-
-@media (max-width: 992px) {
-  .d-lg-none-custom {
-    display: none !important;
-  }
+    &:hover {
+        box-shadow: var(--card-shadow-hover);
+        transform: translateY(-2px);
+    }
 }

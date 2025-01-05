@@ -1,14 +1,15 @@
 {% load i18n %}
 
 {% get_current_language as LANGUAGE_CODE %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top rounded">
+<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-blur sticky-top rounded">
   <div class="container">
-    <!-- Brand and toggle -->
+    <!-- Brand -->
     <a class="navbar-brand d-flex align-items-center"
        href="{% url 'home' %}">
       <i class="bi bi-calendar-event me-2"></i>
       My Hebrew Dates
     </a>
+    <!-- Mobile Toggle -->
     <button class="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
@@ -18,10 +19,9 @@
             aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <!-- Main navbar content -->
     <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Main navigation -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <!-- Main Navigation Links -->
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
              href="{% url 'home' %}">
@@ -49,12 +49,33 @@
           </li>
         {% endif %}
       </ul>
-      <!-- User menu and social links -->
-      <ul class="navbar-nav align-items-center">
+      <!-- Right Side Items -->
+      <div class="d-flex align-items-center gap-2">
+        <!-- Social Links -->
+        <div class="btn-group btn-group-sm">
+          <a class="btn btn-outline-primary rounded-start"
+             href="https://discord.gg/2vqUzSpt6N"
+             data-bs-toggle="tooltip"
+             data-bs-title="Join our Discord">
+            <i class="bi bi-discord"></i>
+          </a>
+          <a class="btn btn-outline-primary rounded-0"
+             href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"
+             data-bs-toggle="tooltip"
+             data-bs-title="Email us">
+            <i class="bi bi-envelope"></i>
+          </a>
+          <a class="btn btn-outline-primary rounded-end"
+             href="https://github.com/abe-101/myhebrewdates"
+             data-bs-toggle="tooltip"
+             data-bs-title="View on GitHub">
+            <i class="bi bi-github"></i>
+          </a>
+        </div>
+        <!-- Auth Section -->
         {% if request.user.is_authenticated %}
-          <!-- User dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"
+          <div class="dropdown">
+            <a class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center"
                href="#"
                role="button"
                data-bs-toggle="dropdown"
@@ -78,54 +99,66 @@
                 </a>
               </li>
             </ul>
-          </li>
+          </div>
         {% else %}
-          {% if ACCOUNT_ALLOW_REGISTRATION %}
-            <li class="nav-item">
-              <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">
+          <div class="d-flex gap-2">
+            {% if ACCOUNT_ALLOW_REGISTRATION %}
+              <a class="btn btn-outline-primary btn-sm"
+                 href="{% url 'account_signup' %}">
                 <i class="bi bi-person-plus me-1"></i>{% translate "Sign Up" %}
               </a>
-            </li>
-          {% endif %}
-          <li class="nav-item">
-            <a id="log-in-link"
-               class="btn btn-outline-light ms-2"
-               href="{% url 'account_login' %}">
+            {% endif %}
+            <a class="btn btn-primary btn-sm" href="{% url 'account_login' %}">
               <i class="bi bi-box-arrow-in-right me-1"></i>{% translate "Sign In" %}
             </a>
-          </li>
-        {% endif %}
-        <!-- Social links -->
-        <li class="nav-item ms-lg-3">
-          <div class="btn-group" role="group" aria-label="Social links">
-            <a class="btn btn-outline-light"
-               href="https://discord.gg/2vqUzSpt6N"
-               data-bs-toggle="tooltip"
-               data-bs-title="Join our Discord">
-              <i class="bi bi-discord"></i>
-            </a>
-            <a class="btn btn-outline-light"
-               href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"
-               data-bs-toggle="tooltip"
-               data-bs-title="Email us">
-              <i class="bi bi-envelope"></i>
-            </a>
-            <a class="btn btn-outline-light"
-               href="https://github.com/abe-101/myhebrewdates"
-               data-bs-toggle="tooltip"
-               data-bs-title="View on GitHub">
-              <i class="bi bi-github"></i>
-            </a>
           </div>
+        {% endif %}
+        <!-- Theme Toggle -->
+        <li class="nav-item dropdown">
+          <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center me-2 theme-toggle"
+                  id="bd-theme"
+                  type="button"
+                  aria-expanded="false"
+                  data-bs-toggle="dropdown"
+                  aria-label="Toggle theme (light)">
+            <i class="bi theme-icon-active bi-sun-fill"></i>
+            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow"
+              aria-labelledby="bd-theme-text">
+            <li>
+              <button type="button"
+                      class="dropdown-item d-flex align-items-center"
+                      data-bs-theme-value="light"
+                      aria-pressed="false">
+                <i class="bi opacity-50 bi-sun-fill"></i>
+                Light
+                <i class="bi ms-auto d-none bi-check2"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button"
+                      class="dropdown-item d-flex align-items-center"
+                      data-bs-theme-value="dark"
+                      aria-pressed="false">
+                <i class="bi opacity-50 bi-moon-stars-fill"></i>
+                Dark
+                <i class="bi ms-auto d-none bi-check2"></i>
+              </button>
+            </li>
+            <li>
+              <button type="button"
+                      class="dropdown-item d-flex align-items-center"
+                      data-bs-theme-value="auto"
+                      aria-pressed="false">
+                <i class="bi opacity-50 bi-circle-half"></i>
+                Auto
+                <i class="bi ms-auto d-none bi-check2"></i>
+              </button>
+            </li>
+          </ul>
         </li>
-      </ul>
+      </div>
     </div>
   </div>
 </nav>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-  });
-</script>

@@ -1,64 +1,74 @@
 {% extends "base.html" %}
 
+{% load static compress %}
+
+{% block css %}
+  {{ block.super }}
+  {% compress css %}
+    <link rel="stylesheet"
+          type="text/x-scss"
+          href="{% static "scss/home.scss" %}" />
+  {% endcompress %}
+{% endblock css %}
 {% block content %}
+  <!-- Hero Section -->
   <header>
-    <div class="bg-light py-5">
+    <div class="bg-body-tertiary py-5">
       <div class="container text-center">
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-          <div class="container">
-            <strong>Beta Program Now Open!</strong> Be the first to automate your work with Hebrew Calendar Webhooks.
-            <a href="{% url 'webhook_interest' %}" class="alert-link">Join the Beta</a>
-          </div>
-          <button type="button"
-                  class="btn-close"
-                  data-bs-dismiss="alert"
-                  aria-label="Close"></button>
-        </div>
         <h1 class="display-4">My Hebrew Dates</h1>
         <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
-        {% if user.is_authenticated %}
-          <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-lg">Get Started</a>
-        {% else %}
-          <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg me-2">Sign In</a>
-          <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign Up</a>
-        {% endif %}
+        <div class="d-flex justify-content-center gap-3">
+          {% if user.is_authenticated %}
+            <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-lg">Get Started</a>
+          {% else %}
+            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg">Sign In</a>
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign Up</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </header>
-  <section class="bg-primary text-white py-5">
-    <div class="container text-center">
-      <div class="row justify-content-center g-4">
+  <!-- Features Section -->
+  <section>
+    <div class="container text-center py-5">
+      <div class="row g-4">
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-calendar4-event display-3 text-white"></i>
+          <div class="text-center mb-4">
+            <i class="bi bi-calendar4-event display-3 text-primary"></i>
           </div>
           <h2>Create Personalized Calendars</h2>
-          <p>Create custom Hebrew event calendars for your family, including birthdays, anniversaries, and more.</p>
+          <p class="text-body-secondary">
+            Create custom Hebrew event calendars for your family, including birthdays, anniversaries, and more.
+          </p>
         </div>
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-file-earmark-arrow-up display-3 text-white"></i>
+          <div class="text-center mb-4">
+            <i class="bi bi-file-earmark-arrow-up display-3 text-primary"></i>
           </div>
           <h2>Corresponding English Events</h2>
-          <p>Automatically generate English event labels that correspond to your Hebrew dates for easy understanding.</p>
+          <p class="text-body-secondary">
+            Automatically generate English event labels that correspond to your Hebrew dates for easy understanding.
+          </p>
         </div>
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-link-45deg display-3 text-white"></i>
+          <div class="text-center mb-4">
+            <i class="bi bi-link-45deg display-3 text-primary"></i>
           </div>
           <h2>Share with Family Members</h2>
-          <p>Share your personalized calendar with family members by providing them with a unique URL to subscribe to.</p>
+          <p class="text-body-secondary">
+            Share your personalized calendar with family members by providing them with a unique URL to subscribe to.
+          </p>
         </div>
       </div>
     </div>
   </section>
   <!-- Testimonials Section -->
-  <section class="py-5 bg-light">
+  <section class="py-5 bg-body-tertiary">
     <div class="container">
       <h2 class="text-center mb-5">What Our Users Say</h2>
       <div class="row g-4">
         <div class="col-lg-4">
-          <div class="card h-100 hover-shadow">
+          <div class="card h-100">
             <div class="card-body">
               <p class="card-text">
                 "My Hebrew Dates has made it so much easier for our family to remember
@@ -69,7 +79,7 @@
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card h-100 hover-shadow">
+          <div class="card h-100">
             <div class="card-body">
               <p class="card-text">
                 "I love using My Hebrew Dates to keep track of all our family birthdays
@@ -80,7 +90,7 @@
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card h-100 hover-shadow">
+          <div class="card h-100">
             <div class="card-body">
               <p class="card-text">
                 "My Hebrew Dates has brought our family closer together by helping us
@@ -93,35 +103,38 @@
       </div>
     </div>
   </section>
-  <hr class="my-5" />
   <!-- How It Works Section -->
-  <section class="py-4">
+  <section class="py-5 text-center">
     <div class="container">
-      <h2 class="text-center mb-5">How It Works</h2>
-      <div class="row g-4 justify-content-center align-items-center">
-        <div class="col-lg-4 text-center">
+      <h2 class="mb-5">How It Works</h2>
+      <div class="row g-4">
+        <div class="col-lg-4">
           <div class="mb-4">
             <i class="bi bi-pencil-square display-3 text-primary"></i>
           </div>
           <h5>Create Your Calendar</h5>
-          <p>
-            Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the Hebrew date.
+          <p class="text-body-secondary">
+            Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the
+            Hebrew date.
           </p>
         </div>
-        <div class="col-lg-4 text-center">
+        <div class="col-lg-4">
           <div class="mb-4">
             <i class="bi bi-link-45deg display-3 text-primary"></i>
           </div>
           <h5>Share the URL</h5>
-          <p>With the click of a button, generate a unique URL to share your calendar with your family members.</p>
+          <p class="text-body-secondary">
+            With the click of a button, generate a unique URL to share your calendar with your family members.
+          </p>
         </div>
-        <div class="col-lg-4 text-center">
+        <div class="col-lg-4">
           <div class="mb-4">
             <i class="bi bi-calendar-check display-3 text-primary"></i>
           </div>
           <h5>Stay Connected</h5>
-          <p>
-            Your family members can subscribe to the calendar and receive updates for the Hebrew events that will automatically appear in their calendar feed.
+          <p class="text-body-secondary">
+            Your family members can subscribe to the calendar and receive updates for the Hebrew events that will
+            automatically appear in their calendar feed.
           </p>
         </div>
       </div>

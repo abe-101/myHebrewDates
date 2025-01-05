@@ -1,0 +1,76 @@
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+
+// About page specific styles
+.about-hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0 0 2rem 2rem;
+  margin-top: -1rem; // Pull up to remove gap from navbar
+  box-shadow: 0 4px 15px rgba($purple-500, 0.2);
+
+  .hero-logo {
+    width: 300px;
+    height: 300px;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    backdrop-filter: blur(8px);
+    transform: translateY(10px);
+    animation: float 3s ease-in-out infinite;
+
+    [data-bs-theme="dark"] & {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+.about-content {
+  .creator-image {
+    border-radius: $border-radius-lg;
+    box-shadow: 0 8px 24px rgba($purple-500, 0.15);
+    transition: all 0.3s ease;
+    border: 5px solid white;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba($purple-500, 0.25);
+    }
+  }
+
+  .social-links {
+    .btn {
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($purple-500, 0.15);
+      }
+    }
+  }
+}
+
+// Feature cards enhancement
+.feature-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba($purple-500, 0.15) !important;
+  }
+
+  .bi {
+    transition: all 0.3s ease;
+  }
+
+  &:hover .bi {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
