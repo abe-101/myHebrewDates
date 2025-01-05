@@ -1,0 +1,8 @@
+// Only needed if you want card hover effects
+.card {
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+}

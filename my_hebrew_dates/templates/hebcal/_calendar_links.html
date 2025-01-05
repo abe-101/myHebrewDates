@@ -1,6 +1,6 @@
 <div id="calendarLinks">
   <p>
-    <button class="szButtonSmall btn btn-primary"
+    <button class="btn btn-outline-primarySmall btn btn-primary"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#addToCalendar"
@@ -13,19 +13,19 @@
         {# djlint:off D018 #}
         <i class="bi bi-apple"></i> <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
           {# djlint:on #}
-        class="szLink ">Apple</a>
+        class="hover-text-shadow ">Apple</a>
       </li>
       <li class="list-group-item">
         <i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-    class="szLink">Google</a>
+    class="hover-text-shadow">Google</a>
       </li>
       <li class="list-group-item">
         <i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-    class="szLink">Office 365</a>
+    class="hover-text-shadow">Office 365</a>
       </li>
       <li class="list-group-item">
         <i class="bi bi-microsoft-teams"></i> <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-    class="szLink">Outlook.com</a>
+    class="hover-text-shadow">Outlook.com</a>
       </li>
     </ul>
   </div>

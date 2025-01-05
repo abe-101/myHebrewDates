@@ -48,8 +48,10 @@ def calendar_list_view(request):
         request.user,
         user_owned_calendars,
     )
+    event_count = HebrewDate.objects.filter(calendar__in=user_owned_calendars).count()
 
     context = {
+        "event_count": event_count,
         "calendar_list": user_owned_calendars,
         "domain_name": Site.objects.get_current().domain,
     }

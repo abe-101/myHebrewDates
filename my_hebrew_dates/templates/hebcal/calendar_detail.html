@@ -17,7 +17,7 @@
                id="calendar_file_url{{ calendar.uuid }}"
                value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
         <button onclick="shareFile('{{ calendar.uuid }}')"
-                class="szWhiteBorder szButtonSmall btn btn-primary"
+                class="szWhiteBorder btn btn-outline-primarySmall btn btn-primary"
                 type="button"
                 title="Share with friends and family">
           <i class="bi bi-share"></i>
@@ -56,7 +56,7 @@
         {% include "hebcal/_calendar_links.html" %}
       </div>
       <div class="card-footer">
-        <a class="szLink text-white"
+        <a class="hover-text-shadow"
            data-bs-toggle="collapse"
            href="#collapseExample"
            role="button"

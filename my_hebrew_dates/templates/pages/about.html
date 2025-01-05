@@ -1,218 +1,123 @@
 {% extends "base.html" %}
 
+{% load static compress %}
+
+{% block css %}
+  {{ block.super }}
+  {% compress css %}
+    <link rel="stylesheet"
+          type="text/x-scss"
+          href="{% static "scss/about.scss" %}" />
+  {% endcompress %}
+{% endblock css %}
 {% block content %}
-  <!-- Main content -->
-  <header class="bg-light py-5">
-    <div class="container text-center">
-      <h1 class="display-4">About My Hebrew Dates</h1>
-      <!-- <p class="lead">Create Subscribable Hebrew Event Calendars with Ease!</p> -->
-      <p class="lead">Add Hebrew dates to your Google, Apple, or Outlook calendar with the click of a button!</p>
-    </div>
-  </header>
-  <hr />
-  <section class="py-5">
+  <!-- Hero Section -->
+  <div class="bg-body-tertiary py-5 mb-5 about-hero">
     <div class="container">
-      <div class="row">
-        <div class="col-lg-6">
-          <h2>About Us</h2>
-          <p>
-            My Hebrew Dates is a platform designed to make it simple and convenient for families to create
-            personalized
-            Hebrew event calendars.
-            We understand the importance of keeping track of Hebrew dates, such as birthdays and anniversaries,
-            and we
-            want to help you celebrate
-            these special occasions with your loved ones.
+      <div class="row align-items-center">
+        <div class="col-lg-6 px-4 py-lg-5">
+          <!-- Added padding -->
+          <h1 class="display-4 fw-bold mb-4">About My Hebrew Dates</h1>
+          <!-- Increased bottom margin -->
+          <p class="lead mb-4">
+            <!-- Added bottom margin -->
+            Simplifying Hebrew calendar management by bringing your important dates into your everyday calendar. Perfect for families keeping track of birthdays, anniversaries, and yahrzeits across the Hebrew calendar.
           </p>
         </div>
-        <div class="col-lg-6">
-          <h2>About the Developer</h2>
-          <p>
-            <a class="szLink" href="https://www.linkedin.com/in/abe101/">Abe Hanoka</a> is the creator of My
-            Hebrew
-            Dates. He developed this platform to address
-            a common problem he faced personally: the lack of an easy way to save and share recurring Hebrew
-            date events.
-            With his expertise in software development,
-            Abe designed My Hebrew Dates to be a user-friendly tool for managing Hebrew calendars. His goal is
-            to help
-            individuals and families effortlessly track and
-            celebrate their important Hebrew dates.
-          </p>
+        <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center">
+          <!-- Changed to flex container -->
+          <div class="hero-logo">
+            <img src="{% static 'images/logo.png' %}"
+                 alt="My Hebrew Dates Logo"
+                 class="img-fluid logo-filter" />
+          </div>
         </div>
       </div>
     </div>
-    <div class="container text-center">
-      <div class="szBlock">
-        <a class="szButton btn btn-primary btn-lg"
-           href="mailto:abe@myhebrewdates.com?subject=Feedback%20on%20MyHebrewDates">
-          <i class="bi bi-envelope"></i>
-          Get in touch
-        </a>
-      </div>
-      <div class="szBlock">
-        <a class="szButton btn btn-primary btn-lg"
-           href="https://github.com/abe-101/myHebrewDates">
-          <i class="bi bi-github"></i> GitHub
-        </a>
-      </div>
-      <div class="szBlock">
-        <a class="szButton btn btn-primary btn-lg"
-           href="https://discord.gg/2vqUzSpt6N">
-          <i class="bi bi-discord"></i> Discord
-        </a>
-      </div>
-    </div>
-  </section>
-  <section class="py-5">
+  </div>
+  <!-- Meet the Creator Section -->
+  <section class="about-content py-5">
     <div class="container">
-      <h2 class="text-center mb-4">FAQs</h2>
-      <div class="col-md-8 mx-auto">
-        <div class="accordion" id="faqAccordion">
-          <!-- FAQ Item 1 -->
-          <div class="accordion-item mb-3 shadow">
-            <h2 class="accordion-header" id="headingOne">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseOne"
-                      aria-expanded="true"
-                      aria-controls="collapseOne">
-                <strong>I've updated my calendar on the site, but the changes aren't showing up in my Google Calendar. Why is this?</strong>
-              </button>
-            </h2>
-            <div id="collapseOne"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="headingOne"
-                 data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Google Calendar typically updates external calendars every 12-24 hours. Additionally, it caches events. This means even if you make immediate changes or delete and re-add the calendar, you might still see the old data until Google refreshes its cache. Please be patient and allow some time for updates to reflect.
-              </div>
-            </div>
+      <div class="row align-items-center">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <img src="{% static 'images/hi.png' %}"
+               alt="Abe Hanoka"
+               class="img-fluid creator-image" />
+        </div>
+        <div class="col-md-8">
+          <h2 class="mb-3">Meet the Creator: Abe Hanoka</h2>
+          <p>
+            Hi! I'm Abe, a developer passionate about making Jewish life more accessible through technology. My Hebrew Dates was born from a personal challenge: keeping track of family events that follow the Hebrew calendar while using modern digital tools.
+          </p>
+          <p>
+            After years of manually converting dates and maintaining multiple calendars, I realized there had to be a better way. That's why I created My Hebrew Dates—to bridge the gap between traditional Jewish date-keeping and modern calendar applications.
+          </p>
+          <p>
+            Today, My Hebrew Dates helps families worldwide stay connected to their important dates, making it easier to honor traditions while embracing modern convenience.
+          </p>
+          <div class="social-links mt-4 d-flex flex-wrap gap-2">
+            <a href="mailto:abe@myhebrewdates.com" class="btn btn-outline-primary">
+              <i class="bi bi-envelope me-2"></i>Get in Touch
+            </a>
+            <a href="https://github.com/abe-101/myhebrewdates"
+               class="btn btn-outline-primary">
+              <i class="bi bi-github me-2"></i>View on GitHub
+            </a>
+            <a href="https://discord.gg/2vqUzSpt6N" class="btn btn-outline-primary">
+              <i class="bi bi-discord me-2"></i>Join Our Discord
+            </a>
           </div>
-          <!-- FAQ Item 2 -->
-          <div class="accordion-item mb-3 shadow">
-            <h2 class="accordion-header" id="headingTwo">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseTwo"
-                      aria-expanded="false"
-                      aria-controls="collapseTwo">
-                <strong>Can I bulk add events?</strong>
-              </button>
-            </h2>
-            <div id="collapseTwo"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="headingTwo"
-                 data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                While our platform doesn't currently have a feature for bulk event addition, you can contact the developer to assist with adding events in bulk. Please note that this specialized service will come with a fee.
-              </div>
-            </div>
-          </div>
-          <!-- FAQ Item for Customizable Alarm Times -->
-          <div class="accordion-item mb-3 shadow">
-            <h2 class="accordion-header" id="headingCustomAlarm">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseCustomAlarm"
-                      aria-expanded="false"
-                      aria-controls="collapseCustomAlarm">
-                <strong>How do I set custom alarm times for hebrew events?</strong>
-              </button>
-            </h2>
-            <div id="collapseCustomAlarm"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="headingCustomAlarm"
-                 data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                Customizing alarm times is now possible on MyHebrewDates! Simply append <code>?alarm=HOUR</code> to the end of an calendar's URL. Here's how:
-                <ul>
-                  <li>
-                    For a 9 AM alarm: Add <code>?alarm=9</code> to the URL.
-                  </li>
-                  <li>
-                    For a 7 AM alarm: Change it to <code>?alarm=7</code>.
-                  </li>
-                  <li>
-                    To get an alert the night before at 9 PM: Use <code>?alarm=-3</code>.
-                  </li>
-                </ul>
-                This feature allows you to personalize your event reminders to a time that suits you best.
-              </div>
-            </div>
-          </div>
-          <!-- FAQ Item for Merging Multiple Created Calendars -->
-          <div class="accordion-item mb-3 shadow">
-            <h2 class="accordion-header" id="headingMergeCalendars">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseMergeCalendars"
-                      aria-expanded="false"
-                      aria-controls="collapseMergeCalendars">
-                <strong>How can I merge two or more of my created calendars into one?</strong>
-              </button>
-            </h2>
-            <div id="collapseMergeCalendars"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="headingMergeCalendars"
-                 data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                To consolidate events from multiple calendars you've created into a single calendar view, use a tool like <a href="https://mergecal.habet.dev/"
-    target="_blank"
-    rel="noopener noreferrer">MergeCal</a>. This helps streamline your event management by providing one comprehensive calendar. Here’s a simple guide:
-                <ol>
-                  <li>
-                    Visit <a href="https://mergecal.org" target="_blank" rel="noopener noreferrer">MergeCal</a>.
-                  </li>
-                  <li>Select the individual calendars you wish to merge.</li>
-                  <li>Create a unified calendar link to add to your calendar application.</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-          <!-- FAQ Item for Syncing Newly Added Calendar in Google Calendar App -->
-          <div class="accordion-item mb-3 shadow">
-            <h2 class="accordion-header" id="headingSyncNewCalendar">
-              <button class="accordion-button collapsed"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#collapseSyncNewCalendar"
-                      aria-expanded="false"
-                      aria-controls="collapseSyncNewCalendar">
-                <strong>I added the calendar to my Google Calendar, but it doesn't show up in the Google Calendar app. What should I do?</strong>
-              </button>
-            </h2>
-            <div id="collapseSyncNewCalendar"
-                 class="accordion-collapse collapse"
-                 aria-labelledby="headingSyncNewCalendar"
-                 data-bs-parent="#faqAccordion">
-              <div class="accordion-body">
-                If your newly added calendar isn't appearing in the Google Calendar app, follow these steps to sync it manually:
-                <ol>
-                  <li>Open the Google Calendar app and tap the three bars on the top left to access the menu.</li>
-                  <li>
-                    Tap <strong>Refresh</strong> to update your calendar feeds.
-                  </li>
-                  <li>
-                    After refreshing, tap on <strong>Settings</strong> in the menu.
-                  </li>
-                  <li>
-                    Under your Google account, find the newly added calendar. It should be listed under the account you used to add it.
-                  </li>
-                  <li>
-                    Select the calendar and then enable <strong>Sync</strong> to ensure it updates and displays in your app.
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-          <!-- Add more FAQ items as needed -->
         </div>
       </div>
     </div>
   </section>
+  <!-- Features Section -->
+  <section class="py-5 bg-body-tertiary">
+    <div class="container">
+      <h2 class="text-center mb-4 display-5 fw-bold">Why Choose My Hebrew Dates?</h2>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm feature-card">
+            <div class="card-body text-center p-4">
+              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                <i class="bi bi-calendar-check text-primary display-6"></i>
+              </div>
+              <h3 class="h5 fw-bold">Easy Integration</h3>
+              <p class="text-muted">
+                Seamlessly add Hebrew dates to Google Calendar, Apple Calendar, or any calendar app that supports iCal feeds.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm feature-card">
+            <div class="card-body text-center p-4">
+              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                <i class="bi bi-share text-primary display-6"></i>
+              </div>
+              <h3 class="h5 fw-bold">Family Sharing</h3>
+              <p class="text-muted">
+                Share your calendar with family members through a simple link, keeping everyone connected to important dates.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm feature-card">
+            <div class="card-body text-center p-4">
+              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+                <i class="bi bi-bell text-primary display-6"></i>
+              </div>
+              <h3 class="h5 fw-bold">Custom Reminders</h3>
+              <p class="text-muted">
+                Set personalized alerts for events and never miss an important Hebrew date celebration again.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FAQ Section -->
+  {% include "pages/_faq.html" %}
 {% endblock content %}

@@ -1,5 +1,55 @@
-// Custom variables
-$primary: #9b7b8d;
+// New theme palette
+$white: #ffffff;
 
-// Import Bootstrap
+$theme-colors: (
+    "light":      #d4d9d5,
+    "dark":       #030100,
+    "primary":    #324189,
+    "secondary":  #1770c9,
+    "info":       #49bee8,
+    "success":    #0da862,
+    "warning":    #e3cc0d,
+    "danger":     #f21d04,
+);
+
+// Import Bootstrap and override defaults
 @import "bootstrap/bootstrap";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+:root {
+    --gradient-primary: linear-gradient(135deg, #{map-get($theme-colors, "primary")}, #{map-get($theme-colors, "secondary")});
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+[data-bs-theme="dark"] {
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+// Button gradient enhancement
+.btn-primary {
+    background: var(--gradient-primary);
+    border: none;
+
+    &:hover {
+        background: var(--gradient-primary);
+        opacity: 0.9;
+    }
+}
+
+// Card hover enhancement
+.card {
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+    &:hover {
+        box-shadow: var(--card-shadow-hover);
+        transform: translateY(-2px);
+    }
+}
