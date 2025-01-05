@@ -7,8 +7,8 @@ from discord import Embed
 from discord import SyncWebhook
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
 from django.http import HttpRequest
@@ -20,6 +20,7 @@ from django.urls import reverse_lazy
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
+from django_htmx_modal_forms import HtmxModalUpdateView
 
 from my_hebrew_dates.hebcal.decorators import requires_htmx
 from my_hebrew_dates.hebcal.forms import CalendarForm
@@ -36,7 +37,6 @@ from my_hebrew_dates.hebcal.utils import generate_ical_expirimental
 logger = logging.getLogger(__name__)
 
 
-@login_required
 def calendar_list_view(request):
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
@@ -76,7 +76,6 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/calendar_detail.html", context)
 
 
-@login_required
 def create_calendar_view(request: HttpRequest):
     if request.method == "POST":
         form = CalendarForm(request.POST)
@@ -116,7 +115,14 @@ def create_calendar_view(request: HttpRequest):
     return render(request, "hebcal/calendar_new.html", context)
 
 
-@login_required
+class CalendarUpdateModalView(SuccessMessageMixin, HtmxModalUpdateView):
+    model = Calendar
+    modal_size = "md"
+    form_class = CalendarForm
+    detail_template_name = "hebcal/_calendar_name.html"
+    success_message = "Calendar updated successfully"
+
+
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
     month_values = request.GET.getlist("month")
@@ -187,7 +193,6 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/calendar_edit.html", context)
 
 
-@login_required
 @requires_htmx
 def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
@@ -255,7 +260,6 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
-@login_required
 @requires_htmx
 def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
@@ -297,7 +301,6 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/_hebrew_date_form.html", context)
 
 
-@login_required
 @require_POST
 @requires_htmx
 def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):

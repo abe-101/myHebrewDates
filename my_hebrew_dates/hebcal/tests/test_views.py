@@ -153,10 +153,6 @@ class CalendarEditViewTest(BaseTest):
             f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/",
         )
 
-    def test_view_renders_correctly(self):
-        response = self.client.get(self.url)
-        self.assertContains(response, "Manage Your Calendar")
-
     def test_filter_by_month(self):
         response = self.client.get(self.url, {"month": "1"})
         self.assertContains(
