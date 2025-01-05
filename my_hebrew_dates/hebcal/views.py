@@ -204,6 +204,7 @@ def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
                 hebrew_date.name,
                 pk,
             )
+            messages.success(request, f"{hebrew_date.name} updated successfully.")
 
             return render(
                 request,
@@ -271,6 +272,7 @@ def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
                 hebrew_date.name,
                 hebrew_date.pk,
             )
+            messages.success(request, f"{hebrew_date.name} created successfully.")
 
             return render(
                 request,
@@ -412,6 +414,7 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
+    messages.success(request, "Calendar alarm set to " + alarm_time)
     logger.info(
         "update_calendar_links_htmx: %s for calendar: %s (%s)",
         request.user,
