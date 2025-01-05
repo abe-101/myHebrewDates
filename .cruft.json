@@ -39,9 +39,7 @@
   "skip": [
     "LICENSE",
     "README.md",
-    "mergecal/conftest.py",
     "mergecal/static/images/favicons/favicon.ico",
-    "mergecal/static/js/project.js",
-    "mergecal/templates"
+    "mergecal/static/js/project.js"
   ]
 }
