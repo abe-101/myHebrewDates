@@ -7,7 +7,7 @@
 {% endblock title %}
 {% block content %}
   <div class="container mt-4">
-    <h1 class="mb-4">Manage Your Calendar: {{ calendar.name }}</h1>
+    {% include "hebcal/_calendar_name.html" %}
     <div class="row mb-4">
       <div class="col">
         <form id="filter-form"

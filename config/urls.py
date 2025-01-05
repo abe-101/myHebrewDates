@@ -1,6 +1,7 @@
 # ruff: noqa
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_not_required
 from django.contrib import admin
 from django.urls import include, path
 from django.views import defaults as default_views
@@ -18,38 +19,47 @@ sitemaps = {
 
 
 urlpatterns = [
-    path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
+    path(
+        "",
+        login_not_required(TemplateView.as_view(template_name="pages/home.html")),
+        name="home",
+    ),
     path(
         "about/",
-        TemplateView.as_view(template_name="pages/about.html"),
+        login_not_required(TemplateView.as_view(template_name="pages/about.html")),
         name="about",
     ),
-    # Django Admin, use {% url 'admin:index' %}
-    path(settings.ADMIN_URL, admin.site.urls),
-    # User management
-    path("users/", include("my_hebrew_dates.users.urls", namespace="users")),
-    path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
-    path("calendars/", include("my_hebrew_dates.hebcal.urls", namespace="hebcal")),
-    path("automation/", webhook_interest, name="webhook_interest"),
     path(
         "robots.txt",
-        TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
-    ),  # add the robots.txt file
+        login_not_required(
+            TemplateView.as_view(template_name="robots.txt", content_type="text/plain")
+        ),
+    ),
     path(
         "favicon.png",
-        RedirectView.as_view(url="/static/images/favicon.png", permanent=True),
+        login_not_required(
+            RedirectView.as_view(url="/static/images/favicon.png", permanent=True)
+        ),
     ),
     path(
         "favicon.ico",
-        RedirectView.as_view(url="static/images/favicons/favicon.ico", permanent=True),
+        login_not_required(
+            RedirectView.as_view(
+                url="static/images/favicons/favicon.ico", permanent=True
+            )
+        ),
     ),
     path(
         "sitemap.xml",
-        sitemap,
+        login_not_required(sitemap),
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
+    path("automation/", login_not_required(webhook_interest), name="webhook_interest"),
+    path(settings.ADMIN_URL, admin.site.urls),
+    path("users/", include("my_hebrew_dates.users.urls", namespace="users")),
+    path("accounts/", include("allauth.urls")),
+    path("calendars/", include("my_hebrew_dates.hebcal.urls", namespace="hebcal")),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
