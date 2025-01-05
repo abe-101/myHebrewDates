@@ -1,0 +1,45 @@
+{
+  "template": "https://github.com/cookiecutter/cookiecutter-django",
+  "commit": "95c3772b3e5ea1dec1eb2d56374a14584050fa54",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "project_name": "My Hebrew Dates",
+      "project_slug": "my_hebrew_dates",
+      "description": "Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.",
+      "author_name": "Abe Hanoka",
+      "domain_name": "myhebrewdates.com",
+      "email": "abe@myhebrewdates.com",
+      "version": "0.1.0",
+      "open_source_license": "GPLv3",
+      "username_type": "username",
+      "timezone": "UTC",
+      "windows": "n",
+      "editor": "None",
+      "use_docker": "n",
+      "postgresql_version": "16",
+      "cloud_provider": "AWS",
+      "mail_service": "Mailjet",
+      "use_async": "n",
+      "use_drf": "y",
+      "frontend_pipeline": "Django Compressor",
+      "use_celery": "y",
+      "use_mailpit": "y",
+      "use_sentry": "y",
+      "use_whitenoise": "y",
+      "use_heroku": "n",
+      "ci_tool": "Github",
+      "keep_local_envs_in_vcs": "n",
+      "debug": "n",
+      "_template": "https://github.com/cookiecutter/cookiecutter-django",
+      "_commit": "95c3772b3e5ea1dec1eb2d56374a14584050fa54"
+    }
+  },
+  "directory": null,
+  "skip": [
+    "LICENSE",
+    "README.md",
+    "mergecal/static/images/favicons/favicon.ico",
+    "mergecal/static/js/project.js"
+  ]
+}
