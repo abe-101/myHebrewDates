@@ -1,69 +1,77 @@
 {% extends "base.html" %}
 
 {% block title %}
-  Calendars
+  My Calendars
 {% endblock title %}
 {% block content %}
-  <div class="container mt-5">
-    <div class="row">
-      <div class="col-md-8 offset-md-2">
-        <div class="row position-relative">
-          <h1 class="text-center col-11">My Calendars</h1>
-          <div class="col-1 align-items-center align-self-center align-content-center justify-content-center">
-            <a href="{% url 'hebcal:calendar_new' %}"
-               class="szButton btn btn-success">New</a>
-          </div>
-        </div>
-        <hr />
-        <table class="w-100 text-center">
-          <thead>
-            <tr>
-              <th class="text-center">Name</th>
-              <th class="text-center hideSmall">Time Zone</th>
-              <th class="text-center"># of Events</th>
-              <th class="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for calendar in calendar_list %}
-              <tr>
-                <td class="py-3">
-                  <a class="szLink szCaps fs-6"
-                     href="{% url 'hebcal:calendar_detail' calendar.uuid %}">{{ calendar.name }}</a>
-                </td>
-                <td class="py-3 text-muted hideSmall">{{ calendar.timezone }}</td>
-                <td class="py-3">{{ calendar.calendarOf.all.count }}</td>
-                <td class="py-3 text-center">
-                  <input hidden
-                         id="calendar_file_url{{ calendar.uuid }}"
-                         value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
+  <div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">My Calendars</h1>
+      <a href="{% url 'hebcal:calendar_new' %}"
+         class="btn btn-success"
+         data-bs-toggle="tooltip"
+         data-bs-title="Create a new calendar">
+        <i class="bi bi-plus-lg me-1"></i>New Calendar
+      </a>
+    </div>
+    {% if not calendar_list %}
+      <div class="text-center py-5">
+        <i class="bi bi-calendar3 display-1 text-muted mb-3"></i>
+        <h3 class="text-muted">No calendars yet</h3>
+        <p class="lead text-muted">Create your first calendar to get started!</p>
+      </div>
+    {% else %}
+      <div class="row g-4">
+        {% for calendar in calendar_list %}
+          <div class="col-md-6 col-xl-4">
+            <div class="card h-100 hover-shadow">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="card-title mb-0 text-primary">
+                    <i class="bi bi-calendar-event me-2"></i>
+                    {{ calendar.name }}
+                  </h5>
+                  <span class="badge bg-primary">{{ calendar.calendarOf.all.count }} Events</span>
+                </div>
+                <p class="card-text text-muted mb-3">
+                  <small><i class="bi bi-globe2 me-1"></i>{{ calendar.timezone }}</small>
+                </p>
+                <input type="hidden"
+                       id="calendar_file_url{{ calendar.uuid }}"
+                       value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
+                <!-- Action buttons -->
+                <div class="btn-group w-100" role="group" aria-label="Calendar actions">
+                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                     class="btn btn-outline-primary"
+                     data-bs-toggle="tooltip"
+                     data-bs-title="View calendar details">
+                    <i class="bi bi-eye"></i>
+                  </a>
                   <button onclick="shareFile('{{ calendar.uuid }}')"
-                          class="szButtonSmall btn btn-success py-1 px-2 mx-1"
+                          class="btn btn-outline-success"
                           type="button"
-                          title="Share with friends and family">
+                          data-bs-toggle="tooltip"
+                          data-bs-title="Share with friends and family">
                     <i class="bi bi-share"></i>
                   </button>
                   <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-                     title="Edit this calendar"
-                     class="szButtonSmall btn btn-primary py-1 px-2 mx-1">
+                     class="btn btn-outline-primary"
+                     data-bs-toggle="tooltip"
+                     data-bs-title="Edit calendar">
                     <i class="bi bi-pencil-square"></i>
                   </a>
                   <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
-                     title="Delete this calendar"
-                     class="szButtonSmall btn btn-danger py-1 px-2 mx-1">
+                     class="btn btn-outline-danger"
+                     data-bs-toggle="tooltip"
+                     data-bs-title="Delete calendar">
                     <i class="bi bi-trash"></i>
                   </a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
       </div>
-    </div>
+    {% endif %}
   </div>
-  <script>
-    (function() {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
-  </script>
 {% endblock content %}

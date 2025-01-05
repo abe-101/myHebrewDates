@@ -1,5 +1,62 @@
 // Custom variables
 $primary: #9b7b8d;
+$link-color: #000;
+$link-hover-decoration: none;
+$navbar-dark-color: #fff;
+$navbar-dark-hover-color: #fff;
+$navbar-nav-link-padding-x: 0.8rem;
+
+// Border radius
+$border-radius: 0.375rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 0.5rem;
+
+// Font families
+$font-family-base: 'Ubuntu', sans-serif;
+$headings-font-family: 'Oleo Script', cursive;
 
 // Import Bootstrap
 @import "bootstrap/bootstrap";
+
+
+// Custom styles that can't be handled by variables
+.fade-me-in {
+  opacity: 1;
+  transition: opacity 0.25s ease-out;
+
+  &.htmx-added {
+    opacity: 0;
+  }
+}
+
+.fade-me-out.htmx-swapping {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.navbar {
+  box-shadow: 0 8px 6px -6px black;
+}
+
+
+// Custom hover effects
+.hover-shadow:hover {
+  box-shadow: 0 0 11px $primary;
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-text-shadow:hover {
+  text-shadow: 1px 1px $primary;
+  transition: text-shadow 0.2s ease;
+}
+
+// Bootstrap utilities extension
+.min-vh-70 {
+  min-height: 70vh;
+}
+
+@media (max-width: 992px) {
+  .d-lg-none-custom {
+    display: none !important;
+  }
+}

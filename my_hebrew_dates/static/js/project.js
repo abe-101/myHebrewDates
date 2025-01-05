@@ -70,3 +70,6 @@ document.addEventListener('htmx:confirm', function (e) {
     if (result.isConfirmed) e.detail.issueRequest(true); // use true to skip window.confirm
   });
 });
+
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
