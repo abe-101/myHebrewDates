@@ -10,7 +10,6 @@ django-celery-beat==2.7.0  # https://github.com/celery/django-celery-beat
 pyluach
 icalendar==6.0.0a0  # https://github.com/collective/icalendar
 discord.py==2.4.0  # https://github.com/Rapptz/discord.py
-audioop-lts  # https://github.com/Rapptz/discord.py/issues/9742
 
 # Django
 # ------------------------------------------------------------------------------
