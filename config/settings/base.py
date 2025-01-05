@@ -92,6 +92,7 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "drf_spectacular",
+    "django_htmx_messages",
 ]
 
 LOCAL_APPS = [
@@ -167,7 +168,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
-    "config.middleware.HtmxMessageMiddleware",
+    "django_htmx_messages.middleware.HtmxMessageMiddleware",
 ]
 
 # STATIC
