@@ -36,16 +36,7 @@
             </div>
             <div class="col-auto">
               <span class="text-muted me-2">Total Events:</span>
-              <strong>
-                {% with total_events=0 %}
-                  {% for calendar in calendar_list %}
-                    {% with count=calendar.calendarOf.all.count %}
-                      {% with total_events=total_events|add:count %}{% endwith %}
-                    {% endwith %}
-                  {% endfor %}
-                  {{ total_events }}
-                {% endwith %}
-              </strong>
+              <strong>{{ event_count }}</strong>
             </div>
           </div>
           <!-- Calendar List -->
