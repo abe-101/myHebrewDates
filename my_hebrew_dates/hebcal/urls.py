@@ -59,7 +59,7 @@ urlpatterns = [
     ),
     path(
         "update-calendar-links-htmx/<uuid:uuid>/",
-        update_calendar_links_htmx,
+        login_not_required(update_calendar_links_htmx),
         name="update_calendar_links_htmx",
     ),
 ]
