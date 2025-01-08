@@ -8,7 +8,7 @@ hiredis==3.1.0  # https://github.com/redis/hiredis-py
 celery==5.4.0  # pyup: < 6.0  # https://github.com/celery/celery
 django-celery-beat==2.7.0  # https://github.com/celery/django-celery-beat
 pyluach
-icalendar==6.0.0a0  # https://github.com/collective/icalendar
+icalendar==6.1.0  # https://github.com/collective/icalendar
 discord.py==2.4.0  # https://github.com/Rapptz/discord.py
 
 # Django
