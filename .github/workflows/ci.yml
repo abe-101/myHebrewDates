@@ -31,7 +31,7 @@ jobs:
           python-version: '3.12'
       # Consider using pre-commit.ci for open source project
       - name: Run pre-commit
-        uses: abe-101/pre-commit@v3.0.2
+        uses: abe-101/pre-commit@v3.0.3
 
   # With no caching at all the entire ci process takes 3m to complete!
   pytest:
