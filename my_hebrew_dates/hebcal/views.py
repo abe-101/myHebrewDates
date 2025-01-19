@@ -65,6 +65,7 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
     context = {
         "calendar": calendar,
         "domain_name": Site.objects.get_current().domain,
+        "alarm_time": 9,
     }
     logger.info(
         "user: %s accessed Calendar_detail_view for calendar: %s (%s)",
