@@ -448,7 +448,7 @@ def webhook_interest(request):
             # Send email to user
             user_email = form.cleaned_data.get("email")
             msg = f"""
-                Dear {form.cleaned_data.get('name')},
+                Dear {form.cleaned_data.get("name")},
 
                 Thank you for your interest in the Hebrew Calendar Webhook Beta.
                 We've received your sign-up and will keep you updated on our progress.
