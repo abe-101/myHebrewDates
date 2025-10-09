@@ -423,4 +423,3 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
     )
 
     return render(request, "hebcal/_calendar_links.html", context)
-
