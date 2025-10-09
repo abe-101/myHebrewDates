@@ -77,7 +77,7 @@ class CreateCalendarViewTest(BaseTest):
             response,
             expected_url=reverse(
                 "hebcal:calendar_edit",
-                args=[Calendar.objects.first().uuid],
+                args=[Calendar.objects.first().uuid],  # type: ignore[union-attr]
             ),
         )
 

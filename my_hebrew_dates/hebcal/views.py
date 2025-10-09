@@ -116,7 +116,7 @@ def create_calendar_view(request: HttpRequest):
     return render(request, "hebcal/calendar_new.html", context)
 
 
-class CalendarUpdateModalView(SuccessMessageMixin, HtmxModalUpdateView):
+class CalendarUpdateModalView(SuccessMessageMixin, HtmxModalUpdateView):  # type: ignore[misc]
     model = Calendar
     modal_size = "md"
     form_class = CalendarForm
@@ -180,7 +180,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         calendar.uuid,
     )
 
-    if request.htmx:
+    if hasattr(request, "htmx") and request.htmx:
         log_msg = "search_query: %s | Month: %s | Day: %s | Sort: %s | Order: %s"
         logger.info(
             log_msg,
@@ -327,14 +327,15 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("hebcal:calendar_list")
     login_url = reverse_lazy("users:redirect")
     template_name = "hebcal/calendar_delete.html"
+    object: Calendar  # type annotation for the object
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 
 
 def serve_pixel(request, pixel_id: UUID, pk: int):
     pixel_data = (
-        b"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h",
-        "HgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h"
+        "HgAHggJ/PchI7wAAAABJRU5ErkJggg=="
     )
 
     x_forwarded_for = request.headers.get("x-forwarded-for")
@@ -387,13 +388,13 @@ def calendar_file(request, uuid: UUID):
         )
     expirimental = request.GET.get("expirimental", False)
     if expirimental:
-        calendar_str: str = generate_ical_expirimental(
+        calendar_str = generate_ical_expirimental(
             model_calendar=calendar,
             user_agent=user_agent,
             alarm_trigger=alarm_trigger,
         )
     else:
-        calendar_str: str = generate_ical(
+        calendar_str = generate_ical(
             model_calendar=calendar,
             user_agent=user_agent,
             alarm_trigger=alarm_trigger,
@@ -460,7 +461,7 @@ def webhook_interest(request):
                 subject="Thank you for your interest in Hebrew Calendar Webhook Beta",
                 message=msg,
                 from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[user_email],
+                recipient_list=[user_email] if user_email else [],
                 fail_silently=False,
             )
 

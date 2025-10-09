@@ -67,10 +67,10 @@ class Calendar(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    TIMEZONE_CHOICES = set(zoneinfo.available_timezones())
-    TIMEZONE_CHOICES.discard("Factory")
-    TIMEZONE_CHOICES.discard("localtime")
-    TIMEZONE_CHOICES = ((x, x) for x in sorted(TIMEZONE_CHOICES, key=str.lower))
+    _timezone_set = set(zoneinfo.available_timezones())
+    _timezone_set.discard("Factory")
+    _timezone_set.discard("localtime")
+    TIMEZONE_CHOICES = tuple((x, x) for x in sorted(_timezone_set, key=str.lower))
 
     timezone = models.CharField(
         "Timezone",
@@ -141,7 +141,9 @@ class HebrewDate(TimeStampedModel):
             " ".join(word.capitalize() for word in self.name.split()) + "'s"
         )
         event_type = dict(self.EVENT_CHOICES).get(self.event_type)
-        return capitalized_date + " " + event_type.capitalize()
+        if event_type is not None:
+            return capitalized_date + " " + event_type.capitalize()
+        return capitalized_date
 
     @staticmethod
     def _month_to_rfc(month: int) -> int | str:
@@ -163,7 +165,8 @@ class HebrewDate(TimeStampedModel):
             12: "5L",  # Adar I -> 5L (leap month)
             13: 6,  # Adar II -> 6
         }
-        return mapping[month]
+        result = mapping.get(month, month)
+        return result if isinstance(result, (int, str)) else month
 
     def get_rfc7529_month(self) -> int | str:
         """

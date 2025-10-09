@@ -11,9 +11,9 @@ lengths_of_months = [0, 30, 29, 30, 29, 30, 29, 30, 30, 30, 29, 30, 30, 29]
 ADAR_2 = 13
 
 
-def create_hebrew_to_english_dict():
+def create_hebrew_to_english_dict() -> dict[str, list[object]]:
     logger.info("Creating hebrew_to_english_dict")
-    hebrew_to_english_dict = {}
+    hebrew_to_english_dict: dict[str, list[object]] = {}
     today_year = dates.HebrewDate.today().year
 
     for year in range(today_year, today_year + 3):  # three years
@@ -35,4 +35,4 @@ def create_hebrew_to_english_dict():
     return hebrew_to_english_dict
 
 
-hebrew_to_english_dict = create_hebrew_to_english_dict()
+hebrew_to_english_dict: dict[str, list[object]] = create_hebrew_to_english_dict()
