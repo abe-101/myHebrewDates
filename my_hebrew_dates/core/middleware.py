@@ -5,7 +5,9 @@ https://github.com/encode/django-rest-framework/discussions/9503#discussioncomme
 import re
 
 from django.conf import settings
-from django.contrib.auth.middleware import LoginRequiredMiddleware
+from django.contrib.auth.middleware import (
+    LoginRequiredMiddleware,  # type: ignore[attr-defined]
+)
 
 
 class CustomLoginRequiredMiddleware(LoginRequiredMiddleware):

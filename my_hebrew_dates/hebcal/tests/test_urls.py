@@ -29,7 +29,9 @@ class TestUrls(SimpleTestCase):
     def test_calendar_delete_url(self):
         uuid = self.generate_uuid()
         url = reverse("hebcal:calendar_delete", args=[uuid])
-        assert resolve(url).func.view_class == CalendarDeleteView
+        resolved = resolve(url)
+        assert hasattr(resolved.func, "view_class")
+        assert resolved.func.view_class == CalendarDeleteView
 
     def test_calendar_new_url(self):
         url = reverse("hebcal:calendar_new")
