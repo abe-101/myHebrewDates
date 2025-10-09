@@ -11,7 +11,6 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
-from my_hebrew_dates.hebcal.views import webhook_interest
 
 sitemaps = {
     "static": StaticViewSitemap,
@@ -55,7 +54,6 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
-    path("automation/", login_not_required(webhook_interest), name="webhook_interest"),
     path(settings.ADMIN_URL, admin.site.urls),
     path("users/", include("my_hebrew_dates.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
