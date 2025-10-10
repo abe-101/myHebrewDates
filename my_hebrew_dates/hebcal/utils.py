@@ -9,7 +9,6 @@ from zoneinfo import ZoneInfo
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
-from icalendar import Timezone
 
 from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
 
@@ -34,9 +33,8 @@ def generate_ical(
     newcal.add("x-wr-timezone", timezone)
     newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
 
-    newtimezone = Timezone()
-    newtimezone.add("tzid", timezone)
-    newcal.add_component(newtimezone)
+    # Note: VTIMEZONE component not needed for all-day events
+    # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
 
@@ -150,9 +148,8 @@ def generate_ical_expirimental(
     newcal.add("x-wr-timezone", timezone)
     newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
 
-    newtimezone = Timezone()
-    newtimezone.add("tzid", timezone)
-    newcal.add_component(newtimezone)
+    # Note: VTIMEZONE component not needed for all-day events
+    # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
 
