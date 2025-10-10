@@ -126,8 +126,8 @@ def generate_ical(
     for event in sorted_events:
         newcal.add_component(event)
 
-    cal_bye_str = newcal.to_ical()
-    return cal_bye_str.decode("utf8")
+    ical_str = newcal.to_ical()
+    return ical_str.decode("utf8")
 
 
 def generate_ical_experimental(
@@ -223,5 +223,5 @@ def generate_ical_experimental(
     for event in sorted_events:
         newcal.add_component(event)
 
-    cal_bye_str = newcal.to_ical()
-    return cal_bye_str.decode("utf8")
+    ical_str = newcal.to_ical()
+    return ical_str.decode("utf8")
