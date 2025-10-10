@@ -1,6 +1,5 @@
 # ruff: noqa: S324, ERA001
 import html
-import logging
 from base64 import urlsafe_b64encode
 from datetime import datetime
 from datetime import timedelta
@@ -12,8 +11,6 @@ from icalendar import Calendar
 from icalendar import Event
 
 from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
-
-logger = logging.getLogger(__name__)
 
 # Constants
 MYHEBREWDATES_URL = "https://myhebrewdates.com"
