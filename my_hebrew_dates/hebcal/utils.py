@@ -21,20 +21,21 @@ def generate_ical(
     user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    newcal = Calendar()
-    newcal.add("prodid", "-//" + model_calendar.name + "//MyHebrewDates.com//")
-    newcal.add("version", "2.0")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add(
-        "x-wr-timezone",
-        model_calendar.timezone,
-    )  # It is good to add this as well.
-    newcal.add("x-wr-caldesc", "Created by MyHebrewDates.com")
+    # Google Calendar works better with UTC for all-day events
+    is_google = "google" in user_agent.lower()
+    timezone = "UTC" if is_google else model_calendar.timezone
 
+    newcal = Calendar()
+    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
+    newcal.add("version", "2.0")
+    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
     newcal.add("method", "PUBLISH")
+    newcal.add("x-wr-calname", model_calendar.name)
+    newcal.add("x-wr-timezone", timezone)
+    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
 
     newtimezone = Timezone()
-    newtimezone.add("tzid", model_calendar.timezone)
+    newtimezone.add("tzid", timezone)
     newcal.add_component(newtimezone)
 
     events = []
@@ -59,44 +60,40 @@ def generate_ical(
                 f"{hebrew_date.event_type} {hebrew_date.name}"
             )
             event.add("summary", title)
+
             base_description = (
-                title
-                + "\n\nHebrew date automation triggers: https://myhebrewdates.com/automation"
+                f"{title}\n\n"
+                "Hebrew date automation triggers: https://myhebrewdates.com/automation"
             )
-            # if "Google-Calendar-Importer" in user_agent:
-            # if not (user_agent == "" or "iOS" in user_agent or "macOS" in user_agent):
-            #     base_description += (
-            #         "\n"
-            #         f"<img src='https://myhebrewdates.com/calendars/serve-ima
-            # ge/{model_calendar.uuid}/{hebrew_date.pk}' "
-            #         "width='1' height='1'>"
-            #     )
             event.add("description", base_description)
 
-            html_description = f"""
-            <html>
-            <body>
-                {title}<br>
-                Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>
-                <img src='https://myhebrewdates.com/calendars/serve-image
-                /{model_calendar.uuid}/{hebrew_date.pk}' width='1' height='1'>
-            </body>
-            </html>
-            """
+            img_url = (
+                f"https://myhebrewdates.com/calendars/serve-image/"
+                f"{model_calendar.uuid}/{hebrew_date.pk}"
+            )
+            html_description = (
+                f"<html><body>{title}<br>"
+                "Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>"
+                f"<img src='{img_url}' width='1' height='1'></body></html>"
+            )
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
-            event.add(
-                "dtstamp",
-                datetime.now(tz=ZoneInfo(model_calendar.timezone)),
-            )  # Set DTSTAMP to the current UTC time
+            # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
+            now_utc = datetime.now(tz=ZoneInfo("UTC"))
+            event.add("dtstamp", now_utc)
+            event.add("last-modified", hebrew_date.modified)
+            event.add("sequence", 0)
+
             event.add("dtstart", eng_date)
-            event.add("transp", "TRANSPARENT")
+            event.add("dtstart;value=date", eng_date)  # Mark as all-day event
             event.add("uid", uid)
+            event.add("transp", "TRANSPARENT")
             event.add(
                 "categories",
                 ["Hebrew Date", str(hebrew_date.get_event_type_display())],
             )
-            event.add("transp", "TRANSPARENT")
+
+            # Microsoft compatibility
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
 
@@ -140,20 +137,21 @@ def generate_ical_expirimental(
     user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    newcal = Calendar()
-    newcal.add("prodid", "-//" + model_calendar.name + "//MyHebrewDates.com//")
-    newcal.add("version", "2.0")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add(
-        "x-wr-timezone",
-        model_calendar.timezone,
-    )  # It is good to add this as well.
-    newcal.add("x-wr-caldesc", "Created by MyHebrewDates.com")
+    # Google Calendar works better with UTC for all-day events
+    is_google = "google" in user_agent.lower()
+    timezone = "UTC" if is_google else model_calendar.timezone
 
+    newcal = Calendar()
+    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
+    newcal.add("version", "2.0")
+    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
     newcal.add("method", "PUBLISH")
+    newcal.add("x-wr-calname", model_calendar.name)
+    newcal.add("x-wr-timezone", timezone)
+    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
 
     newtimezone = Timezone()
-    newtimezone.add("tzid", model_calendar.timezone)
+    newtimezone.add("tzid", timezone)
     newcal.add_component(newtimezone)
 
     events = []
@@ -184,18 +182,20 @@ def generate_ical_expirimental(
         )
         event.add("description", base_description)
 
-        event.add(
-            "dtstamp",
-            datetime.now(tz=ZoneInfo(model_calendar.timezone)),
-        )  # Set DTSTAMP to the current UTC time
+        # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
+        now_utc = datetime.now(tz=ZoneInfo("UTC"))
+        event.add("dtstamp", now_utc)
+        event.add("last-modified", hebrew_date.modified)
+        event.add("sequence", 0)
+
         event.add("dtstart", eng_date)
+        event.add("dtstart;value=date", eng_date)  # Mark as all-day event
         event.add("transp", "TRANSPARENT")
         event.add("uid", uid)
         event.add(
             "categories",
             ["Hebrew Date", str(hebrew_date.get_event_type_display())],
         )
-        event.add("transp", "TRANSPARENT")
 
         # Add alarm to the event
         alarm = Alarm()
