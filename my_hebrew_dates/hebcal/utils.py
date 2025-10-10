@@ -86,6 +86,7 @@ def generate_ical(
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
 
+            event.add("dtstart", eng_date)
             event.add("dtstart;value=date", eng_date)  # Mark as all-day event
             event.add("uid", uid)
             event.add("transp", "TRANSPARENT")
@@ -188,6 +189,7 @@ def generate_ical_experimental(
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
 
+        event.add("dtstart", eng_date)
         event.add("dtstart;value=date", eng_date)  # Mark as all-day event
         event.add("transp", "TRANSPARENT")
         event.add("uid", uid)
