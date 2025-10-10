@@ -26,7 +26,7 @@ from my_hebrew_dates.hebcal.models import HebrewDate
 from my_hebrew_dates.hebcal.models import HebrewDayEnum
 from my_hebrew_dates.hebcal.models import HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
-from my_hebrew_dates.hebcal.utils import generate_ical_expirimental
+from my_hebrew_dates.hebcal.utils import generate_ical_experimental
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -371,7 +371,9 @@ def calendar_file(request, uuid: UUID):
         logger.warning("Invalid alarm trigger value: %s", alarm_trigger_hours)
         alarm_trigger = timedelta(hours=9)
 
-    calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
+    calendar: Calendar = get_object_or_404(
+        Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
+    )
 
     if alarm_trigger_hours != "9":
         logger.info(
@@ -383,7 +385,7 @@ def calendar_file(request, uuid: UUID):
         )
     expirimental = request.GET.get("expirimental", False)
     if expirimental:
-        calendar_str = generate_ical_expirimental(
+        calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             user_agent=user_agent,
             alarm_trigger=alarm_trigger,

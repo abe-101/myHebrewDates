@@ -1,5 +1,5 @@
 # ruff: noqa: S324, ERA001
-import logging
+import html
 from base64 import urlsafe_b64encode
 from datetime import datetime
 from datetime import timedelta
@@ -12,7 +12,10 @@ from icalendar import Event
 
 from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
 
-logger = logging.getLogger(__name__)
+# Constants
+MYHEBREWDATES_URL = "https://myhebrewdates.com"
+MERGECAL_URL = "https://mergecal.org"
+MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
 
 
 def generate_ical(
@@ -37,6 +40,7 @@ def generate_ical(
     # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
+    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
     for hebrew_date in model_calendar.calendarOf.all():
         for eng_date in hebrew_date.get_english_dates():
@@ -50,7 +54,7 @@ def generate_ical(
             uid = (
                 eng_date.isoformat()
                 + urlsafe_b64encode(event_hash).decode("ascii")
-                + "@myhebrewdates.com"
+                + MYHEBREWDATES_DOMAIN
             )
             event = Event()
             title = (
@@ -60,24 +64,24 @@ def generate_ical(
             event.add("summary", title)
 
             base_description = (
-                f"{title}\n\n"
-                "Stop switching calendars. Merge them → https://mergecal.org"
+                f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
             )
             event.add("description", base_description)
 
             img_url = (
-                f"https://myhebrewdates.com/calendars/serve-image/"
+                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
                 f"{model_calendar.uuid}/{hebrew_date.pk}"
             )
             html_description = (
-                f"<html><body>{title}<br>"
-                "Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>"
-                f"<img src='{img_url}' width='1' height='1'></body></html>"
+                f"<html><body>{html.escape(title)}<br>"
+                f"Delivered to you by: "
+                f"<a href='{MYHEBREWDATES_URL}'>MyHebrewDates.com</a><br>"
+                f"<img src='{html.escape(img_url)}' "
+                f"width='1' height='1'></body></html>"
             )
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-            now_utc = datetime.now(tz=ZoneInfo("UTC"))
             event.add("dtstamp", now_utc)
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
@@ -95,12 +99,16 @@ def generate_ical(
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
 
+            attach_url = (
+                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
+                f"{model_calendar.uuid}/{hebrew_date.pk}"
+            )
             event.add(
                 "attach",
                 [
                     {
                         "fmttype": "image/png",
-                        "value": f"https://myhebrewdates.com/calendars/serve-image/{model_calendar.uuid}/{hebrew_date.pk}",
+                        "value": attach_url,
                     },
                 ],
             )
@@ -108,13 +116,10 @@ def generate_ical(
             # Add alarm to the event
             alarm = Alarm()
             alarm.add("action", "DISPLAY")
-            alarm.add(
-                "description",
-                hebrew_date.name
-                + "'s "
-                + hebrew_date.get_event_type_display()
-                + " is today!",
+            alarm_desc = (
+                f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
             )
+            alarm.add("description", alarm_desc)
 
             alarm.add("trigger", alarm_trigger)
             event.add_component(alarm)
@@ -126,11 +131,11 @@ def generate_ical(
     for event in sorted_events:
         newcal.add_component(event)
 
-    cal_bye_str = newcal.to_ical()
-    return cal_bye_str.decode("utf8")
+    ical_str = newcal.to_ical()
+    return ical_str.decode("utf8")
 
 
-def generate_ical_expirimental(
+def generate_ical_experimental(
     model_calendar: ModelCalendar,
     user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
@@ -152,6 +157,7 @@ def generate_ical_expirimental(
     # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
+    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
     for hebrew_date in model_calendar.calendarOf.all():
         event_hash = sha1(
@@ -165,7 +171,7 @@ def generate_ical_expirimental(
         uid = (
             eng_date.isoformat()
             + urlsafe_b64encode(event_hash).decode("ascii")
-            + "@myhebrewdates.com"
+            + MYHEBREWDATES_DOMAIN
         )
         event = Event()
         title = (
@@ -174,12 +180,11 @@ def generate_ical_expirimental(
         )
         event.add("summary", title)
         base_description = (
-            title + "\n\nStop switching calendars. Merge them → https://mergecal.org"
+            f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
         )
         event.add("description", base_description)
 
         # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-        now_utc = datetime.now(tz=ZoneInfo("UTC"))
         event.add("dtstamp", now_utc)
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
@@ -196,13 +201,10 @@ def generate_ical_expirimental(
         # Add alarm to the event
         alarm = Alarm()
         alarm.add("action", "DISPLAY")
-        alarm.add(
-            "description",
-            hebrew_date.name
-            + "'s "
-            + hebrew_date.get_event_type_display()
-            + " is today!",
+        alarm_desc = (
+            f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
         )
+        alarm.add("description", alarm_desc)
 
         alarm.add("trigger", alarm_trigger)
         event.add_component(alarm)
@@ -223,5 +225,5 @@ def generate_ical_expirimental(
     for event in sorted_events:
         newcal.add_component(event)
 
-    cal_bye_str = newcal.to_ical()
-    return cal_bye_str.decode("utf8")
+    ical_str = newcal.to_ical()
+    return ical_str.decode("utf8")
