@@ -107,13 +107,10 @@ def generate_ical(
             # Add alarm to the event
             alarm = Alarm()
             alarm.add("action", "DISPLAY")
-            alarm.add(
-                "description",
-                hebrew_date.name
-                + "'s "
-                + hebrew_date.get_event_type_display()
-                + " is today!",
+            alarm_desc = (
+                f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
             )
+            alarm.add("description", alarm_desc)
 
             alarm.add("trigger", alarm_trigger)
             event.add_component(alarm)
@@ -194,13 +191,10 @@ def generate_ical_experimental(
         # Add alarm to the event
         alarm = Alarm()
         alarm.add("action", "DISPLAY")
-        alarm.add(
-            "description",
-            hebrew_date.name
-            + "'s "
-            + hebrew_date.get_event_type_display()
-            + " is today!",
+        alarm_desc = (
+            f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
         )
+        alarm.add("description", alarm_desc)
 
         alarm.add("trigger", alarm_trigger)
         event.add_component(alarm)
