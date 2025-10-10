@@ -371,7 +371,9 @@ def calendar_file(request, uuid: UUID):
         logger.warning("Invalid alarm trigger value: %s", alarm_trigger_hours)
         alarm_trigger = timedelta(hours=9)
 
-    calendar: Calendar = get_object_or_404(Calendar.objects.filter(uuid=uuid))
+    calendar: Calendar = get_object_or_404(
+        Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
+    )
 
     if alarm_trigger_hours != "9":
         logger.info(
