@@ -15,6 +15,11 @@ from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
 
 logger = logging.getLogger(__name__)
 
+# Constants
+MYHEBREWDATES_URL = "https://myhebrewdates.com"
+MERGECAL_URL = "https://mergecal.org"
+MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
+
 
 def generate_ical(
     model_calendar: ModelCalendar,
@@ -52,7 +57,7 @@ def generate_ical(
             uid = (
                 eng_date.isoformat()
                 + urlsafe_b64encode(event_hash).decode("ascii")
-                + "@myhebrewdates.com"
+                + MYHEBREWDATES_DOMAIN
             )
             event = Event()
             title = (
@@ -62,19 +67,20 @@ def generate_ical(
             event.add("summary", title)
 
             base_description = (
-                f"{title}\n\n"
-                "Stop switching calendars. Merge them → https://mergecal.org"
+                f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
             )
             event.add("description", base_description)
 
             img_url = (
-                f"https://myhebrewdates.com/calendars/serve-image/"
+                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
                 f"{model_calendar.uuid}/{hebrew_date.pk}"
             )
             html_description = (
                 f"<html><body>{html.escape(title)}<br>"
-                "Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>"
-                f"<img src='{html.escape(img_url)}' width='1' height='1'></body></html>"
+                f"Delivered to you by: "
+                f"<a href='{MYHEBREWDATES_URL}'>MyHebrewDates.com</a><br>"
+                f"<img src='{html.escape(img_url)}' "
+                f"width='1' height='1'></body></html>"
             )
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
@@ -95,12 +101,16 @@ def generate_ical(
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
 
+            attach_url = (
+                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
+                f"{model_calendar.uuid}/{hebrew_date.pk}"
+            )
             event.add(
                 "attach",
                 [
                     {
                         "fmttype": "image/png",
-                        "value": f"https://myhebrewdates.com/calendars/serve-image/{model_calendar.uuid}/{hebrew_date.pk}",
+                        "value": attach_url,
                     },
                 ],
             )
@@ -163,7 +173,7 @@ def generate_ical_experimental(
         uid = (
             eng_date.isoformat()
             + urlsafe_b64encode(event_hash).decode("ascii")
-            + "@myhebrewdates.com"
+            + MYHEBREWDATES_DOMAIN
         )
         event = Event()
         title = (
@@ -172,7 +182,7 @@ def generate_ical_experimental(
         )
         event.add("summary", title)
         base_description = (
-            title + "\n\nStop switching calendars. Merge them → https://mergecal.org"
+            f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
         )
         event.add("description", base_description)
 
