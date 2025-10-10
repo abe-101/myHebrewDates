@@ -1,55 +1,248 @@
-// New theme palette
+// Hebrew-inspired color palette
 $white: #ffffff;
 
+// Core Hebrew-inspired colors
+$hebrew-blue: #2E5EAA;      // Deep Sapphire (Torah blue)
+$celebration-coral: #E84855; // Coral Red (joy/celebration)
+$tradition-gold: #C6A961;   // Warm Gold (synagogue gold)
+$family-green: #52B788;     // Sage Green (nature/growth)
+$wisdom-blue: #277DA1;      // Ocean Blue (wisdom)
+$candle-amber: #F4A261;     // Warm Amber (candle light)
+$wine-purple: #8B4A9C;      // Amethyst (wine/kiddush)
+
 $theme-colors: (
-    "light":      #d4d9d5,
-    "dark":       #030100,
-    "primary":    #324189,
-    "secondary":  #1770c9,
-    "info":       #49bee8,
-    "success":    #0da862,
-    "warning":    #e3cc0d,
-    "danger":     #f21d04,
+    "light":      #F8F9FB,
+    "dark":       #2D3436,
+    "primary":    $hebrew-blue,
+    "secondary":  $wine-purple,
+    "tertiary":   $tradition-gold,
+    "accent":     $celebration-coral,
+    "info":       $wisdom-blue,
+    "success":    $family-green,
+    "warning":    $candle-amber,
+    "danger":     $celebration-coral,
 );
 
 // Import Bootstrap and override defaults
 @import "bootstrap/bootstrap";
 
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+// Typography - Enhanced with Hebrew support
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;500;600;700&display=swap');
+
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', 'Noto Sans Hebrew', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
 }
 
+// Hebrew text support
+.hebrew, [lang="he"] {
+  font-family: 'Noto Sans Hebrew', 'Inter', sans-serif;
+  direction: rtl;
+  text-align: right;
+}
+
+// CSS Custom Properties for dynamic theming
 :root {
-    --gradient-primary: linear-gradient(135deg, #{map-get($theme-colors, "primary")}, #{map-get($theme-colors, "secondary")});
-    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
+    // Gradients
+    --gradient-primary: linear-gradient(135deg, #{$hebrew-blue}, #{$wine-purple});
+    --gradient-celebration: linear-gradient(135deg, #{$celebration-coral}, #{$candle-amber});
+    --gradient-success: linear-gradient(135deg, #{$family-green}, #{$tradition-gold});
+    --gradient-hero: linear-gradient(135deg, #{$hebrew-blue} 0%, #{$wine-purple} 50%, #{$tradition-gold} 100%);
+
+    // Shadows with Hebrew blue tint
+    --card-shadow: 0 2px 8px rgba(46, 94, 170, 0.08);
+    --card-shadow-hover: 0 8px 24px rgba(46, 94, 170, 0.15);
+    --button-shadow: 0 4px 12px rgba(46, 94, 170, 0.2);
+
+    // Text shadows for headers
+    --text-shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --text-shadow-strong: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 [data-bs-theme="dark"] {
-    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.4);
+    --button-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    // Dark mode gradients with better contrast
+    --gradient-primary: linear-gradient(135deg, #3D6BC6, #A85CA8);
+    --gradient-celebration: linear-gradient(135deg, #F05762, #F7B373);
+    --gradient-success: linear-gradient(135deg, #5EC995, #D4B76F);
+    --gradient-hero: linear-gradient(135deg, #3D6BC6 0%, #A85CA8 50%, #D4B76F 100%);
 }
 
-// Button gradient enhancement
+// Enhanced Button Styles
 .btn-primary {
     background: var(--gradient-primary);
     border: none;
+    box-shadow: var(--button-shadow);
+    font-weight: 500;
+    transition: all 0.3s ease;
 
-    &:hover {
+    &:hover, &:focus {
         background: var(--gradient-primary);
-        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba($hebrew-blue, 0.3);
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 }
 
-// Card hover enhancement
+.btn-outline-primary {
+    border-color: $hebrew-blue;
+    color: $hebrew-blue;
+    font-weight: 500;
+    transition: all 0.3s ease;
+
+    &:hover, &:focus {
+        background: var(--gradient-primary);
+        border-color: transparent;
+        transform: translateY(-1px);
+        box-shadow: var(--button-shadow);
+    }
+}
+
+// New celebration-themed button
+.btn-celebration {
+    background: var(--gradient-celebration);
+    color: white;
+    border: none;
+    font-weight: 600;
+    box-shadow: var(--button-shadow);
+    transition: all 0.3s ease;
+
+    &:hover, &:focus {
+        background: var(--gradient-celebration);
+        transform: translateY(-2px);
+        opacity: 0.95;
+        color: white;
+    }
+}
+
+// Gradient utility classes
+.bg-gradient-primary {
+    background: var(--gradient-primary) !important;
+}
+
+.bg-gradient-celebration {
+    background: var(--gradient-celebration) !important;
+}
+
+.bg-gradient-success {
+    background: var(--gradient-success) !important;
+}
+
+.bg-gradient-hero {
+    background: var(--gradient-hero) !important;
+}
+
+// Enhanced Card Styles
 .card {
     box-shadow: var(--card-shadow);
-    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(46, 94, 170, 0.1);
+    border-radius: 1rem;
 
     &:hover {
         box-shadow: var(--card-shadow-hover);
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        border-color: rgba(46, 94, 170, 0.2);
     }
+}
+
+// Celebration-themed cards - simplified
+.card-celebration {
+    border: 2px solid rgba(198, 169, 97, 0.3);
+    background: rgba(198, 169, 97, 0.05);
+
+    &:hover {
+        border-color: $tradition-gold;
+        background: rgba(198, 169, 97, 0.1);
+    }
+}
+
+// Typography enhancements
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    text-shadow: var(--text-shadow-soft);
+}
+
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+    font-weight: 700;
+    text-shadow: var(--text-shadow-strong);
+}
+
+// Celebration text styles - simplified
+.text-celebration {
+    color: $celebration-coral !important;
+}
+
+.text-tradition {
+    color: $tradition-gold !important;
+}
+
+.text-family {
+    color: $family-green !important;
+}
+
+.text-wisdom {
+    color: $wisdom-blue !important;
+}
+
+// Brand-specific styles
+.brand-enhanced {
+    font-weight: 700;
+    color: white !important;
+    text-decoration: none !important;
+    text-shadow: var(--text-shadow-strong);
+
+    .brand-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        color: $tradition-gold;
+    }
+
+    .brand-tagline {
+        font-size: 0.75rem;
+        font-weight: 400;
+        opacity: 0.9;
+        letter-spacing: 0.5px;
+    }
+}
+
+// Navbar enhancements
+.navbar-gradient {
+    background: var(--gradient-primary) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(46, 94, 170, 0.3);
+}
+
+// Footer enhancements
+.footer-gradient {
+    background: var(--gradient-hero) !important;
+    color: white;
+
+    a {
+        color: rgba(255, 255, 255, 0.8);
+        transition: all 0.3s ease;
+
+        &:hover {
+            color: white;
+            text-decoration: none;
+            transform: translateY(-1px);
+        }
+    }
+}
+
+// Minimal dark mode adjustments - let Bootstrap handle most of it
+[data-bs-theme="dark"] {
+    // Only override shadows for better depth
+    --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --card-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --button-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }

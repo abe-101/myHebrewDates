@@ -1,8 +1,78 @@
-<footer class="bg-primary py-3 mt-auto">
-  <div class="container d-flex flex-column justify-content-center align-items-center">
-    <p class="mb-0 text-center text-white">
-      © <span id="currentYear"></span> My Hebrew Dates. All rights reserved.
-    </p>
+<footer class="footer-gradient py-5 mt-auto">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-brand mb-4">
+          <h5 class="text-white mb-3">
+            <i class="bi bi-calendar-heart me-2 text-tradition"></i>
+            My Hebrew Dates
+          </h5>
+          <p class="text-light opacity-75 mb-3">Connecting families to their Hebrew heritage, one date at a time.</p>
+          <p class="text-light opacity-75 mb-0">
+            <small>Open source • Privacy focused • Community driven</small>
+          </p>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="text-white mb-3">Quick Start</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <a href="{% url 'account_signup' %}"
+               class="text-light opacity-75 text-decoration-none">
+              <i class="bi bi-plus-circle me-2"></i>Create Your Calendar
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'about' %}"
+               class="text-light opacity-75 text-decoration-none">
+              <i class="bi bi-calendar-plus me-2"></i>Add Hebrew Dates
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'about' %}"
+               class="text-light opacity-75 text-decoration-none">
+              <i class="bi bi-share me-2"></i>Share with Family
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-lg-4">
+        <h6 class="text-white mb-3">Community</h6>
+        <div class="community-stats">
+          <div class="stat-item mb-3">
+            <div class="d-flex align-items-center">
+              <strong class="text-warning fs-4 me-2">2,500+</strong>
+              <small class="text-light">Families Connected</small>
+            </div>
+          </div>
+          <div class="stat-item mb-3">
+            <div class="d-flex align-items-center">
+              <strong class="text-warning fs-4 me-2">15,000+</strong>
+              <small class="text-light">Events Tracked</small>
+            </div>
+          </div>
+          <div class="stat-item">
+            <small class="text-light opacity-75">
+              <i class="bi bi-heart-fill text-celebration me-1"></i>
+              Building stronger Jewish families since 2023
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="my-4 opacity-25" />
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <p class="mb-0 text-light opacity-75">
+          © <span id="currentYear"></span> My Hebrew Dates. All rights reserved.
+        </p>
+      </div>
+      <div class="col-md-6 text-md-end">
+        <small class="text-light opacity-50">
+          Made with <i class="bi bi-heart-fill text-celebration"></i> for the Jewish community
+        </small>
+      </div>
+    </div>
   </div>
 </footer>
 <script>
