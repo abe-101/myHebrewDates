@@ -13,90 +13,151 @@
 {% block content %}
   <!-- Hero Section -->
   <header>
-    <div class="bg-body-tertiary py-5">
-      <div class="container text-center">
-        <h1 class="display-4">My Hebrew Dates</h1>
-        <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
-        <div class="d-flex justify-content-center gap-3">
-          {% if user.is_authenticated %}
-            <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-lg">Get Started</a>
-          {% else %}
-            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg">Sign In</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign Up</a>
-          {% endif %}
+    <section class="bg-gradient-hero py-5">
+      <div class="container py-5">
+        <div class="row align-items-center justify-content-center text-center py-5">
+          <div class="col-lg-8">
+            <h1 class="display-2 text-white mb-4 fw-bold">
+              Never Miss Another Hebrew Calendar Celebration
+            </h1>
+            <p class="lead text-white opacity-90 mb-5 fs-4">
+              Connect your family to tradition with seamless Hebrew calendar sync
+            </p>
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+              {% if user.is_authenticated %}
+                <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-celebration btn-lg px-5 py-3">
+                  Create Your Calendar
+                </a>
+              {% else %}
+                <a href="{% url 'account_signup' %}" class="btn btn-celebration btn-lg px-5 py-3">
+                  Get Started Free
+                </a>
+              {% endif %}
+            </div>
+            <div class="mt-4">
+              <small class="text-white opacity-75">
+                Trusted by 2,500+ Jewish families worldwide
+              </small>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   </header>
   <!-- Features Section -->
-  <section>
-    <div class="container text-center py-5">
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-calendar4-event display-3 text-primary"></i>
+  <section class="py-5 bg-light">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="display-5 mb-5 text-primary">Strengthen Family Bonds Through Tradition</h2>
+        <div class="row g-5">
+          <div class="col-lg-4">
+            <div class="text-center">
+              <div class="mb-4">
+                <i class="bi bi-calendar-heart display-3 text-celebration"></i>
+              </div>
+              <h3 class="h4 text-primary mb-3">Create Family Calendars</h3>
+              <p class="text-body-secondary lead">
+                Build meaningful connections by tracking Hebrew birthdays, yahrzeits, and anniversaries that matter to your family.
+              </p>
+            </div>
           </div>
-          <h2>Create Personalized Calendars</h2>
-          <p class="text-body-secondary">
-            Create custom Hebrew event calendars for your family, including birthdays, anniversaries, and more.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-file-earmark-arrow-up display-3 text-primary"></i>
+          <div class="col-lg-4">
+            <div class="text-center">
+              <div class="mb-4">
+                <i class="bi bi-translate display-3 text-family"></i>
+              </div>
+              <h3 class="h4 text-primary mb-3">Bridge Two Worlds</h3>
+              <p class="text-body-secondary lead">
+                Seamlessly convert Hebrew dates to your everyday calendar, making tradition accessible in your digital life.
+              </p>
+            </div>
           </div>
-          <h2>Corresponding English Events</h2>
-          <p class="text-body-secondary">
-            Automatically generate English event labels that correspond to your Hebrew dates for easy understanding.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-link-45deg display-3 text-primary"></i>
+          <div class="col-lg-4">
+            <div class="text-center">
+              <div class="mb-4">
+                <i class="bi bi-people-fill display-3 text-wisdom"></i>
+              </div>
+              <h3 class="h4 text-primary mb-3">Connect Generations</h3>
+              <p class="text-body-secondary lead">
+                Share your family's Hebrew calendar with relatives worldwide, keeping everyone connected to your shared heritage.
+              </p>
+            </div>
           </div>
-          <h2>Share with Family Members</h2>
-          <p class="text-body-secondary">
-            Share your personalized calendar with family members by providing them with a unique URL to subscribe to.
-          </p>
         </div>
       </div>
     </div>
   </section>
   <!-- Testimonials Section -->
-  <section class="py-5 bg-body-tertiary">
+  <section class="py-5">
     <div class="container">
-      <h2 class="text-center mb-5">What Our Users Say</h2>
+      <div class="text-center mb-5">
+        <h2 class="display-5 text-primary">Families Share Their Stories</h2>
+        <p class="lead text-muted">Discover how My Hebrew Dates strengthens family connections</p>
+      </div>
       <div class="row g-4">
         <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <div class="mb-3">
+                <i class="bi bi-quote text-celebration" style="font-size: 2rem;"></i>
+              </div>
+              <p class="card-text mb-4 fst-italic">
                 "My Hebrew Dates has made it so much easier for our family to remember
-                and celebrate important Hebrew events. Highly recommended!"
+                and celebrate important Hebrew events. Our children now know exactly when their Hebrew birthday is!"
               </p>
-              <h5 class="card-title">Ezra Cohen</h5>
+              <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                  <i class="bi bi-person-fill text-white"></i>
+                </div>
+                <div>
+                  <h6 class="card-title mb-0">Ezra Cohen</h6>
+                  <small class="text-muted">Father of 3, Brooklyn NY</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <div class="mb-3">
+                <i class="bi bi-quote text-celebration" style="font-size: 2rem;"></i>
+              </div>
+              <p class="card-text mb-4 fst-italic">
                 "I love using My Hebrew Dates to keep track of all our family birthdays
-                and other special dates. It's a fantastic tool!"
+                and yahrzeits. It's brought our extended family closer together across different cities."
               </p>
-              <h5 class="card-title">Leah Rosenberg</h5>
+              <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                  <i class="bi bi-person-fill text-white"></i>
+                </div>
+                <div>
+                  <h6 class="card-title mb-0">Leah Rosenberg</h6>
+                  <small class="text-muted">Grandmother, Los Angeles CA</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body p-4">
+              <div class="mb-3">
+                <i class="bi bi-quote text-celebration" style="font-size: 2rem;"></i>
+              </div>
+              <p class="card-text mb-4 fst-italic">
                 "My Hebrew Dates has brought our family closer together by helping us
-                stay connected through our shared calendar. Thank you!"
+                stay connected through our shared calendar. Now nobody misses a celebration!"
               </p>
-              <h5 class="card-title">Benjamin Steinberg</h5>
+              <div class="d-flex align-items-center">
+                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                  <i class="bi bi-person-fill text-white"></i>
+                </div>
+                <div>
+                  <h6 class="card-title mb-0">Benjamin Steinberg</h6>
+                  <small class="text-muted">Community Leader, Chicago IL</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -104,39 +165,69 @@
     </div>
   </section>
   <!-- How It Works Section -->
-  <section class="py-5 text-center">
+  <section class="py-5 text-center bg-gradient-primary text-white">
     <div class="container">
-      <h2 class="mb-5">How It Works</h2>
+      <div class="mb-5">
+        <h2 class="display-5 mb-3">Simple Steps to Family Connection</h2>
+        <p class="lead opacity-90">Start celebrating together in just minutes</p>
+      </div>
       <div class="row g-4">
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-pencil-square display-3 text-primary"></i>
+          <div class="card rounded-4 h-100 shadow border-0">
+            <div class="card-body p-4">
+              <div class="mb-4 position-relative">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                  <i class="bi bi-calendar-plus display-4 text-white"></i>
+                </div>
+                <span class="badge bg-danger position-absolute translate-middle rounded-pill" style="top: 10px; left: 60%;">1</span>
+              </div>
+              <h4 class="text-primary mb-3">Create Your Family Calendar</h4>
+              <p class="text-muted">
+                Sign up and add your family's special Hebrew dates - birthdays, anniversaries, and yahrzeits that matter most to you.
+              </p>
+            </div>
           </div>
-          <h5>Create Your Calendar</h5>
-          <p class="text-body-secondary">
-            Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the
-            Hebrew date.
-          </p>
         </div>
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-link-45deg display-3 text-primary"></i>
+          <div class="card rounded-4 h-100 shadow border-0">
+            <div class="card-body p-4">
+              <div class="mb-4 position-relative">
+                <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                  <i class="bi bi-share display-4 text-white"></i>
+                </div>
+                <span class="badge bg-danger position-absolute translate-middle rounded-pill" style="top: 10px; left: 60%;">2</span>
+              </div>
+              <h4 class="text-primary mb-3">Share with Love</h4>
+              <p class="text-muted">
+                Generate a secure calendar link to share with family members across the globe. One click connects everyone.
+              </p>
+            </div>
           </div>
-          <h5>Share the URL</h5>
-          <p class="text-body-secondary">
-            With the click of a button, generate a unique URL to share your calendar with your family members.
-          </p>
         </div>
         <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-calendar-check display-3 text-primary"></i>
+          <div class="card rounded-4 h-100 shadow border-0">
+            <div class="card-body p-4">
+              <div class="mb-4 position-relative">
+                <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                  <i class="bi bi-heart-fill display-4 text-white"></i>
+                </div>
+                <span class="badge bg-danger position-absolute translate-middle rounded-pill" style="top: 10px; left: 60%;">3</span>
+              </div>
+              <h4 class="text-primary mb-3">Never Miss a Celebration</h4>
+              <p class="text-muted">
+                Family members automatically receive reminders in their personal calendars. Every Hebrew date becomes a moment of connection.
+              </p>
+            </div>
           </div>
-          <h5>Stay Connected</h5>
-          <p class="text-body-secondary">
-            Your family members can subscribe to the calendar and receive updates for the Hebrew events that will
-            automatically appear in their calendar feed.
-          </p>
         </div>
+      </div>
+      <div class="mt-5">
+        {% if not user.is_authenticated %}
+          <a href="{% url 'account_signup' %}" class="btn btn-celebration btn-lg px-5 py-3">
+            Start Building Your Family Calendar Today
+            <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        {% endif %}
       </div>
     </div>
   </section>

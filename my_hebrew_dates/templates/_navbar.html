@@ -1,12 +1,12 @@
 {% load i18n %}
 
 {% get_current_language as LANGUAGE_CODE %}
-<nav class="navbar navbar-expand-lg bg-body-tertiary navbar-blur sticky-top rounded">
+<nav class="navbar navbar-expand-lg navbar-gradient sticky-top">
   <div class="container">
-    <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center"
+    <!-- Clean Brand -->
+    <a class="navbar-brand text-white fw-bold d-flex align-items-center"
        href="{% url 'home' %}">
-      <i class="bi bi-calendar-event me-2"></i>
+      <i class="bi bi-calendar-heart me-2"></i>
       My Hebrew Dates
     </a>
     <!-- Mobile Toggle -->
@@ -23,135 +23,154 @@
       <!-- Main Navigation Links -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+          <a class="nav-link text-light {% if request.resolver_match.url_name == 'home' %}fw-bold{% endif %}"
              href="{% url 'home' %}">
             <i class="bi bi-house-door me-1"></i>Home
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+          <a class="nav-link text-light {% if request.resolver_match.url_name == 'about' %}fw-bold{% endif %}"
              href="{% url 'about' %}">
             <i class="bi bi-info-circle me-1"></i>About
           </a>
         </li>
         {% if request.user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link {% if request.resolver_match.url_name == 'calendar_list' %}active{% endif %}"
+            <a class="nav-link text-light {% if request.resolver_match.url_name == 'calendar_list' %}fw-bold{% endif %}"
                href="{% url 'hebcal:calendar_list' %}">
               <i class="bi bi-calendar3 me-1"></i>Calendars
             </a>
           </li>
         {% endif %}
       </ul>
-      <!-- Right Side Items -->
-      <div class="d-flex align-items-center gap-2">
-        <!-- Social Links -->
-        <div class="btn-group btn-group-sm">
-          <a class="btn btn-outline-primary rounded-start"
-             href="https://discord.gg/2vqUzSpt6N"
-             data-bs-toggle="tooltip"
-             data-bs-title="Join our Discord">
-            <i class="bi bi-discord"></i>
-          </a>
-          <a class="btn btn-outline-primary rounded-0"
-             href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates"
-             data-bs-toggle="tooltip"
-             data-bs-title="Email us">
-            <i class="bi bi-envelope"></i>
-          </a>
-          <a class="btn btn-outline-primary rounded-end"
-             href="https://github.com/abe-101/myhebrewdates"
-             data-bs-toggle="tooltip"
-             data-bs-title="View on GitHub">
-            <i class="bi bi-github"></i>
-          </a>
-        </div>
-        <!-- Auth Section -->
-        {% if request.user.is_authenticated %}
-          <div class="dropdown">
-            <a class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center"
+
+      <!-- Right Side - Organized in logical groups -->
+      <div class="d-flex align-items-center">
+        <!-- Social Links Group -->
+        <div class="navbar-nav me-3">
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-light d-flex align-items-center"
                href="#"
                role="button"
                data-bs-toggle="dropdown"
                aria-expanded="false">
-              <i class="bi bi-person-circle me-1"></i>
-              {{ request.user.username }}
+              <i class="bi bi-chat-dots me-1"></i>
+              <span class="d-none d-lg-inline">Connect</span>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
-                <a class="dropdown-item"
-                   href="{% url 'users:detail' request.user.username %}">
-                  <i class="bi bi-person me-2"></i>{% translate "My Profile" %}
+                <a class="dropdown-item" href="https://discord.gg/2vqUzSpt6N">
+                  <i class="bi bi-discord me-2"></i>Join Discord
                 </a>
               </li>
               <li>
-                <hr class="dropdown-divider" />
+                <a class="dropdown-item" href="mailto:support@myHebrewDates.com">
+                  <i class="bi bi-envelope me-2"></i>Email Support
+                </a>
               </li>
               <li>
-                <a class="dropdown-item" href="{% url 'account_logout' %}">
-                  <i class="bi bi-box-arrow-right me-2"></i>{% translate "Sign Out" %}
+                <a class="dropdown-item" href="https://github.com/abe-101/myhebrewdates">
+                  <i class="bi bi-github me-2"></i>View Source
                 </a>
               </li>
             </ul>
           </div>
-        {% else %}
-          <div class="d-flex gap-2">
-            {% if ACCOUNT_ALLOW_REGISTRATION %}
-              <a class="btn btn-outline-primary btn-sm"
-                 href="{% url 'account_signup' %}">
-                <i class="bi bi-person-plus me-1"></i>{% translate "Sign Up" %}
+        </div>
+
+        <!-- Settings Group -->
+        <div class="navbar-nav me-3">
+          <li class="nav-item dropdown">
+            <button class="nav-link dropdown-toggle text-light bg-transparent border-0 d-flex align-items-center"
+                    id="bd-theme"
+                    type="button"
+                    aria-expanded="false"
+                    data-bs-toggle="dropdown"
+                    aria-label="Toggle theme (light)">
+              <i class="bi theme-icon-active bi-sun-fill me-1"></i>
+              <span class="d-none d-lg-inline">Theme</span>
+              <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow"
+                aria-labelledby="bd-theme-text">
+              <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="light"
+                        aria-pressed="false">
+                  <i class="bi me-2 opacity-50 bi-sun-fill"></i>
+                  Light
+                  <i class="bi ms-auto d-none bi-check2"></i>
+                </button>
+              </li>
+              <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="dark"
+                        aria-pressed="false">
+                  <i class="bi me-2 opacity-50 bi-moon-stars-fill"></i>
+                  Dark
+                  <i class="bi ms-auto d-none bi-check2"></i>
+                </button>
+              </li>
+              <li>
+                <button type="button"
+                        class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="auto"
+                        aria-pressed="false">
+                  <i class="bi me-2 opacity-50 bi-circle-half"></i>
+                  Auto
+                  <i class="bi ms-auto d-none bi-check2"></i>
+                </button>
+              </li>
+            </ul>
+          </li>
+        </div>
+
+        <!-- Auth Group -->
+        <div class="navbar-nav">
+          {% if request.user.is_authenticated %}
+            <div class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle text-light d-flex align-items-center"
+                 href="#"
+                 role="button"
+                 data-bs-toggle="dropdown"
+                 aria-expanded="false">
+                <i class="bi bi-person-circle me-1"></i>
+                <span class="d-none d-lg-inline">{{ request.user.username }}</span>
               </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <a class="dropdown-item"
+                     href="{% url 'users:detail' request.user.username %}">
+                    <i class="bi bi-person me-2"></i>{% translate "My Profile" %}
+                  </a>
+                </li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                <li>
+                  <a class="dropdown-item" href="{% url 'account_logout' %}">
+                    <i class="bi bi-box-arrow-right me-2"></i>{% translate "Sign Out" %}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          {% else %}
+            <div class="nav-item">
+              <a class="nav-link text-light" href="{% url 'account_login' %}">
+                <i class="bi bi-box-arrow-in-right me-1"></i>
+                {% translate "Sign In" %}
+              </a>
+            </div>
+            {% if ACCOUNT_ALLOW_REGISTRATION %}
+              <div class="nav-item ms-2">
+                <a class="btn btn-celebration btn-sm" href="{% url 'account_signup' %}">
+                  {% translate "Get Started" %}
+                </a>
+              </div>
             {% endif %}
-            <a class="btn btn-primary btn-sm" href="{% url 'account_login' %}">
-              <i class="bi bi-box-arrow-in-right me-1"></i>{% translate "Sign In" %}
-            </a>
-          </div>
-        {% endif %}
-        <!-- Theme Toggle -->
-        <li class="nav-item dropdown">
-          <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center me-2 theme-toggle"
-                  id="bd-theme"
-                  type="button"
-                  aria-expanded="false"
-                  data-bs-toggle="dropdown"
-                  aria-label="Toggle theme (light)">
-            <i class="bi theme-icon-active bi-sun-fill"></i>
-            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow"
-              aria-labelledby="bd-theme-text">
-            <li>
-              <button type="button"
-                      class="dropdown-item d-flex align-items-center"
-                      data-bs-theme-value="light"
-                      aria-pressed="false">
-                <i class="bi opacity-50 bi-sun-fill"></i>
-                Light
-                <i class="bi ms-auto d-none bi-check2"></i>
-              </button>
-            </li>
-            <li>
-              <button type="button"
-                      class="dropdown-item d-flex align-items-center"
-                      data-bs-theme-value="dark"
-                      aria-pressed="false">
-                <i class="bi opacity-50 bi-moon-stars-fill"></i>
-                Dark
-                <i class="bi ms-auto d-none bi-check2"></i>
-              </button>
-            </li>
-            <li>
-              <button type="button"
-                      class="dropdown-item d-flex align-items-center"
-                      data-bs-theme-value="auto"
-                      aria-pressed="false">
-                <i class="bi opacity-50 bi-circle-half"></i>
-                Auto
-                <i class="bi ms-auto d-none bi-check2"></i>
-              </button>
-            </li>
-          </ul>
-        </li>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>

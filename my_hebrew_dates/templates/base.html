@@ -109,21 +109,17 @@
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">
-    <div class="container flex-grow-1 mb-5">
-      <div class="mb-1">{% include '_navbar.html' %}</div>
-      <div class="container">
-        {% block body %}
-          {% block main %}
-            {% block content %}
-              <p>Use this document as a way to quick start any new project.</p>
-            {% endblock content %}
-          {% endblock main %}
-          {% include 'toasts.html' %}
-        {% endblock body %}
-      </div>
-      <!-- /container -->
-    </div>
-    <!-- flex-shrink-0 container -->
+    {% include '_navbar.html' %}
+    <main class="flex-grow-1">
+      {% block body %}
+        {% block main %}
+          {% block content %}
+            <p>Use this document as a way to quick start any new project.</p>
+          {% endblock content %}
+        {% endblock main %}
+        {% include 'toasts.html' %}
+      {% endblock body %}
+    </main>
     {% include '_footer.html' %}
     <!-- /container -->
     {% block modal %}
