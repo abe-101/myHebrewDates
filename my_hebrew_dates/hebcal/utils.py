@@ -37,6 +37,7 @@ def generate_ical(
     # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
+    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
     for hebrew_date in model_calendar.calendarOf.all():
         for eng_date in hebrew_date.get_english_dates():
@@ -77,7 +78,6 @@ def generate_ical(
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-            now_utc = datetime.now(tz=ZoneInfo("UTC"))
             event.add("dtstamp", now_utc)
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
@@ -151,6 +151,7 @@ def generate_ical_experimental(
     # All-day events (VALUE=DATE) don't require timezone conversion
 
     events = []
+    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
     for hebrew_date in model_calendar.calendarOf.all():
         event_hash = sha1(
@@ -178,7 +179,6 @@ def generate_ical_experimental(
         event.add("description", base_description)
 
         # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-        now_utc = datetime.now(tz=ZoneInfo("UTC"))
         event.add("dtstamp", now_utc)
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
