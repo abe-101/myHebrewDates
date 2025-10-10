@@ -63,7 +63,7 @@ def generate_ical(
 
             base_description = (
                 f"{title}\n\n"
-                "Hebrew date automation triggers: https://myhebrewdates.com/automation"
+                "Stop switching calendars. Merge them → https://mergecal.org"
             )
             event.add("description", base_description)
 
@@ -177,8 +177,7 @@ def generate_ical_expirimental(
         )
         event.add("summary", title)
         base_description = (
-            title
-            + "\n\nHebrew date automation triggers: https://myhebrewdates.com/automation"
+            title + "\n\nStop switching calendars. Merge them → https://mergecal.org"
         )
         event.add("description", base_description)
 
