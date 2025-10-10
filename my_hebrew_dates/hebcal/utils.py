@@ -1,4 +1,5 @@
 # ruff: noqa: S324, ERA001
+import html
 import logging
 from base64 import urlsafe_b64encode
 from datetime import datetime
@@ -71,9 +72,9 @@ def generate_ical(
                 f"{model_calendar.uuid}/{hebrew_date.pk}"
             )
             html_description = (
-                f"<html><body>{title}<br>"
+                f"<html><body>{html.escape(title)}<br>"
                 "Delivered to you by: <a href='https://myhebrewdates.com'>MyHebrewDates.com</a><br>"
-                f"<img src='{img_url}' width='1' height='1'></body></html>"
+                f"<img src='{html.escape(img_url)}' width='1' height='1'></body></html>"
             )
             event.add("x-alt-desc;fmttype=text/html", html_description)
 
