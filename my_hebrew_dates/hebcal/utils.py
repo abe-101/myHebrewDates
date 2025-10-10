@@ -130,7 +130,7 @@ def generate_ical(
     return cal_bye_str.decode("utf8")
 
 
-def generate_ical_expirimental(
+def generate_ical_experimental(
     model_calendar: ModelCalendar,
     user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
