@@ -7,29 +7,65 @@
   {{ calendar.name }}
 {% endblock title %}
 {% block content %}
-  <div class="container szSmallerSection">
-    <div class="card mt-4 mb-4">
-      <div class="card-header d-flex justify-content-between">
-        <h5 class="card-title szCaps">
-          <i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}
-        </h5>
+  <style>
+    .platform-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+      transition: all 0.3s ease;
+    }
+
+    .event-birthday {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+      border-color: #667eea !important;
+    }
+
+    .event-anniversary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+      border-color: #f093fb !important;
+    }
+
+    .event-yahrzeit {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+      border-color: #4facfe !important;
+    }
+
+    #calendar {
+      min-height: 600px;
+    }
+
+    .card {
+      transition: all 0.3s ease;
+    }
+
+    #calendarLoading {
+      z-index: 10;
+    }
+  </style>
+  <div class="container mt-4">
+    <div class="card mb-4 shadow">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">
+          <i class="bi bi-calendar-heart"></i> {{ calendar.name }}
+        </h3>
         <input hidden
                id="calendar_file_url{{ calendar.uuid }}"
                value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
         <button onclick="shareFile('{{ calendar.uuid }}')"
-                class="szWhiteBorder btn btn-outline-primarySmall btn btn-primary"
+                class="btn btn-light"
                 type="button"
                 title="Share with friends and family">
-          <i class="bi bi-share"></i>
+          <i class="bi bi-share"></i> Share
         </button>
       </div>
       <div class="card-body">
-        <p>
-          By clicking the "Add To Calendar" button, you can choose your preferred calendar client and effortlessly sync the hebrew events with your personal calendar. Select your preferred platform from the list and follow the instructions to subscribe to this calendar.
+        <p class="lead">
+          Subscribe to this calendar to automatically sync Hebrew dates with your personal calendar. Choose your platform below or copy the URL for any calendar app.
         </p>
         <!-- Alarm Time Selection Form with htmx -->
-        <div id="alarmTimeSelector" class="mb-2">
-          <label for="alarmTime">Set an alarm reminder:</label>
+        <div id="alarmTimeSelector" class="mb-4">
+          <label for="alarmTime" class="form-label fw-bold">
+            <i class="bi bi-alarm"></i> Alarm Reminder
+          </label>
           <select name="alarm"
                   id="alarmTime"
                   class="form-select"
@@ -52,34 +88,99 @@
             <option value="11">11 AM</option>
             <option value="12">12 PM</option>
           </select>
+          <small class="form-text text-muted">Set when you want to be reminded of upcoming events</small>
         </div>
         {% include "hebcal/_calendar_links.html" %}
       </div>
       <div class="card-footer">
-        <a class="hover-text-shadow"
+        <a class="d-flex justify-content-between align-items-center text-decoration-none"
            data-bs-toggle="collapse"
            href="#collapseExample"
            role="button"
            aria-expanded="false"
            aria-controls="collapseExample">
-          <i class="bi bi-lightbulb"></i> About following a calendar
+          <span>
+            <i class="bi bi-lightbulb"></i> About calendar subscriptions
+          </span>
+          <i class="bi bi-chevron-down"></i>
         </a>
-        <span>
-          <i class="bi bi-caret-down"></i>
-        </span>
-        <div class="collapse" id="collapseExample">
-          When you subscribe to this calendar, all of the events in the calendar will appear on your own calendar. When the calendar owner creates new events, they'll automatically appear on your calendar. It's like magic. ⭐
+        <div class="collapse mt-3" id="collapseExample">
+          <p class="text-muted mb-0">
+            When you subscribe to this calendar, all events will appear on your own calendar. When new events are created, they'll automatically appear. It's like magic!
+          </p>
         </div>
       </div>
     </div>
-    <div class="card mb-4">
-      <div class="card-header">
-        <h5 class="card-title szCaps">
-          <i class="bi bi-calendar-check-fill"></i> {{ calendar.name }}
+    <div class="card mb-4 shadow">
+      <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">
+          <i class="bi bi-calendar-week"></i> Calendar Preview
         </h5>
       </div>
       <div class="card-body">
-        <div id="calendar"></div>
+        <div id="calendarContainer" class="position-relative">
+          <div id="calendarLoading"
+               class="position-absolute top-50 start-50 translate-middle text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading calendar...</p>
+          </div>
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Event Details Modal -->
+    <div class="modal fade"
+         id="eventModal"
+         tabindex="-1"
+         aria-labelledby="eventModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="eventModalLabel"></h5>
+            <button type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item py-3" id="eventTimeItem">
+                    <i class="bi bi-clock me-2"></i>
+                    <span id="eventTime"></span>
+                  </li>
+                  <li class="list-group-item py-3" id="eventTypeItem">
+                    <i class="bi bi-tag me-2"></i>
+                    <span id="eventType"></span>
+                  </li>
+                  <li class="list-group-item py-3" id="eventLocationItem">
+                    <i class="bi bi-geo-alt me-2"></i>
+                    <span id="eventLocation"></span>
+                  </li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <div class="card h-100">
+                  <div class="card-body">
+                    <h6 class="card-subtitle mb-2 text-muted">Description</h6>
+                    <div id="eventDescription"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button"
+                    class="btn btn-outline-secondary"
+                    data-bs-dismiss="modal">
+              <i class="bi bi-x-circle me-2"></i>Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -87,28 +188,234 @@
 {% block inline_javascript %}
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM content loaded');
       var calendarEl = document.getElementById('calendar');
+      var loadingEl = document.getElementById('calendarLoading');
+
+      if (!calendarEl) {
+        console.error('Calendar element not found');
+        return;
+      }
+
       var calendar = new FullCalendar.Calendar(calendarEl, {
+        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
         themeSystem: 'bootstrap5',
         headerToolbar: {
-          left: 'prev,next today',
+          start: 'prev,next today',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,listYear'
+          end: 'dayGridMonth,timeGridWeek,listYear,multiMonthYear'
+        },
+        buttonIcons: {
+          prev: 'arrow-left',
+          next: 'arrow-right',
+        },
+        eventClassNames: function(arg) {
+          var event = arg.event;
+          var title = event.title.toLowerCase();
+          var description = event.extendedProps.description ? event.extendedProps.description.toLowerCase() : '';
+
+          if (title.includes('birthday') || description.includes('birthday')) {
+            return ['event-birthday'];
+          } else if (title.includes('anniversary') || description.includes('anniversary')) {
+            return ['event-anniversary'];
+          } else if (title.includes('yahrzeit') || title.includes('yartzeit') || description.includes('yahrzeit') || description.includes('yartzeit')) {
+            return ['event-yahrzeit'];
+          }
+          return ['bg-primary'];
         },
         dayMaxEvents: true,
         initialView: 'listYear',
-        eventSources: [{
+        events: {
           url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
           format: 'ics',
-        }, ]
-        // Additional FullCalendar options can go here
+        },
+        loading: function(isLoading) {
+          if (isLoading) {
+            loadingEl.style.display = 'block';
+          } else {
+            loadingEl.style.display = 'none';
+          }
+        },
+        eventClick: function(info) {
+          info.jsEvent.preventDefault();
+          console.log('Event clicked:', info.event);
+          var modal = new bootstrap.Modal(document.getElementById('eventModal'));
+          var event = info.event;
+
+          // Set modal title
+          document.getElementById('eventModalLabel').textContent = event.title;
+
+          // Set event time
+          var timeStr = formatEventTime(event.start, event.end, event.allDay);
+          document.getElementById('eventTime').textContent = timeStr;
+          document.getElementById('eventTimeItem').style.display = 'list-item';
+
+          // Set event type if available in description (Birthday, Anniversary, Yahrzeit)
+          var typeEl = document.getElementById('eventTypeItem');
+          if (event.extendedProps.description) {
+            var description = event.extendedProps.description;
+            var eventType = '';
+            if (description.includes('Birthday') || event.title.includes('Birthday')) {
+              eventType = 'Birthday';
+            } else if (description.includes('Anniversary') || event.title.includes('Anniversary')) {
+              eventType = 'Anniversary';
+            } else if (description.includes('Yahrzeit') || event.title.includes('Yahrzeit')) {
+              eventType = 'Yahrzeit';
+            }
+
+            if (eventType) {
+              document.getElementById('eventType').textContent = eventType;
+              typeEl.style.display = 'list-item';
+            } else {
+              typeEl.style.display = 'none';
+            }
+          } else {
+            typeEl.style.display = 'none';
+          }
+
+          // Set location if available
+          var locationEl = document.getElementById('eventLocationItem');
+          if (event.extendedProps.location) {
+            document.getElementById('eventLocation').textContent = event.extendedProps.location;
+            locationEl.style.display = 'list-item';
+          } else {
+            locationEl.style.display = 'none';
+          }
+
+          // Set description if available
+          var descriptionEl = document.getElementById('eventDescription');
+          if (event.extendedProps.description) {
+            descriptionEl.innerHTML = parseDescription(event.extendedProps.description);
+          } else {
+            descriptionEl.innerHTML = '<p class="text-muted">No additional details.</p>';
+          }
+
+          modal.show();
+        },
+        eventContent: function(arg) {
+          return {
+            html: `<div class="fc-event-title">${arg.event.title}</div>`
+          };
+        }
       });
+
       calendar.render();
+      console.log('Calendar rendered');
     });
+
+    function formatEventTime(start, end, allDay) {
+      var options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+      };
+
+      if (allDay) {
+        options.hour = undefined;
+        options.minute = undefined;
+        return start.toLocaleDateString('en-US', options);
+      }
+
+      var startStr = start.toLocaleString('en-US', options);
+      if (!end) return startStr;
+
+      var endOptions = {
+        ...options
+      };
+      // If start and end are on the same day, only show the date once
+      if (start.toDateString() === end.toDateString()) {
+        endOptions = {
+          hour: 'numeric',
+          minute: '2-digit',
+        };
+      }
+
+      var endStr = end.toLocaleString('en-US', endOptions);
+      return `${startStr} - ${endStr}`;
+    }
+
+    function parseDescription(description) {
+      // Convert URLs to links and preserve line breaks
+      var linkedText = description.replace(
+        /(https?:\/\/[^\s]+)/g,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+      );
+      return linkedText.replace(/\n/g, '<br />');
+    }
   </script>
   <script>
     (function() {
       $('[data-toggle="tooltip"]').tooltip()
     })
+  </script>
+  <script>
+    function copyCalendarUrl() {
+      const urlInput = document.getElementById('calendarUrl');
+      const copyButton = event.currentTarget;
+      const originalHtml = copyButton.innerHTML;
+
+      // Select and copy the URL
+      urlInput.select();
+      urlInput.setSelectionRange(0, 99999); // For mobile devices
+
+      navigator.clipboard.writeText(urlInput.value).then(function() {
+        // Show success feedback
+        copyButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> Copied!';
+        copyButton.classList.remove('btn-primary');
+        copyButton.classList.add('btn-success');
+
+        // Create and show toast notification
+        const toastHtml = `
+          <div class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="copyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="toast-header bg-success text-white">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <strong class="me-auto">Success</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Calendar URL copied to clipboard!
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Remove any existing toast
+        const existingToast = document.querySelector('.toast-container');
+        if (existingToast) {
+          existingToast.remove();
+        }
+
+        // Add new toast
+        document.body.insertAdjacentHTML('beforeend', toastHtml);
+        const toastElement = document.getElementById('copyToast');
+        const toast = new bootstrap.Toast(toastElement, {
+          autohide: true,
+          delay: 3000
+        });
+        toast.show();
+
+        // Reset button after 2 seconds
+        setTimeout(function() {
+          copyButton.innerHTML = originalHtml;
+          copyButton.classList.remove('btn-success');
+          copyButton.classList.add('btn-primary');
+        }, 2000);
+      }).catch(function(err) {
+        // Show error feedback
+        copyButton.innerHTML = '<i class="bi bi-x-circle-fill"></i> Failed';
+        copyButton.classList.remove('btn-primary');
+        copyButton.classList.add('btn-danger');
+
+        setTimeout(function() {
+          copyButton.innerHTML = originalHtml;
+          copyButton.classList.remove('btn-danger');
+          copyButton.classList.add('btn-primary');
+        }, 2000);
+      });
+    }
   </script>
 {% endblock inline_javascript %}
