@@ -375,14 +375,13 @@ def calendar_file(request, uuid: UUID):
         Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
     )
 
-    if alarm_trigger_hours != "9":
-        logger.info(
-            "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
-            calendar.name,
-            ip,
-            user_agent,
-            alarm_trigger,
-        )
+    logger.info(
+        "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
+        calendar.name,
+        ip,
+        user_agent,
+        alarm_trigger,
+    )
     expirimental = request.GET.get("expirimental", False)
     if expirimental:
         calendar_str = generate_ical_experimental(
