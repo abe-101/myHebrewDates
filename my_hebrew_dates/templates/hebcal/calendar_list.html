@@ -4,147 +4,96 @@
   My Calendars
 {% endblock title %}
 {% block content %}
-  <style>
-    .calendar-item {
-      transition: all 0.2s ease;
-      border-left: 4px solid transparent;
-    }
-
-    .calendar-item:hover {
-      border-left-color: var(--bs-primary);
-      transform: translateX(4px);
-    }
-
-    .stat-number {
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-
-    .empty-illustration {
-      font-size: 4rem;
-      opacity: 0.2;
-    }
-
-    .stat-icon {
-      font-size: 2rem;
-    }
-  </style>
   <div class="container py-4">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h1 class="h3 mb-1">
-          <i class="bi bi-calendar-heart text-primary"></i> My Hebrew Calendars
-        </h1>
-        <p class="text-muted mb-0">Track birthdays, yahrzeits, and anniversaries</p>
+        <h2>My Calendars</h2>
+        <p class="text-muted mb-0">
+          {{ calendar_list|length }} calendar
+          {% if calendar_list|length != 1 %}s{% endif %}
+          , {{ event_count }} event
+          {% if event_count != 1 %}s{% endif %}
+        </p>
       </div>
       <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-2"></i>New Calendar
+        <i class="bi bi-plus-circle me-1"></i>New Calendar
       </a>
     </div>
     {% if not calendar_list %}
       <!-- Empty State -->
-      <div class="card shadow-sm border-0">
-        <div class="card-body text-center py-5">
-          <div class="empty-illustration mb-3">
-            <i class="bi bi-calendar-plus"></i>
-          </div>
-          <h3 class="h5 mb-3">No calendars yet</h3>
-          <p class="text-muted mb-4">Create your first calendar to start tracking important Hebrew dates</p>
-          <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-2"></i>Create Your First Calendar
-          </a>
-        </div>
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">
+          <i class="bi bi-info-circle me-2"></i>No calendars yet
+        </h4>
+        <p class="mb-3">Create your first calendar to start tracking Hebrew dates.</p>
+        <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-1"></i>Create Calendar
+        </a>
       </div>
     {% else %}
-      <!-- Stats Row -->
-      <div class="row g-3 mb-4">
-        <div class="col-sm-6">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="bi bi-calendar-check text-primary stat-icon"></i>
-                </div>
-                <div>
-                  <div class="text-muted small">Total Calendars</div>
-                  <div class="stat-number">{{ calendar_list|length }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <div class="d-flex align-items-center">
-                <div class="me-3">
-                  <i class="bi bi-star text-warning stat-icon"></i>
-                </div>
-                <div>
-                  <div class="text-muted small">Total Events</div>
-                  <div class="stat-number">{{ event_count }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Calendar Cards -->
-      <div class="card shadow-sm">
-        <div class="list-group list-group-flush">
-          {% for calendar in calendar_list %}
-            <div class="list-group-item calendar-item p-4">
-              <div class="row align-items-center">
-                <div class="col-md-8">
-                  <h5 class="mb-2">
-                    <i class="bi bi-calendar-event text-primary me-2"></i>
-                    <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                       class="text-decoration-none">{{ calendar.name }}</a>
-                  </h5>
-                  <div class="text-muted small">
-                    <i class="bi bi-globe2 me-1"></i>{{ calendar.timezone }}
-                    <span class="mx-2">•</span>
-                    <i class="bi bi-calendar-event me-1"></i>{{ calendar.calendarOf.all.count }} event
-                    {% if calendar.calendarOf.all.count != 1 %}s{% endif %}
-                  </div>
-                </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+      <!-- Calendar Table -->
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>Calendar Name</th>
+              <th>Events</th>
+              <th>Timezone</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for calendar in calendar_list %}
+              <tr>
+                <td>
+                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                     class="text-decoration-none fw-semibold">
+                    <i class="bi bi-calendar-event text-primary me-2"></i>{{ calendar.name }}
+                  </a>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ calendar.calendarOf.all.count }}</span>
+                </td>
+                <td>
+                  <small class="text-muted">{{ calendar.timezone }}</small>
+                </td>
+                <td class="text-end">
                   <input type="hidden"
                          id="calendar_file_url{{ calendar.uuid }}"
                          value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
-                  <div class="btn-group" role="group">
+                  <div class="btn-group btn-group-sm" role="group">
                     <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                       class="btn btn-sm btn-outline-primary"
+                       class="btn btn-outline-primary"
                        data-bs-toggle="tooltip"
                        data-bs-title="View calendar">
                       <i class="bi bi-eye"></i>
                     </a>
                     <button onclick="shareFile('{{ calendar.uuid }}')"
-                            class="btn btn-sm btn-outline-secondary"
+                            class="btn btn-outline-secondary"
                             type="button"
                             data-bs-toggle="tooltip"
                             data-bs-title="Share">
                       <i class="bi bi-share"></i>
                     </button>
                     <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-                       class="btn btn-sm btn-outline-secondary"
+                       class="btn btn-outline-secondary"
                        data-bs-toggle="tooltip"
                        data-bs-title="Edit events">
                       <i class="bi bi-pencil"></i>
                     </a>
                     <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
-                       class="btn btn-sm btn-outline-danger"
+                       class="btn btn-outline-danger"
                        data-bs-toggle="tooltip"
-                       data-bs-title="Delete calendar">
+                       data-bs-title="Delete">
                       <i class="bi bi-trash"></i>
                     </a>
                   </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     {% endif %}
   </div>
