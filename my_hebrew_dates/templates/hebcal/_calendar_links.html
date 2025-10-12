@@ -16,8 +16,10 @@
         class="hover-text-shadow ">Apple</a>
       </li>
       <li class="list-group-item">
-        <i class="bi bi-google"></i> <a href="https://calendar.google.com/calendar/r?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-    class="hover-text-shadow">Google</a>
+        <i class="bi bi-google"></i> <a href="https://www.google.com/calendar/render?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+    class="hover-text-shadow"
+    target="_blank"
+    rel="noopener noreferrer">Google</a>
       </li>
       <li class="list-group-item">
         <i class="bi bi-microsoft"></i> <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
