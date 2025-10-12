@@ -1,5 +1,4 @@
 # ruff: noqa: S324, ERA001
-import html
 from base64 import urlsafe_b64encode
 from datetime import datetime
 from datetime import timedelta
@@ -68,26 +67,19 @@ def generate_ical(
             )
             event.add("description", base_description)
 
-            img_url = (
-                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
-                f"{model_calendar.uuid}/{hebrew_date.pk}"
-            )
-            html_description = (
-                f"<html><body>{html.escape(title)}<br>"
-                f"Delivered to you by: "
-                f"<a href='{MYHEBREWDATES_URL}'>MyHebrewDates.com</a><br>"
-                f"<img src='{html.escape(img_url)}' "
-                f"width='1' height='1'></body></html>"
-            )
-            event.add("x-alt-desc;fmttype=text/html", html_description)
-
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
             event.add("dtstamp", now_utc)
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
 
-            event.add("dtstart", eng_date)
-            event.add("dtstart;value=date", eng_date)  # Mark as all-day event
+            # Use VALUE=DATE to mark as all-day event (no time component)
+            event.add("dtstart", eng_date, parameters={"value": "DATE"})
+            # For all-day events, DTEND should be the next day (RFC 5545)
+            event.add(
+                "dtend",
+                eng_date + timedelta(days=1),
+                parameters={"value": "DATE"},
+            )
             event.add("uid", uid)
             event.add("transp", "TRANSPARENT")
             event.add(
@@ -98,20 +90,6 @@ def generate_ical(
             # Microsoft compatibility
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
-
-            attach_url = (
-                f"{MYHEBREWDATES_URL}/calendars/serve-image/"
-                f"{model_calendar.uuid}/{hebrew_date.pk}"
-            )
-            event.add(
-                "attach",
-                [
-                    {
-                        "fmttype": "image/png",
-                        "value": attach_url,
-                    },
-                ],
-            )
 
             # Add alarm to the event
             alarm = Alarm()
@@ -189,8 +167,14 @@ def generate_ical_experimental(
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
 
-        event.add("dtstart", eng_date)
-        event.add("dtstart;value=date", eng_date)  # Mark as all-day event
+        # Use VALUE=DATE to mark as all-day event (no time component)
+        event.add("dtstart", eng_date, parameters={"value": "DATE"})
+        # For all-day events, DTEND should be the next day (RFC 5545)
+        event.add(
+            "dtend",
+            eng_date + timedelta(days=1),
+            parameters={"value": "DATE"},
+        )
         event.add("transp", "TRANSPARENT")
         event.add("uid", uid)
         event.add(
