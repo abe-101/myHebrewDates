@@ -17,7 +17,9 @@
         </p>
       </div>
       <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i>New Calendar
+        <i class="bi bi-plus-circle me-1"></i>
+        <span class="d-none d-sm-inline">New Calendar</span>
+        <span class="d-inline d-sm-none">New</span>
       </a>
     </div>
     {% if not calendar_list %}
@@ -32,68 +34,54 @@
         </a>
       </div>
     {% else %}
-      <!-- Calendar Table -->
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr>
-              <th>Calendar Name</th>
-              <th>Events</th>
-              <th>Timezone</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for calendar in calendar_list %}
-              <tr>
-                <td>
-                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                     class="text-decoration-none fw-semibold">
-                    <i class="bi bi-calendar-event text-primary me-2"></i>{{ calendar.name }}
-                  </a>
-                </td>
-                <td>
-                  <span class="badge bg-secondary">{{ calendar.calendarOf.all.count }}</span>
-                </td>
-                <td>
-                  <small class="text-muted">{{ calendar.timezone }}</small>
-                </td>
-                <td class="text-end">
-                  <input type="hidden"
-                         id="calendar_file_url{{ calendar.uuid }}"
-                         value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
-                  <div class="btn-group btn-group-sm" role="group">
-                    <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                       class="btn btn-outline-primary"
-                       data-bs-toggle="tooltip"
-                       data-bs-title="View calendar">
-                      <i class="bi bi-eye"></i>
-                    </a>
-                    <button onclick="shareFile('{{ calendar.uuid }}')"
-                            class="btn btn-outline-secondary"
-                            type="button"
-                            data-bs-toggle="tooltip"
-                            data-bs-title="Share">
-                      <i class="bi bi-share"></i>
-                    </button>
-                    <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-                       class="btn btn-outline-secondary"
-                       data-bs-toggle="tooltip"
-                       data-bs-title="Edit events">
-                      <i class="bi bi-pencil"></i>
-                    </a>
-                    <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
-                       class="btn btn-outline-danger"
-                       data-bs-toggle="tooltip"
-                       data-bs-title="Delete">
-                      <i class="bi bi-trash"></i>
-                    </a>
+      <!-- Calendar Cards -->
+      <div class="row g-3">
+        {% for calendar in calendar_list %}
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1">
+                      <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                         class="text-decoration-none">
+                        <i class="bi bi-calendar-event text-primary me-2"></i>{{ calendar.name }}
+                      </a>
+                    </h5>
+                    <div class="text-muted small">
+                      <span class="badge bg-primary">{{ calendar.calendarOf.all.count }} event
+                        {% if calendar.calendarOf.all.count != 1 %}s{% endif %}
+                      </span>
+                      <span class="ms-2">{{ calendar.timezone }}</span>
+                    </div>
                   </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+                </div>
+                <input type="hidden"
+                       id="calendar_file_url{{ calendar.uuid }}"
+                       value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
+                <div class="d-grid gap-2 d-sm-flex">
+                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                     class="btn btn-primary btn-sm">
+                    <i class="bi bi-eye me-1"></i>View
+                  </a>
+                  <button onclick="shareFile('{{ calendar.uuid }}')"
+                          class="btn btn-outline-secondary btn-sm"
+                          type="button">
+                    <i class="bi bi-share me-1"></i>Share
+                  </button>
+                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+                     class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>Edit
+                  </a>
+                  <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
+                     class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash me-1"></i>Delete
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
       </div>
     {% endif %}
   </div>
