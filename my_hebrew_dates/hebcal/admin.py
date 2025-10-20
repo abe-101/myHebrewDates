@@ -30,7 +30,7 @@ class CalendarAdmin(admin.ModelAdmin):
     search_fields = ("name", "uuid", "owner__email")
     list_filter = ("migrated_at",)
     readonly_fields = ("migrated_at",)
-    actions = ["enable_migration", "send_migration_email"]
+    actions = ["migrate_and_notify"]
 
     def owner_email(self, obj):
         return obj.owner.email
@@ -49,35 +49,27 @@ class CalendarAdmin(admin.ModelAdmin):
             "-events_count",
         )
 
-    @admin.action(description="Enable migration (set migrated_at)")
-    def enable_migration(self, request, queryset):
-        """Enable migration for selected calendars using model method."""
+    @admin.action(description="Migrate calendars and send notification email")
+    def migrate_and_notify(self, request, queryset):
+        """Enable migration for selected calendars and send notification emails."""
         migrated_count = 0
+        email_count = 0
 
         for calendar in queryset:
+            # Enable migration if not already migrated
             if not calendar.is_migrated:
                 calendar.migrate_to_authenticated()
                 migrated_count += 1
 
-        self.message_user(
-            request,
-            f"Enabled migration for {migrated_count} calendar(s).",
-        )
-
-    @admin.action(description="Send migration notification email")
-    def send_migration_email(self, request, queryset):
-        """Send migration notification emails to calendar owners."""
-        email_count = 0
-
-        for calendar in queryset:
+            # Send notification email (whether just migrated or already migrated)
             if calendar.is_migrated:
                 send_migration_notification_email(calendar)
                 email_count += 1
 
         self.message_user(
             request,
-            f"Sent migration notification email for {email_count} calendar(s). "
-            f"(Placeholder - check logs)",
+            f"Enabled migration for {migrated_count} calendar(s) and sent "
+            f"{email_count} notification email(s). (Placeholder - check logs)",
         )
 
 

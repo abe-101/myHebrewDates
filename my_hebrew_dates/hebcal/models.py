@@ -223,8 +223,9 @@ class UserCalendarSubscription(TimeStampedModel):
     Each subscription has a unique 11-character short UUID for authenticated access.
     """
 
-    # Alarm time choices (hours before event, negative = previous day)
-    ALARM_TIME_CHOICES = [
+    # Common alarm time presets for UI display (not enforced at model level)
+    # Users can store any integer value; this is just for convenient dropdown options
+    DEFAULT_ALARM_TIME_CHOICES = [
         (-5, "7 PM (previous day)"),
         (-4, "8 PM (previous day)"),
         (-3, "9 PM (previous day)"),

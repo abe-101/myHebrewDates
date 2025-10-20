@@ -420,7 +420,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-@cache_page(60 * 60)  # Cache the page for 15 minutes
+@cache_page(60 * 60)  # Cache for 60 minutes (1 hour)
 def calendar_file(request, uuid: UUID):
     """
     Legacy calendar file endpoint.
@@ -470,8 +470,8 @@ def calendar_file(request, uuid: UUID):
         )
 
     # Generate calendar (with migration prompt if migrated)
-    expirimental = request.GET.get("expirimental", False)
-    if expirimental:
+    experimental = request.GET.get("experimental", False)
+    if experimental:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             user_agent=user_agent,
@@ -532,9 +532,10 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
 
 @requires_htmx
 @login_required
+@require_POST
 def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
     """Update alarm time for a user's calendar subscription via HTMX."""
-    alarm_time_str = request.GET.get("alarm", "9")  # Default to 9 AM
+    alarm_time_str = request.POST.get("alarm", "9")  # Default to 9 AM
 
     # Get the subscription and verify it belongs to the current user
     subscription = get_object_or_404(
@@ -554,8 +555,8 @@ def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
     subscription.alarm_time = alarm_time
     subscription.save(update_fields=["alarm_time"])
 
-    # Get the label for the alarm time from model choices
-    alarm_label = dict(UserCalendarSubscription.ALARM_TIME_CHOICES).get(
+    # Get the label for the alarm time from display choices
+    alarm_label = dict(UserCalendarSubscription.DEFAULT_ALARM_TIME_CHOICES).get(
         alarm_time,
         f"{alarm_time} hours",
     )
@@ -579,18 +580,21 @@ def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
 # ============================================================================
 
 
-@cache_page(60 * 60)
 def calendar_subscription_file(request: HttpRequest, subscription_id: str):
     """
     Serve calendar file via authenticated subscription short ID.
     Uses the subscription's alarm_time preference from database.
+
+    Note: No view-level caching to ensure accurate last_accessed tracking.
+    The calendar generation itself is relatively fast, and calendar apps
+    typically cache the .ics file content on their end anyway.
     """
     subscription = get_object_or_404(
         UserCalendarSubscription.objects.select_related("calendar", "user"),
         subscription_id=subscription_id,
     )
 
-    # Update last accessed timestamp
+    # Update last accessed timestamp (runs on every request)
     subscription.last_accessed = timezone.now()
     subscription.save(update_fields=["last_accessed"])
 

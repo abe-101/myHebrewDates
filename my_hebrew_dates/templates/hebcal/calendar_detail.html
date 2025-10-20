@@ -78,9 +78,10 @@
             <select name="alarm"
                     id="alarmTime"
                     class="form-select"
-                    hx-get="{% url 'hebcal:update_subscription_alarm_htmx' subscription.subscription_id %}"
+                    hx-post="{% url 'hebcal:update_subscription_alarm_htmx' subscription.subscription_id %}"
                     hx-swap="none"
-                    hx-trigger="change from:#alarmTime">
+                    hx-trigger="change from:#alarmTime"
+                    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
               <option value="-5" {% if subscription.alarm_time == -5 %}selected{% endif %}>7 PM (previous day)</option>
               <option value="-4" {% if subscription.alarm_time == -4 %}selected{% endif %}>8 PM (previous day)</option>
               <option value="-3" {% if subscription.alarm_time == -3 %}selected{% endif %}>9 PM (previous day)</option>
