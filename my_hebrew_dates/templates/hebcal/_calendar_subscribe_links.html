@@ -49,7 +49,7 @@ Where:
           </h6>
           <p class="card-text small text-muted">iPhone, iPad, Mac</p>
           {# djlint:off D018 #}
-          <a href="{{ calendar_url|cut:'https://'|cut:'http://'|add:'webcal://' }}"
+          <a href="webcal://{{ calendar_url|slice:'8:' }}"
              class="btn btn-outline-primary btn-sm w-100">
             <i class="bi bi-box-arrow-up-right"></i> Subscribe
           </a>
