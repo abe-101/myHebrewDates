@@ -291,20 +291,7 @@
         dayMaxEvents: true,
         initialView: 'listYear',
         events: {
-          {
-            %
-            if calendar.is_migrated and subscription %
-          }
-          url: "{% url 'calendar_subscription_file' subscription.subscription_id %}",
-          {
-            %
-            else %
-          }
-          url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
-          {
-            %
-            endif %
-          }
+          url: "{% if calendar.is_migrated and subscription %}{% url 'calendar_subscription_file' subscription.subscription_id %}{% else %}{% url 'hebcal:calendar_file' calendar.uuid %}{% endif %}",
           format: 'ics',
         },
         loading: function(isLoading) {

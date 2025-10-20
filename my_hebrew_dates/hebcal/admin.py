@@ -30,7 +30,7 @@ class CalendarAdmin(admin.ModelAdmin):
     search_fields = ("name", "uuid", "owner__email")
     list_filter = ("migrated_at",)
     readonly_fields = ("migrated_at",)
-    actions = ["migrate_and_notify"]
+    actions = ["enable_migration", "send_migration_email"]
 
     def owner_email(self, obj):
         return obj.owner.email

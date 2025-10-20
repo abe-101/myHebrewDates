@@ -223,6 +223,24 @@ class UserCalendarSubscription(TimeStampedModel):
     Each subscription has a unique 11-character short UUID for authenticated access.
     """
 
+    # Alarm time choices (hours before event, negative = previous day)
+    ALARM_TIME_CHOICES = [
+        (-5, "7 PM (previous day)"),
+        (-4, "8 PM (previous day)"),
+        (-3, "9 PM (previous day)"),
+        (-2, "10 PM (previous day)"),
+        (-1, "11 PM (previous day)"),
+        (0, "12 AM"),
+        (5, "5 AM"),
+        (6, "6 AM"),
+        (7, "7 AM"),
+        (8, "8 AM"),
+        (9, "9 AM"),
+        (10, "10 AM"),
+        (11, "11 AM"),
+        (12, "12 PM"),
+    ]
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -247,6 +265,7 @@ class UserCalendarSubscription(TimeStampedModel):
 
     # Alarm time preference (hours before event, can be negative for previous day)
     alarm_time = models.IntegerField(
+        choices=ALARM_TIME_CHOICES,
         default=9,
         help_text="Hours for alarm reminder (negative values = previous day)",
     )

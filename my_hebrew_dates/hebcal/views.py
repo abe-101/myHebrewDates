@@ -46,7 +46,7 @@ def calendar_list_view(request):
     user_subscriptions = (
         UserCalendarSubscription.objects.filter(user=request.user)
         .exclude(calendar__owner=request.user)
-        .select_related("calendar")
+        .select_related("calendar", "calendar__owner")
     )
 
     if not user_owned_calendars.exists() and not user_subscriptions.exists():
@@ -123,6 +123,7 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/calendar_detail.html", context)
 
 
+@login_required
 def create_calendar_view(request: HttpRequest):
     if request.method == "POST":
         form = CalendarForm(request.POST)
@@ -533,7 +534,7 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
 @login_required
 def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
     """Update alarm time for a user's calendar subscription via HTMX."""
-    alarm_time = request.GET.get("alarm", "9")  # Default to 9 AM
+    alarm_time_str = request.GET.get("alarm", "9")  # Default to 9 AM
 
     # Get the subscription and verify it belongs to the current user
     subscription = get_object_or_404(
@@ -542,28 +543,26 @@ def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
         user=request.user,
     )
 
+    # Validate alarm time is in allowed list
+    allowed_alarm_times = {
+        choice[0] for choice in UserCalendarSubscription.ALARM_TIME_CHOICES
+    }
+    try:
+        alarm_time = int(alarm_time_str)
+        if alarm_time not in allowed_alarm_times:
+            alarm_time = 9  # Default to 9 AM if invalid
+    except ValueError:
+        alarm_time = 9  # Default to 9 AM if not a valid integer
+
     # Update the alarm time
-    subscription.alarm_time = int(alarm_time)
+    subscription.alarm_time = alarm_time
     subscription.save(update_fields=["alarm_time"])
 
-    # Get the label for the alarm time
-    alarm_labels = {
-        "-5": "7 PM (previous day)",
-        "-4": "8 PM (previous day)",
-        "-3": "9 PM (previous day)",
-        "-2": "10 PM (previous day)",
-        "-1": "11 PM (previous day)",
-        "0": "12 AM",
-        "5": "5 AM",
-        "6": "6 AM",
-        "7": "7 AM",
-        "8": "8 AM",
-        "9": "9 AM",
-        "10": "10 AM",
-        "11": "11 AM",
-        "12": "12 PM",
-    }
-    alarm_label = alarm_labels.get(alarm_time, f"{alarm_time} hours")
+    # Get the label for the alarm time from model choices
+    alarm_label = dict(UserCalendarSubscription.ALARM_TIME_CHOICES).get(
+        alarm_time,
+        f"{alarm_time} hours",
+    )
 
     messages.success(request, f"Alarm time updated to {alarm_label}")
     logger.info(
