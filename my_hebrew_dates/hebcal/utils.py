@@ -33,7 +33,14 @@ def generate_ical(  # noqa: PLR0915
     newcal.add("version", "2.0")
     newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
     newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
+
+    # If migration prompt is being injected, indicate this needs attention
+    if inject_migration_prompt:
+        calendar_name = f"⚠️ Action Needed: {model_calendar.name}"
+    else:
+        calendar_name = model_calendar.name
+
+    newcal.add("x-wr-calname", calendar_name)
     newcal.add("x-wr-timezone", timezone)
     newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
 
@@ -269,26 +276,115 @@ def generate_ical_experimental(
 
 def send_migration_notification_email(calendar):
     """
-    Placeholder function for sending migration notification emails.
+    Send migration notification email to calendar owner.
 
     Args:
         calendar: Calendar instance to send notification for
-
-    TODO: Implement email sending logic with proper templates
     """
     import logging
 
+    from django.core.mail import send_mail
+
     logger = logging.getLogger(__name__)
 
-    # Placeholder - will be implemented later
-    logger.info(
-        "Migration email placeholder called for calendar: %s (owner: %s)",
-        calendar.name,
-        calendar.owner.email,
-    )
+    # Get the subscribe URL
+    site_url = get_site_url()
+    subscribe_url = f"{site_url}/calendars/{calendar.uuid}/subscribe/"
 
-    # For now, just log that we would send an email
-    # Later implementation will:
-    # 1. Render email template with context
-    # 2. Send via Django's send_mail or email backend
-    # 3. Handle failures gracefully
+    # Render email content
+    subject = f"Action Required: Re-subscribe to your '{calendar.name}' calendar"
+
+    # Plain text version
+    message = f"""Hello,
+
+Your Hebrew dates calendar "{calendar.name}" has been upgraded with enhanced \
+security features.
+
+WHAT'S CHANGING:
+- Each person now gets their own secure subscription link
+- You can customize alarm times without changing the URL
+- Better tracking and access control
+
+WHAT YOU NEED TO DO:
+1. Click this link to get your personal subscription URL: {subscribe_url}
+2. Re-add the calendar to your calendar app (Apple Calendar, Google Calendar, \
+etc.)
+3. Remove the old calendar subscription (it will show a migration notice)
+
+WHY THIS MATTERS:
+The old public link will continue to work temporarily but will show a \
+migration prompt in your calendar. To get the best experience and avoid \
+seeing the migration notice, please re-subscribe using your personal link.
+
+Questions? Reply to this email or visit {site_url}
+
+Thanks for using My Hebrew Dates!
+"""
+
+    # HTML version (optional, but recommended)
+    html_message = f"""
+<html>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2 style="color: #4A90E2;">Calendar Update Required</h2>
+
+    <p>Hello,</p>
+
+    <p>Your Hebrew dates calendar <strong>"{calendar.name}"</strong> has been \
+upgraded with enhanced security features.</p>
+
+    <h3 style="color: #4A90E2;">What's Changing:</h3>
+    <ul>
+        <li>Each person now gets their own secure subscription link</li>
+        <li>You can customize alarm times without changing the URL</li>
+        <li>Better tracking and access control</li>
+    </ul>
+
+    <h3 style="color: #4A90E2;">What You Need to Do:</h3>
+    <ol>
+        <li>Click this link to get your personal subscription URL: \
+<a href="{subscribe_url}" style="color: #4A90E2;">{subscribe_url}</a></li>
+        <li>Re-add the calendar to your calendar app (Apple Calendar, \
+Google Calendar, etc.)</li>
+        <li>Remove the old calendar subscription (it will show a migration \
+notice)</li>
+    </ol>
+
+    <div style="background-color: #FFF3CD; border-left: 4px solid #FFC107; \
+padding: 12px; margin: 20px 0;">
+        <strong>Why This Matters:</strong><br>
+        The old public link will continue to work temporarily but will show a \
+migration prompt in your calendar.
+        To get the best experience and avoid seeing the migration notice, \
+please re-subscribe using your personal link.
+    </div>
+
+    <p style="margin-top: 30px;">
+        Questions? Reply to this email or visit \
+<a href="{site_url}" style="color: #4A90E2;">{site_url}</a>
+    </p>
+
+    <p>Thanks for using My Hebrew Dates!</p>
+</body>
+</html>
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=None,  # Uses DEFAULT_FROM_EMAIL from settings
+            recipient_list=[calendar.owner.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        logger.info(
+            "Migration notification email sent: calendar=%s, owner=%s",
+            calendar.name,
+            calendar.owner.email,
+        )
+    except Exception:
+        logger.exception(
+            "Failed to send migration email: calendar=%s, owner=%s",
+            calendar.name,
+            calendar.owner.email,
+        )
