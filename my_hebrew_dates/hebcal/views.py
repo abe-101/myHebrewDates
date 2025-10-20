@@ -543,14 +543,10 @@ def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
         user=request.user,
     )
 
-    # Validate alarm time is in allowed list
-    allowed_alarm_times = {
-        choice[0] for choice in UserCalendarSubscription.ALARM_TIME_CHOICES
-    }
+    # Validate alarm time is a valid integer
+    # Allow any integer value - users may want reminders days or weeks in advance
     try:
         alarm_time = int(alarm_time_str)
-        if alarm_time not in allowed_alarm_times:
-            alarm_time = 9  # Default to 9 AM if invalid
     except ValueError:
         alarm_time = 9  # Default to 9 AM if not a valid integer
 

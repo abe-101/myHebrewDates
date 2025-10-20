@@ -264,10 +264,13 @@ class UserCalendarSubscription(TimeStampedModel):
     )
 
     # Alarm time preference (hours before event, can be negative for previous day)
+    # No validation limit - users may want reminders days or weeks in advance
     alarm_time = models.IntegerField(
-        choices=ALARM_TIME_CHOICES,
         default=9,
-        help_text="Hours for alarm reminder (negative values = previous day)",
+        help_text=(
+            "Hours for alarm reminder (negative = before midnight, "
+            "positive = after midnight, supports any value)"
+        ),
     )
 
     # Simple tracking
