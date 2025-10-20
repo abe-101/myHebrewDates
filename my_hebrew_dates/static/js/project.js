@@ -1,55 +1,64 @@
 /* Project specific Javascript goes here. */
-function copyFileUrl(pk) {
-  // Get the text field
-  var copyText = document.getElementById('calendar_file_url' + pk);
+function copyUrlToClipboard(url, successMessage, failureMessage) {
+  const successText = successMessage || 'URL copied to clipboard.';
+  const failureText = failureMessage || 'Failed to copy. Please copy manually.';
 
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
+  if (!url) {
+    alert(failureText);
+    return Promise.resolve(false);
+  }
 
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
+  const fallbackCopy = () => {
+    const textarea = document.createElement('textarea');
+    textarea.value = url;
+    textarea.setAttribute('readonly', '');
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+    const succeeded = document.execCommand('copy');
+    document.body.removeChild(textarea);
 
-  // Alert the copied text
-  //createToast({message: "Copied the text:\n" + copyText.value, tags: "text-white bg-success"})
-  //alert("Copied the text: " + copyText.value);
+    if (succeeded) {
+      alert(successText);
+      return true;
+    }
+
+    alert(failureText);
+    return false;
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        alert(successText);
+        return true;
+      })
+      .catch(() => fallbackCopy());
+  }
+
+  return Promise.resolve(fallbackCopy());
 }
-function shareFile(calendarUuid) {
-  const fileUrlInput = document.getElementById(
-    `calendar_file_url${calendarUuid}`,
-  );
-  const fileUrl = fileUrlInput.value;
+
+function shareFile(url, successMessage, failureMessage) {
+  const successText = successMessage || 'URL copied to clipboard.';
+  const failureText = failureMessage || 'Failed to copy. Please copy manually.';
+
+  if (!url) {
+    alert(failureText);
+    return;
+  }
 
   if (navigator.share) {
-    navigator
-      .share({
-        url: fileUrl,
-      })
-      .then(() => {
-        console.log('File shared successfully.');
-      })
-      .catch((error) => {
-        console.error('Error sharing file:', error);
-        copyFileUrlToClipboard(fileUrl);
-        notifyUser('Link copied to clipboard.');
-      });
-  } else {
-    copyFileUrlToClipboard(fileUrl);
-    notifyUser('URL copied to clipboard.');
+    navigator.share({ url }).catch(() => {
+      copyUrlToClipboard(url, successText, failureText);
+    });
+    return;
   }
-}
 
-function copyFileUrlToClipboard(url) {
-  const el = document.createElement('textarea');
-  el.value = url;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-}
-
-function notifyUser(message) {
-  alert(message);
+  copyUrlToClipboard(url, successText, failureText);
 }
 
 document.addEventListener('htmx:confirm', function (e) {
@@ -71,5 +80,5 @@ document.addEventListener('htmx:confirm', function (e) {
   });
 });
 
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));

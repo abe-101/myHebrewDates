@@ -5,8 +5,11 @@ import zoneinfo
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
+from shortuuid.django_fields import ShortUUIDField
 
 from my_hebrew_dates.core.models import TimeStampedModel
+from my_hebrew_dates.core.utils import get_site_url
 
 from .hebrew_date import hebrew_to_english_dict
 
@@ -81,11 +84,50 @@ class Calendar(TimeStampedModel):
     )
     calendar_file_str = models.TextField(blank=True, null=True)
 
+    # Migration tracking - single field
+    migrated_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When this calendar was migrated to authenticated access",
+    )
+
+    # Many-to-many relationship with users via subscriptions
+    subscribers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        through="UserCalendarSubscription",
+        related_name="subscribed_calendars",
+        help_text="Users who have subscribed to this calendar",
+    )
+
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse("hebcal:calendar_edit", kwargs={"uuid": self.uuid})
+
+    @property
+    def is_migrated(self):
+        """Check if calendar has been migrated to authenticated access."""
+        return self.migrated_at is not None
+
+    def migrate_to_authenticated(self):
+        """
+        Migrate this calendar to authenticated access.
+
+        Sets migrated_at timestamp and ensures owner has a subscription.
+        Returns the owner's subscription (created or existing).
+        """
+        if not self.is_migrated:
+            self.migrated_at = timezone.now()
+            self.save(update_fields=["migrated_at"])
+
+        # Ensure owner has a subscription (idempotent)
+        subscription, created = UserCalendarSubscription.objects.get_or_create(
+            user=self.owner,
+            calendar=self,
+        )
+
+        return subscription
 
 
 class HebrewDate(TimeStampedModel):
@@ -173,3 +215,62 @@ class HebrewDate(TimeStampedModel):
         Get the month number according to RFC 7529 specification.
         """
         return self._month_to_rfc(self.month)
+
+
+class UserCalendarSubscription(TimeStampedModel):
+    """
+    Many-to-many relationship between users and calendars.
+    Each subscription has a unique 11-character short UUID for authenticated access.
+    """
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="calendar_subscriptions",
+    )
+    calendar = models.ForeignKey(
+        "Calendar",
+        on_delete=models.CASCADE,
+        related_name="subscriptions",
+    )
+
+    # Short UUID for user-friendly URLs (11 characters, like YouTube IDs)
+    # With 11 characters from base57 alphabet, we get ~10^19 possible combinations
+    # Django enforces uniqueness at the database level
+    subscription_id = ShortUUIDField(
+        length=11,
+        max_length=11,
+        editable=False,
+        unique=True,
+        db_index=True,
+    )
+
+    # Alarm time preference (hours before event, can be negative for previous day)
+    alarm_time = models.IntegerField(
+        default=9,
+        help_text="Hours for alarm reminder (negative values = previous day)",
+    )
+
+    # Simple tracking
+    last_accessed = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ("user", "calendar")
+        verbose_name = "Calendar Subscription"
+        verbose_name_plural = "Calendar Subscriptions"
+        indexes = [
+            models.Index(fields=["subscription_id"]),
+        ]
+
+    def __str__(self):
+        return f"{self.user.email} → {self.calendar.name}"
+
+    def get_calendar_url(self):
+        """Get the full subscription URL for this subscription (alarm stored in DB)."""
+
+        site_url = get_site_url()
+        path = reverse(
+            "calendar_subscription_file",
+            kwargs={"subscription_id": self.subscription_id},
+        )
+        return f"{site_url}{path}"

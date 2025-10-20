@@ -7,12 +7,14 @@ from my_hebrew_dates.hebcal.views import calendar_detail_view
 from my_hebrew_dates.hebcal.views import calendar_edit_view
 from my_hebrew_dates.hebcal.views import calendar_file
 from my_hebrew_dates.hebcal.views import calendar_list_view
+from my_hebrew_dates.hebcal.views import calendar_subscribe_view
 from my_hebrew_dates.hebcal.views import create_calendar_view
 from my_hebrew_dates.hebcal.views import create_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import edit_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import serve_pixel
 from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
+from my_hebrew_dates.hebcal.views import update_subscription_alarm_htmx
 
 app_name = "hebcal"
 
@@ -39,6 +41,12 @@ urlpatterns = [
         name="create_hebrew_date_htmx",
     ),
     path("<uuid:uuid>/delete/", CalendarDeleteView.as_view(), name="calendar_delete"),
+    # Subscribe endpoint (redirects to calendar_detail which handles migration)
+    path(
+        "<uuid:uuid>/subscribe/",
+        calendar_subscribe_view,
+        name="calendar_subscribe",
+    ),
     path("new/", create_calendar_view, name="calendar_new"),
     path("", calendar_list_view, name="calendar_list"),
     path(
@@ -61,5 +69,10 @@ urlpatterns = [
         "update-calendar-links-htmx/<uuid:uuid>/",
         login_not_required(update_calendar_links_htmx),
         name="update_calendar_links_htmx",
+    ),
+    path(
+        "update-subscription-alarm-htmx/<str:subscription_id>/",
+        update_subscription_alarm_htmx,
+        name="update_subscription_alarm_htmx",
     ),
 ]

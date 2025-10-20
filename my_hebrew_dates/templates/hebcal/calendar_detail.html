@@ -47,10 +47,7 @@
         <h3 class="mb-0">
           <i class="bi bi-calendar-heart"></i> {{ calendar.name }}
         </h3>
-        <input hidden
-               id="calendar_file_url{{ calendar.uuid }}"
-               value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
-        <button onclick="shareFile('{{ calendar.uuid }}')"
+        <button onclick="shareFile('{{ site_url|escapejs }}{% url 'hebcal:calendar_detail' calendar.uuid %}')"
                 class="btn btn-light"
                 type="button"
                 title="Share with friends and family">
@@ -58,39 +55,107 @@
         </button>
       </div>
       <div class="card-body">
-        <p class="lead">
-          Subscribe to this calendar to automatically sync Hebrew dates with your personal calendar. Choose your platform below or copy the URL for any calendar app.
-        </p>
+        {% if calendar.is_migrated and subscription %}
+          <div class="alert alert-success mb-4">
+            <h5 class="alert-heading">
+              <i class="bi bi-check-circle-fill"></i> You're Subscribed!
+            </h5>
+            <p class="mb-2">
+              You now have a personal subscription to this calendar. Use the URL below to add it to your calendar app.
+            </p>
+            {% if is_owner %}
+              <p class="mb-0">
+                <strong>As the owner,</strong> you can share this calendar by sending the subscribe link to others:
+                <code>{{ site_url }}/calendars/{{ calendar.uuid }}/subscribe/</code>
+              </p>
+            {% endif %}
+          </div>
+          <!-- Alarm Time Selection Form with htmx -->
+          <div id="alarmTimeSelector" class="mb-4">
+            <label for="alarmTime" class="form-label fw-bold">
+              <i class="bi bi-alarm"></i> Alarm Reminder
+            </label>
+            <select name="alarm"
+                    id="alarmTime"
+                    class="form-select"
+                    hx-get="{% url 'hebcal:update_subscription_alarm_htmx' subscription.subscription_id %}"
+                    hx-swap="none"
+                    hx-trigger="change from:#alarmTime">
+              <option value="-5" {% if subscription.alarm_time == -5 %}selected{% endif %}>7 PM (previous day)</option>
+              <option value="-4" {% if subscription.alarm_time == -4 %}selected{% endif %}>8 PM (previous day)</option>
+              <option value="-3" {% if subscription.alarm_time == -3 %}selected{% endif %}>9 PM (previous day)</option>
+              <option value="-2" {% if subscription.alarm_time == -2 %}selected{% endif %}>10 PM (previous day)</option>
+              <option value="-1" {% if subscription.alarm_time == -1 %}selected{% endif %}>11 PM (previous day)</option>
+              <option value="0" {% if subscription.alarm_time == 0 %}selected{% endif %}>12 AM</option>
+              <option value="5" {% if subscription.alarm_time == 5 %}selected{% endif %}>5 AM</option>
+              <option value="6" {% if subscription.alarm_time == 6 %}selected{% endif %}>6 AM</option>
+              <option value="7" {% if subscription.alarm_time == 7 %}selected{% endif %}>7 AM</option>
+              <option value="8" {% if subscription.alarm_time == 8 %}selected{% endif %}>8 AM</option>
+              <option value="9" {% if subscription.alarm_time == 9 %}selected{% endif %}>9 AM</option>
+              <option value="10" {% if subscription.alarm_time == 10 %}selected{% endif %}>10 AM</option>
+              <option value="11" {% if subscription.alarm_time == 11 %}selected{% endif %}>11 AM</option>
+              <option value="12" {% if subscription.alarm_time == 12 %}selected{% endif %}>12 PM</option>
+            </select>
+            <small class="form-text text-muted">Set when you want to be reminded of upcoming events. Your subscription URL stays the same!</small>
+          </div>
+          <h6 class="mb-3">
+            <i class="bi bi-link-45deg"></i> Your Personal Subscription URL
+          </h6>
+          <div class="input-group mb-4">
+            <input type="text"
+                   class="form-control font-monospace"
+                   id="personalSubscriptionUrl"
+                   readonly
+                   value="{{ subscription.get_calendar_url }}" />
+            <button class="btn btn-primary"
+                    type="button"
+                    onclick="shareFile('{{ subscription.get_calendar_url|escapejs }}', 'Personal URL copied!')">
+              <i class="bi bi-clipboard"></i> Copy
+            </button>
+          </div>
+          <small class="text-muted d-block mb-4">
+            <i class="bi bi-shield-lock"></i> This URL is unique to you. Do not share it with others.
+          </small>
+          {% include "hebcal/_calendar_subscribe_links.html" with calendar_url=subscription.get_calendar_url calendar_id=subscription.id show_url_input=False show_download=False %}
+        {% else %}
+          <p class="lead mb-4">
+            Subscribe to this calendar to automatically sync Hebrew dates with your personal calendar. Choose your platform below or copy the URL for any calendar app.
+          </p>
+        {% endif %}
         <!-- Alarm Time Selection Form with htmx -->
-        <div id="alarmTimeSelector" class="mb-4">
-          <label for="alarmTime" class="form-label fw-bold">
-            <i class="bi bi-alarm"></i> Alarm Reminder
-          </label>
-          <select name="alarm"
-                  id="alarmTime"
-                  class="form-select"
-                  hx-get="{% url 'hebcal:update_calendar_links_htmx' calendar.uuid %}"
-                  hx-target="#calendarLinks"
-                  hx-swap="outerHTML"
-                  hx-trigger="change from:#alarmTime">
-            <option value="-5">7 PM (previous day)</option>
-            <option value="-4">8 PM (previous day)</option>
-            <option value="-3">9 PM (previous day)</option>
-            <option value="-2">10 PM (previous day)</option>
-            <option value="-1">11 PM (previous day)</option>
-            <option value="0">12 AM</option>
-            <option value="5">5 AM</option>
-            <option value="6">6 AM</option>
-            <option value="7">7 AM</option>
-            <option value="8">8 AM</option>
-            <option selected value="9">9 AM</option>
-            <option value="10">10 AM</option>
-            <option value="11">11 AM</option>
-            <option value="12">12 PM</option>
-          </select>
-          <small class="form-text text-muted">Set when you want to be reminded of upcoming events</small>
-        </div>
-        {% include "hebcal/_calendar_links.html" %}
+        {% if not calendar.is_migrated %}
+          <div id="alarmTimeSelector" class="mb-4">
+            <label for="alarmTime" class="form-label fw-bold">
+              <i class="bi bi-alarm"></i> Alarm Reminder
+            </label>
+            <select name="alarm"
+                    id="alarmTime"
+                    class="form-select"
+                    hx-get="{% url 'hebcal:update_calendar_links_htmx' calendar.uuid %}"
+                    hx-target="#calendarLinks"
+                    hx-swap="outerHTML"
+                    hx-trigger="change from:#alarmTime">
+              <option value="-5">7 PM (previous day)</option>
+              <option value="-4">8 PM (previous day)</option>
+              <option value="-3">9 PM (previous day)</option>
+              <option value="-2">10 PM (previous day)</option>
+              <option value="-1">11 PM (previous day)</option>
+              <option value="0">12 AM</option>
+              <option value="5">5 AM</option>
+              <option value="6">6 AM</option>
+              <option value="7">7 AM</option>
+              <option value="8">8 AM</option>
+              <option selected value="9">9 AM</option>
+              <option value="10">10 AM</option>
+              <option value="11">11 AM</option>
+              <option value="12">12 PM</option>
+            </select>
+            <small class="form-text text-muted">Set when you want to be reminded of upcoming events</small>
+          </div>
+          <div id="calendarLinks">
+            {% include "hebcal/_calendar_subscribe_links.html" with calendar_url=calendar_url calendar_id=calendar.uuid show_url_input=True show_download=True calendar_name=calendar.name %}
+          </div>
+        {% endif %}
       </div>
       <div class="card-footer">
         <a class="d-flex justify-content-between align-items-center text-decoration-none"
@@ -226,7 +291,20 @@
         dayMaxEvents: true,
         initialView: 'listYear',
         events: {
+          {
+            %
+            if calendar.is_migrated and subscription %
+          }
+          url: "{% url 'calendar_subscription_file' subscription.subscription_id %}",
+          {
+            %
+            else %
+          }
           url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
+          {
+            %
+            endif %
+          }
           format: 'ics',
         },
         loading: function(isLoading) {
@@ -350,72 +428,5 @@
     (function() {
       $('[data-toggle="tooltip"]').tooltip()
     })
-  </script>
-  <script>
-    function copyCalendarUrl() {
-      const urlInput = document.getElementById('calendarUrl');
-      const copyButton = event.currentTarget;
-      const originalHtml = copyButton.innerHTML;
-
-      // Select and copy the URL
-      urlInput.select();
-      urlInput.setSelectionRange(0, 99999); // For mobile devices
-
-      navigator.clipboard.writeText(urlInput.value).then(function() {
-        // Show success feedback
-        copyButton.innerHTML = '<i class="bi bi-check-circle-fill"></i> Copied!';
-        copyButton.classList.remove('btn-primary');
-        copyButton.classList.add('btn-success');
-
-        // Create and show toast notification
-        const toastHtml = `
-          <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="copyToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-              <div class="toast-header bg-success text-white">
-                <i class="bi bi-check-circle-fill me-2"></i>
-                <strong class="me-auto">Success</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-              </div>
-              <div class="toast-body">
-                Calendar URL copied to clipboard!
-              </div>
-            </div>
-          </div>
-        `;
-
-        // Remove any existing toast
-        const existingToast = document.querySelector('.toast-container');
-        if (existingToast) {
-          existingToast.remove();
-        }
-
-        // Add new toast
-        document.body.insertAdjacentHTML('beforeend', toastHtml);
-        const toastElement = document.getElementById('copyToast');
-        const toast = new bootstrap.Toast(toastElement, {
-          autohide: true,
-          delay: 3000
-        });
-        toast.show();
-
-        // Reset button after 2 seconds
-        setTimeout(function() {
-          copyButton.innerHTML = originalHtml;
-          copyButton.classList.remove('btn-success');
-          copyButton.classList.add('btn-primary');
-        }, 2000);
-      }).catch(function(err) {
-        // Show error feedback
-        copyButton.innerHTML = '<i class="bi bi-x-circle-fill"></i> Failed';
-        copyButton.classList.remove('btn-primary');
-        copyButton.classList.add('btn-danger');
-
-        setTimeout(function() {
-          copyButton.innerHTML = originalHtml;
-          copyButton.classList.remove('btn-danger');
-          copyButton.classList.add('btn-primary');
-        }, 2000);
-      });
-    }
   </script>
 {% endblock inline_javascript %}
