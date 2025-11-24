@@ -4,6 +4,7 @@ from datetime import timedelta
 from uuid import UUID
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
@@ -12,12 +13,15 @@ from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 from django_htmx_modal_forms import HtmxModalUpdateView
 
+from my_hebrew_dates.core.utils import get_site_url
 from my_hebrew_dates.hebcal.decorators import requires_htmx
 from my_hebrew_dates.hebcal.forms import CalendarForm
 from my_hebrew_dates.hebcal.forms import HebrewDateForm
@@ -25,6 +29,7 @@ from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.models import HebrewDate
 from my_hebrew_dates.hebcal.models import HebrewDayEnum
 from my_hebrew_dates.hebcal.models import HebrewMonthEnum
+from my_hebrew_dates.hebcal.models import UserCalendarSubscription
 from my_hebrew_dates.hebcal.utils import generate_ical
 from my_hebrew_dates.hebcal.utils import generate_ical_experimental
 
@@ -33,22 +38,34 @@ logger = logging.getLogger(__name__)
 
 
 def calendar_list_view(request):
+    """
+    Show calendars owned by user and calendars they're subscribed to.
+    """
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
-    if not user_owned_calendars.exists():
+    user_subscriptions = (
+        UserCalendarSubscription.objects.filter(user=request.user)
+        .exclude(calendar__owner=request.user)
+        .select_related("calendar", "calendar__owner")
+    )
+
+    if not user_owned_calendars.exists() and not user_subscriptions.exists():
         return redirect("hebcal:calendar_new")
 
     logger.info(
-        "Calendar list view called for user: %s with calendars: %s",
+        "Calendar list view: user=%s, owned=%d, subscribed=%d",
         request.user,
-        user_owned_calendars,
+        user_owned_calendars.count(),
+        user_subscriptions.count(),
     )
+
     event_count = HebrewDate.objects.filter(calendar__in=user_owned_calendars).count()
 
     context = {
         "event_count": event_count,
         "calendar_list": user_owned_calendars,
-        "domain_name": Site.objects.get_current().domain,
+        "subscribed_calendars": user_subscriptions,
+        "site_url": get_site_url(),
     }
 
     return render(request, "hebcal/calendar_list.html", context)
@@ -57,10 +74,44 @@ def calendar_list_view(request):
 def calendar_detail_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, uuid=uuid)
 
+    # If calendar is migrated, require login
+    if calendar.is_migrated and not request.user.is_authenticated:
+        return redirect(f"{reverse('account_login')}?next={request.path}")
+
+    # If user is authenticated, get or create subscription
+    # (regardless of migration status)
+    # This ensures subscriptions are ready before migration happens
+    subscription = None
+    if request.user.is_authenticated:
+        subscription, created = UserCalendarSubscription.objects.get_or_create(
+            user=request.user,
+            calendar=calendar,
+        )
+        if created:
+            logger.info(
+                "Created subscription: user=%s, calendar=%s (%s), subscription_id=%s",
+                request.user.email,
+                calendar.name,
+                calendar.uuid,
+                subscription.subscription_id,
+            )
+
+    # Build calendar URL for non-migrated calendars
+    site_url = get_site_url()
+    alarm_time = 9
+    calendar_url = None
+    if not calendar.is_migrated:
+        path = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        calendar_url = f"{site_url}{path}?alarm={alarm_time}"
+
     context = {
         "calendar": calendar,
+        "subscription": subscription,
+        "is_owner": request.user.is_authenticated and request.user == calendar.owner,
         "domain_name": Site.objects.get_current().domain,
-        "alarm_time": 9,
+        "site_url": site_url,
+        "alarm_time": alarm_time,
+        "calendar_url": calendar_url,
     }
     logger.info(
         "user: %s accessed Calendar_detail_view for calendar: %s (%s)",
@@ -72,6 +123,7 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
     return render(request, "hebcal/calendar_detail.html", context)
 
 
+@login_required
 def create_calendar_view(request: HttpRequest):
     if request.method == "POST":
         form = CalendarForm(request.POST)
@@ -79,6 +131,21 @@ def create_calendar_view(request: HttpRequest):
             calendar = form.save(commit=False)
             calendar.owner = request.user
             calendar.save()
+
+            # Auto-create subscription for the owner
+            subscription, created = UserCalendarSubscription.objects.get_or_create(
+                user=request.user,
+                calendar=calendar,
+            )
+            if created:
+                logger.info(
+                    "Auto-created subscription for calendar owner: "
+                    "user=%s, calendar=%s, subscription_id=%s",
+                    request.user.email,
+                    calendar.name,
+                    subscription.subscription_id,
+                )
+
             messages.success(request, f"{calendar.name} created successfully.")
             logger.info(
                 "user: %s created Calendar: %s (%s)",
@@ -353,8 +420,17 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-@cache_page(60 * 60)  # Cache the page for 15 minutes
+@cache_page(60 * 60)  # Cache for 60 minutes (1 hour)
 def calendar_file(request, uuid: UUID):
+    """
+    Legacy calendar file endpoint.
+    If migrated: injects migration prompt event, but still serves calendar.
+    """
+    calendar: Calendar = get_object_or_404(
+        Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
+    )
+
+    # Get request info
     x_forwarded_for = request.headers.get("x-forwarded-for")
     ip = (
         x_forwarded_for.split(",")[0]
@@ -362,28 +438,40 @@ def calendar_file(request, uuid: UUID):
         else request.META.get("REMOTE_ADDR")
     )
     user_agent = request.headers.get("user-agent", "")
+
+    # Use query param for backward compatibility, default to 9
     alarm_trigger_hours = request.GET.get("alarm", "9")
     if alarm_trigger_hours == "":
         alarm_trigger_hours = "9"
+
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
     except ValueError:
         logger.warning("Invalid alarm trigger value: %s", alarm_trigger_hours)
         alarm_trigger = timedelta(hours=9)
 
-    calendar: Calendar = get_object_or_404(
-        Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
-    )
+    # Log with migration status
+    if calendar.is_migrated:
+        logger.warning(
+            "Legacy access for MIGRATED calendar: %s (%s), IP=%s "
+            "(migration prompt will be injected)",
+            calendar.name,
+            calendar.uuid,
+            ip,
+        )
+    else:
+        logger.info(
+            "Legacy calendar access: calendar=%s (%s), IP=%s, UA=%s, Alarm=%s",
+            calendar.name,
+            calendar.uuid,
+            ip,
+            user_agent,
+            alarm_trigger,
+        )
 
-    logger.info(
-        "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
-        calendar.name,
-        ip,
-        user_agent,
-        alarm_trigger,
-    )
-    expirimental = request.GET.get("expirimental", False)
-    if expirimental:
+    # Generate calendar (with migration prompt if migrated)
+    experimental = request.GET.get("experimental", False)
+    if experimental:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             user_agent=user_agent,
@@ -394,6 +482,8 @@ def calendar_file(request, uuid: UUID):
             model_calendar=calendar,
             user_agent=user_agent,
             alarm_trigger=alarm_trigger,
+            # Pass migration flag so generate_ical can inject prompt event
+            inject_migration_prompt=calendar.is_migrated,
         )
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
@@ -408,11 +498,20 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
 
     # Fetch the specific calendar by UUID
     calendar = get_object_or_404(Calendar, uuid=uuid)
-    domain_name = Site.objects.get_current().domain
+
+    # Build calendar URL
+    site_url = get_site_url()
+    path = reverse("hebcal:calendar_file", args=[calendar.uuid])
+    calendar_url = f"{site_url}{path}?alarm={alarm_time}"
 
     context = {
         "calendar": calendar,
-        "domain_name": domain_name,
+        "calendar_url": calendar_url,
+        "calendar_id": calendar.uuid,
+        "show_url_input": True,
+        "show_download": True,
+        "calendar_name": calendar.name,
+        "site_url": site_url,
         "alarm_time": alarm_time,
     }
     messages.success(request, "Calendar alarm set to " + alarm_time)
@@ -423,4 +522,123 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         calendar.uuid,
     )
 
-    return render(request, "hebcal/_calendar_links.html", context)
+    # Return the wrapped version for HTMX (needs #calendarLinks div)
+    return render(
+        request,
+        "hebcal/_calendar_links_htmx.html",
+        context,
+    )
+
+
+@requires_htmx
+@login_required
+@require_POST
+def update_subscription_alarm_htmx(request: HttpRequest, subscription_id: str):
+    """Update alarm time for a user's calendar subscription via HTMX."""
+    alarm_time_str = request.POST.get("alarm", "9")  # Default to 9 AM
+
+    # Get the subscription and verify it belongs to the current user
+    subscription = get_object_or_404(
+        UserCalendarSubscription,
+        subscription_id=subscription_id,
+        user=request.user,
+    )
+
+    # Validate alarm time is a valid integer
+    # Allow any integer value - users may want reminders days or weeks in advance
+    try:
+        alarm_time = int(alarm_time_str)
+    except ValueError:
+        alarm_time = 9  # Default to 9 AM if not a valid integer
+
+    # Update the alarm time
+    subscription.alarm_time = alarm_time
+    subscription.save(update_fields=["alarm_time"])
+
+    # Get the label for the alarm time from display choices
+    alarm_label = dict(UserCalendarSubscription.DEFAULT_ALARM_TIME_CHOICES).get(
+        alarm_time,
+        f"{alarm_time} hours",
+    )
+
+    messages.success(request, f"Alarm time updated to {alarm_label}")
+    logger.info(
+        "update_subscription_alarm_htmx: user=%s, calendar=%s, "
+        "subscription_id=%s, alarm=%s",
+        request.user.email,
+        subscription.calendar.name,
+        subscription_id,
+        alarm_time,
+    )
+
+    # Return empty response - no need to update anything, just show the message
+    return HttpResponse()
+
+
+# ============================================================================
+# CALENDAR MIGRATION VIEWS
+# ============================================================================
+
+
+def calendar_subscription_file(request: HttpRequest, subscription_id: str):
+    """
+    Serve calendar file via authenticated subscription short ID.
+    Uses the subscription's alarm_time preference from database.
+
+    Note: No view-level caching to ensure accurate last_accessed tracking.
+    The calendar generation itself is relatively fast, and calendar apps
+    typically cache the .ics file content on their end anyway.
+    """
+    subscription = get_object_or_404(
+        UserCalendarSubscription.objects.select_related("calendar", "user"),
+        subscription_id=subscription_id,
+    )
+
+    # Update last accessed timestamp (runs on every request)
+    subscription.last_accessed = timezone.now()
+    subscription.save(update_fields=["last_accessed"])
+
+    # Use alarm time from subscription preference (stored in DB)
+    alarm_trigger = timedelta(hours=subscription.alarm_time)
+
+    # Log access
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    ip = (
+        x_forwarded_for.split(",")[0]
+        if x_forwarded_for
+        else request.META.get("REMOTE_ADDR")
+    )
+    user_agent = request.headers.get("user-agent", "")
+
+    logger.info(
+        "Subscription access: user=%s, calendar=%s (%s), subscription_id=%s, IP=%s",
+        subscription.user.email,
+        subscription.calendar.name,
+        subscription.calendar.uuid,
+        subscription_id,
+        ip,
+    )
+
+    # Generate calendar using existing function (no experimental param)
+    calendar_str = generate_ical(
+        model_calendar=subscription.calendar,
+        user_agent=user_agent,
+        alarm_trigger=alarm_trigger,
+    )
+
+    response = HttpResponse(calendar_str, content_type="text/calendar")
+    response["Content-Disposition"] = f'attachment; filename="{subscription_id}.ics"'
+
+    return response
+
+
+def calendar_subscribe_view(request: HttpRequest, uuid: UUID):
+    """
+    Quick subscribe endpoint - redirects to calendar detail page.
+    Calendar detail page handles authentication and subscription creation.
+    """
+    # Validate calendar exists before redirecting
+    get_object_or_404(Calendar, uuid=uuid)
+
+    # Redirect to detail page which handles migration/subscription logic
+    return redirect("hebcal:calendar_detail", uuid=uuid)
