@@ -11,6 +11,7 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
+from my_hebrew_dates.hebcal.views import calendar_subscription_file
 
 sitemaps = {
     "static": StaticViewSitemap,
@@ -27,6 +28,12 @@ urlpatterns = [
         "about/",
         login_not_required(TemplateView.as_view(template_name="pages/about.html")),
         name="about",
+    ),
+    # Top-level subscription endpoint for short, clean URLs
+    path(
+        "c/<str:subscription_id>.ics",
+        login_not_required(calendar_subscription_file),
+        name="calendar_subscription_file",
     ),
     path(
         "robots.txt",

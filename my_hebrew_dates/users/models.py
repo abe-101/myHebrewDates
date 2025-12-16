@@ -16,6 +16,9 @@ class User(AbstractUser):
     first_name = None  # type: ignore[assignment]
     last_name = None  # type: ignore[assignment]
 
+    # Note: ManyToMany relationship with Calendar is defined on Calendar model
+    # Access via: user.subscribed_calendars.all()
+
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.
 

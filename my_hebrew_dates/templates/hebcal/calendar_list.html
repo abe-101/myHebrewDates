@@ -53,18 +53,20 @@
                         {% if calendar.calendarOf.all.count != 1 %}s{% endif %}
                       </span>
                       <span class="ms-2">{{ calendar.timezone }}</span>
+                      {% if calendar.is_migrated %}
+                        <span class="badge bg-success ms-2">
+                          <i class="bi bi-shield-check"></i> Migrated
+                        </span>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
-                <input type="hidden"
-                       id="calendar_file_url{{ calendar.uuid }}"
-                       value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
                 <div class="d-grid gap-2 d-sm-flex">
                   <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
                      class="btn btn-primary btn-sm">
                     <i class="bi bi-eye me-1"></i>View
                   </a>
-                  <button onclick="shareFile('{{ calendar.uuid }}')"
+                  <button onclick="shareFile('{{ site_url|escapejs }}{% url 'hebcal:calendar_detail' calendar.uuid %}')"
                           class="btn btn-outline-secondary btn-sm"
                           type="button">
                     <i class="bi bi-share me-1"></i>Share
@@ -76,6 +78,46 @@
                   <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
                      class="btn btn-outline-danger btn-sm">
                     <i class="bi bi-trash me-1"></i>Delete
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if subscribed_calendars %}
+      <!-- Subscribed Calendars Section (only show if subscriptions exist) -->
+      <hr class="my-4" />
+      <h3 class="mb-3">
+        <i class="bi bi-calendar-check"></i> Subscribed Calendars
+      </h3>
+      <p class="text-muted small">Calendars shared with you by others</p>
+      <div class="row g-3">
+        {% for subscription in subscribed_calendars %}
+          <div class="col-12">
+            <div class="card border-secondary">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="flex-grow-1">
+                    <h5 class="card-title mb-1">
+                      <i class="bi bi-calendar-heart text-secondary me-2"></i>{{ subscription.calendar.name }}
+                    </h5>
+                    <div class="text-muted small">
+                      <span class="badge bg-secondary">{{ subscription.calendar.calendarOf.all.count }} event
+                        {% if subscription.calendar.calendarOf.all.count != 1 %}s{% endif %}
+                      </span>
+                      <span class="ms-2">Owner: {{ subscription.calendar.owner.email }}</span>
+                      {% if subscription.last_accessed %}
+                        <span class="ms-2">Last synced: {{ subscription.last_accessed|timesince }} ago</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                <div class="d-grid gap-2 d-sm-flex">
+                  <a href="{% url 'hebcal:calendar_detail' subscription.calendar.uuid %}"
+                     class="btn btn-secondary btn-sm">
+                    <i class="bi bi-eye me-1"></i>View Calendar
                   </a>
                 </div>
               </div>
