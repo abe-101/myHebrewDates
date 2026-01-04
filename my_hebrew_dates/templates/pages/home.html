@@ -10,6 +10,78 @@
           href="{% static "scss/home.scss" %}" />
   {% endcompress %}
 {% endblock css %}
+
+{% block extra_structured_data %}
+  <!-- HowTo Schema for "How It Works" Section -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to Sync Hebrew Calendar Events to Your Digital Calendar",
+    "description": "Step-by-step guide to syncing recurring Hebrew calendar events (birthdays, yahrzeits, anniversaries) to Google Calendar, Apple Calendar, or Outlook using My Hebrew Dates.",
+    "step": [
+      {
+        "@type": "HowToStep",
+        "position": 1,
+        "name": "Create Your Calendar",
+        "text": "Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the Hebrew date.",
+        "itemListElement": [
+          {
+            "@type": "HowToDirection",
+            "text": "Sign up for a My Hebrew Dates account"
+          },
+          {
+            "@type": "HowToDirection",
+            "text": "Create a new calendar"
+          },
+          {
+            "@type": "HowToDirection",
+            "text": "Add Hebrew dates for birthdays, yahrzeits, or anniversaries"
+          }
+        ]
+      },
+      {
+        "@type": "HowToStep",
+        "position": 2,
+        "name": "Share the URL",
+        "text": "With the click of a button, generate a unique URL to share your calendar with your family members.",
+        "itemListElement": [
+          {
+            "@type": "HowToDirection",
+            "text": "Click the share button on your calendar"
+          },
+          {
+            "@type": "HowToDirection",
+            "text": "Copy the generated iCal feed URL"
+          }
+        ]
+      },
+      {
+        "@type": "HowToStep",
+        "position": 3,
+        "name": "Stay Connected",
+        "text": "Your family members can subscribe to the calendar and receive updates for the Hebrew events that will automatically appear in their calendar feed.",
+        "itemListElement": [
+          {
+            "@type": "HowToDirection",
+            "text": "Share the URL with family members"
+          },
+          {
+            "@type": "HowToDirection",
+            "text": "Family members add the iCal feed to their Google Calendar, Apple Calendar, or Outlook"
+          },
+          {
+            "@type": "HowToDirection",
+            "text": "Events automatically sync and update"
+          }
+        ]
+      }
+    ],
+    "totalTime": "PT5M"
+  }
+  </script>
+{% endblock extra_structured_data %}
+
 {% block content %}
   <!-- Hero Section -->
   <header>

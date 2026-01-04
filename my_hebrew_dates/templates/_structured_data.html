@@ -1,0 +1,88 @@
+{% load static %}
+<!-- Schema.org Structured Data for AI/Search Engine Understanding -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://www.myhebrewdates.com/#webapp",
+      "name": "My Hebrew Dates",
+      "alternateName": "MyHebrewDates",
+      "url": "https://www.myhebrewdates.com",
+      "description": "Automatically sync recurring Hebrew calendar events (birthdays, anniversaries, yahrzeits) to Google Calendar, Apple Calendar, and Outlook. Convert Hebrew dates to Gregorian calendar with automatic iCal feed generation.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Hebrew calendar to Gregorian calendar conversion",
+        "Automatic yahrzeit reminders",
+        "Hebrew birthday tracking",
+        "Anniversary sync to digital calendars",
+        "iCal feed generation",
+        "Google Calendar integration",
+        "Apple Calendar integration",
+        "Outlook calendar integration",
+        "Family calendar sharing",
+        "Custom reminder times",
+        "Multi-year recurring events"
+      ],
+      "browserRequirements": "Requires JavaScript. Works with modern browsers (Chrome, Firefox, Safari, Edge).",
+      "screenshot": "https://www.myhebrewdates.com{% static 'images/logo.png' %}",
+      "author": {
+        "@type": "Person",
+        "name": "Abe Hanoka",
+        "email": "abe@myhebrewdates.com",
+        "url": "https://github.com/abe-101"
+      },
+      "publisher": {
+        "@id": "https://www.myhebrewdates.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.myhebrewdates.com/#organization",
+      "name": "My Hebrew Dates",
+      "url": "https://www.myhebrewdates.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.myhebrewdates.com{% static 'images/logo.png' %}",
+        "width": 512,
+        "height": 512
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "abe@myhebrewdates.com",
+        "contactType": "Customer Support"
+      },
+      "sameAs": [
+        "https://github.com/abe-101/myhebrewdates",
+        "https://discord.gg/2vqUzSpt6N"
+      ]
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://www.myhebrewdates.com/#software",
+      "name": "My Hebrew Dates Calendar Sync",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Web",
+      "description": "Free web application for syncing Hebrew calendar events to modern digital calendars. Perfect for tracking yahrzeits, Hebrew birthdays, and Jewish anniversaries.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "ratingCount": "3",
+        "reviewCount": "3"
+      }
+    }
+  ]
+}
+</script>
