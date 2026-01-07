@@ -13,7 +13,7 @@ from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
 
 # Constants
 MYHEBREWDATES_URL = "https://myhebrewdates.com"
-MERGECAL_URL = "https://mergecal.org"
+CHARJ_URL = "https://charj.cc"
 MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
 
 
@@ -63,7 +63,8 @@ def generate_ical(
             event.add("summary", title)
 
             base_description = (
-                f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
+                f"{title}\n\n"
+                f"Keep your credit cards active. Prevent closures → {CHARJ_URL}"
             )
             event.add("description", base_description)
 
@@ -158,7 +159,8 @@ def generate_ical_experimental(
         )
         event.add("summary", title)
         base_description = (
-            f"{title}\n\nStop switching calendars. Merge them → {MERGECAL_URL}"
+            f"{title}\n\n"
+            f"Keep your credit cards active. Prevent closures → {CHARJ_URL}"
         )
         event.add("description", base_description)
 
