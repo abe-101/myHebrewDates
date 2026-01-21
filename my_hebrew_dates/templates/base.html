@@ -34,6 +34,8 @@
     <meta name="author" content="Abe Hanoka" />
     <meta name="keywords"
           content="{% block meta_keywords %}Hebrew calendar, Jewish holidays, event sync, icalendar, recurring events, yahrzeit, reminders, hebrew birthday, MyHebrewDates{% endblock meta_keywords %}" />
+    <link rel="canonical"
+          href="{% block canonical_url %}https://www.MyHebrewDates.com{{ request.path }}{% endblock canonical_url %}" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -106,6 +108,10 @@
       {% django_htmx_script %}
       {% htmx_modal_script %}
     {% endblock javascript %}
+    <!-- Schema.org Structured Data -->
+    {% include '_structured_data.html' %}
+    {% block extra_structured_data %}
+    {% endblock extra_structured_data %}
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">

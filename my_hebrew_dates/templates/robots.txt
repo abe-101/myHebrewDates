@@ -1,4 +1,27 @@
+# Allow all search engines and AI crawlers
 User-Agent: *
-
+Allow: /
 Disallow: /calendars/
-Disallow: /calendars/*
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /users/
+Disallow: /api/
+
+# Explicitly allow AI crawlers to access public content
+User-Agent: GPTBot
+User-Agent: ChatGPT-User
+User-Agent: Claude-Web
+User-Agent: anthropic-ai
+User-Agent: CCBot
+User-Agent: Google-Extended
+User-Agent: PerplexityBot
+User-Agent: Applebot-Extended
+Allow: /
+Disallow: /calendars/
+Disallow: /admin/
+Disallow: /accounts/
+Disallow: /users/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.myhebrewdates.com/sitemap.xml
