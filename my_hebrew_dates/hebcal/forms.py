@@ -79,9 +79,10 @@ class HebrewDateForm(forms.ModelForm):
             max_days = lengths_of_months[month]
             if day > max_days:
                 month_name = HebrewMonthEnum(month).label
-                raise ValidationError(
+                msg = (
                     f"{month_name} only has {max_days} days. "
-                    f"Please select a valid day (1–{max_days}).",
+                    f"Please select a valid day (1-{max_days})."
                 )
+                raise ValidationError(msg)
 
         return cleaned_data

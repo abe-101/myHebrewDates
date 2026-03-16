@@ -78,6 +78,9 @@ class TestHebrewDateForm(TestCase):
         )
         assert not form.is_valid()
         assert "__all__" in form.errors
+        error_message = form.errors["__all__"][0]
+        assert "only has 29 days" in error_message
+        assert "1-29" in error_message
 
     def test_hebrew_date_form_max_day_for_29_day_month(self):
         """Test that day 29 is accepted for 29-day months (e.g. Iyar)."""
