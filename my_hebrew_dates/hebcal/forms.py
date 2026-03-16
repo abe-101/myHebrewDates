@@ -6,9 +6,12 @@ from crispy_forms.layout import Div
 from crispy_forms.layout import Layout
 from crispy_forms.layout import Row
 from django import forms
+from django.core.exceptions import ValidationError
 
+from .hebrew_date import lengths_of_months
 from .models import Calendar
 from .models import HebrewDate
+from .models import HebrewMonthEnum
 
 
 class CalendarForm(forms.ModelForm):
@@ -66,3 +69,20 @@ class HebrewDateForm(forms.ModelForm):
         )
 
         self.helper.form_show_labels = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+        month = cleaned_data.get("month")
+        day = cleaned_data.get("day")
+
+        if month is not None and day is not None:
+            max_days = lengths_of_months[month]
+            if day > max_days:
+                month_name = HebrewMonthEnum(month).label
+                msg = (
+                    f"{month_name} only has {max_days} days. "
+                    f"Please select a valid day (1-{max_days})."
+                )
+                raise ValidationError(msg)
+
+        return cleaned_data

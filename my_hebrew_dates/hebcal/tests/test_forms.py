@@ -71,6 +71,31 @@ class TestHebrewDateForm(TestCase):
         assert not form.is_valid()
         assert "event_type" in form.errors
 
+    def test_hebrew_date_form_day_exceeds_month_length(self):
+        """Test that day 30 is rejected for months with only 29 days (e.g. Iyar)."""
+        form = HebrewDateForm(
+            data={"name": "Test Date", "month": 2, "day": 30, "event_type": "🎂"},
+        )
+        assert not form.is_valid()
+        assert "__all__" in form.errors
+        error_message = form.errors["__all__"][0]
+        assert "only has 29 days" in error_message
+        assert "1-29" in error_message
+
+    def test_hebrew_date_form_max_day_for_29_day_month(self):
+        """Test that day 29 is accepted for 29-day months (e.g. Iyar)."""
+        form = HebrewDateForm(
+            data={"name": "Test Date", "month": 2, "day": 29, "event_type": "🎂"},
+        )
+        assert form.is_valid()
+
+    def test_hebrew_date_form_day_30_valid_for_30_day_month(self):
+        """Test that day 30 is accepted for 30-day months (e.g. Nisan)."""
+        form = HebrewDateForm(
+            data={"name": "Test Date", "month": 1, "day": 30, "event_type": "🎂"},
+        )
+        assert form.is_valid()
+
     def test_hebrew_date_form_initialization_with_instance(self):
         self.user = User.objects.create_user(
             username="testuser",
