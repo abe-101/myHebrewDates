@@ -94,11 +94,11 @@ class HebrewDate(TimeStampedModel):
         help_text="Enter the name of the person associated with this event.",
     )
     month = models.IntegerField(
-        choices=HebrewMonthEnum.choices,
+        choices=HebrewMonthEnum,
         help_text="Select the month of the event according to the Hebrew calendar.",
     )
     day = models.IntegerField(
-        choices=HebrewDayEnum.choices,
+        choices=HebrewDayEnum,
         help_text="Select the day of the event according to the Hebrew calendar.",
     )
 
