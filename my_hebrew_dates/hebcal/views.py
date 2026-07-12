@@ -35,9 +35,6 @@ logger = logging.getLogger(__name__)
 def calendar_list_view(request):
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
-    if not user_owned_calendars.exists():
-        return redirect("hebcal:calendar_new")
-
     logger.info(
         "Calendar list view called for user: %s with calendars: %s",
         request.user,

@@ -1,17 +1,32 @@
 <div id="calendar-{{ calendar.id }}" class="mb-4">
-  <div class="d-flex align-items-center gap-3">
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-2">
+      <li class="breadcrumb-item">
+        <a href="{% url 'hebcal:calendar_list' %}">My Calendars</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">{{ calendar.name }}</li>
+    </ol>
+  </nav>
+  <div class="d-flex flex-wrap align-items-center gap-3">
     <div>
       <h1 class="mb-1">{{ calendar.name }}</h1>
-      <small class="text-muted">Timezone: {{ calendar.timezone }}</small>
+      <small class="text-body-secondary">Timezone: {{ calendar.timezone }}</small>
     </div>
-    <button hx-get="{% url 'hebcal:update_calendar' pk=calendar.pk %}"
-            hx-target="body"
-            hx-swap="beforeend"
-            data-bs-toggle="tooltip"
-            class="btn btn-primary align-self-start mt-2"
-            title="Edit Calendar">
-      <i class="bi bi-pencil-square me-1"></i>
-      Edit
-    </button>
+    <div class="d-flex gap-2 align-self-start mt-2">
+      <button hx-get="{% url 'hebcal:update_calendar' pk=calendar.pk %}"
+              hx-target="body"
+              hx-swap="beforeend"
+              class="btn btn-outline-secondary btn-sm"
+              title="Rename calendar or change its timezone">
+        <i class="bi bi-pencil-square me-1"></i>
+        Rename
+      </button>
+      <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+         class="btn btn-outline-primary btn-sm"
+         title="Subscription links and calendar preview">
+        <i class="bi bi-share me-1"></i>
+        Share &amp; Subscribe
+      </a>
+    </div>
   </div>
 </div>

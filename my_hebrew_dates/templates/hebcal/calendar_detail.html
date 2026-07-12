@@ -42,6 +42,16 @@
     }
   </style>
   <div class="container mt-4">
+    {% if request.user == calendar.owner %}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-2">
+          <li class="breadcrumb-item">
+            <a href="{% url 'hebcal:calendar_list' %}">My Calendars</a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">{{ calendar.name }}</li>
+        </ol>
+      </nav>
+    {% endif %}
     <div class="card mb-4 shadow">
       <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h3 class="mb-0">
@@ -50,12 +60,21 @@
         <input hidden
                id="calendar_file_url{{ calendar.uuid }}"
                value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
-        <button onclick="shareFile('{{ calendar.uuid }}')"
-                class="btn btn-light"
-                type="button"
-                title="Share with friends and family">
-          <i class="bi bi-share"></i> Share
-        </button>
+        <div class="d-flex gap-2">
+          {% if request.user == calendar.owner %}
+            <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+               class="btn btn-light"
+               title="Add or edit the dates in this calendar">
+              <i class="bi bi-pencil-square"></i> Manage Dates
+            </a>
+          {% endif %}
+          <button onclick="shareFile('{{ calendar.uuid }}')"
+                  class="btn btn-light"
+                  type="button"
+                  title="Share with friends and family">
+            <i class="bi bi-share"></i> Share
+          </button>
+        </div>
       </div>
       <div class="card-body">
         <p class="lead">
