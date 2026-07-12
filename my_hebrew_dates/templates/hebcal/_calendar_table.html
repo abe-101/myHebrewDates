@@ -1,26 +1,40 @@
 <div id="calendar-table" class="fade-me-in">
   <!-- Calendar Table -->
   <div class="table-responsive">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table-sm align-middle">
       <thead>
         <tr>
           <th>Name</th>
           <th>
-            Hebrew Day
             <button hx-get=""
-                    class="btn btn-sm"
+                    class="btn btn-sm btn-link text-decoration-none text-reset p-0 fw-bold"
                     hx-vals='{"sort": "day", "order": "{% if day_desc %}asc{% else %}desc{% endif %}"}'
-                    hx-target="#calendar-table">
-              <i class="bi bi-arrow-{% if day_desc %}down{% else %}up{% endif %}"></i>
+                    hx-include="#filter-form"
+                    hx-target="#calendar-table"
+                    hx-swap="outerHTML"
+                    title="Sort by Hebrew day">
+              Hebrew Day
+              {% if sort_by == "day" %}
+                <i class="bi bi-arrow-{% if day_desc %}down{% else %}up{% endif %}"></i>
+              {% else %}
+                <i class="bi bi-arrow-down-up opacity-50"></i>
+              {% endif %}
             </button>
           </th>
           <th>
-            Hebrew Month
             <button hx-get=""
-                    class="btn btn-sm"
+                    class="btn btn-sm btn-link text-decoration-none text-reset p-0 fw-bold"
                     hx-vals='{"sort": "month", "order": "{% if month_desc %}asc{% else %}desc{% endif %}"}'
-                    hx-target="#calendar-table">
-              <i class="bi bi-arrow-{% if month_desc %}down{% else %}up{% endif %}"></i>
+                    hx-include="#filter-form"
+                    hx-target="#calendar-table"
+                    hx-swap="outerHTML"
+                    title="Sort by Hebrew month">
+              Hebrew Month
+              {% if sort_by == "month" %}
+                <i class="bi bi-arrow-{% if month_desc %}down{% else %}up{% endif %}"></i>
+              {% else %}
+                <i class="bi bi-arrow-down-up opacity-50"></i>
+              {% endif %}
             </button>
           </th>
           <th>Event Type</th>
@@ -30,6 +44,19 @@
       <tbody>
         {% for hebrew_date in hebrew_dates %}
           {% include 'hebcal/_hebrew_date_row.html' %}
+        {% empty %}
+          <tr>
+            <td colspan="5" class="text-center text-body-secondary py-5">
+              {% if is_filtered %}
+                <i class="bi bi-funnel fs-3 d-block mb-2"></i>
+                No dates match your filters.
+                <a href="{{ request.path }}">Clear filters</a>
+              {% else %}
+                <i class="bi bi-calendar-plus fs-3 d-block mb-2"></i>
+                No dates yet. Add your first birthday, anniversary, or yahrzeit below.
+              {% endif %}
+            </td>
+          </tr>
         {% endfor %}
         <tr id="new-date-button">
           <td colspan="5">

@@ -11,7 +11,7 @@
     <div class="row mb-4">
       <div class="col">
         <form id="filter-form"
-              class="d-flex justify-content-end"
+              class="d-flex flex-wrap gap-2 align-items-center"
               hx-get="{{ request.path }}"
               hx-target="#calendar-table"
               hx-params="*"
@@ -19,7 +19,7 @@
               hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
               hx-indicator=".htmx-indicator"
               hx-push-url="true">
-          <div class="me-2">
+          <div class="flex-grow-1">
             <input class="search-box form-control rounded"
                    type="search"
                    name="search"
@@ -28,12 +28,16 @@
                    placeholder="Search names..." />
           </div>
           <!-- Month Filter Dropdown -->
-          <div class="dropdown me-1">
+          <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle"
                     type="button"
                     id="dropdownMonthButton"
                     data-bs-toggle="dropdown"
-                    aria-expanded="false">Month</button>
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+              Month
+              {% if selected_months %}<span class="badge text-bg-primary">{{ selected_months|length }}</span>{% endif %}
+            </button>
             <ul class="dropdown-menu p-2" aria-labelledby="dropdownMonthButton">
               {% for value, name in month_choices %}
                 <li>
@@ -51,12 +55,16 @@
             </ul>
           </div>
           <!-- Day Filter Dropdown -->
-          <div class="dropdown me-1">
+          <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle"
                     type="button"
                     id="dropdownDayButton"
                     data-bs-toggle="dropdown"
-                    aria-expanded="false">Day</button>
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+              Day
+              {% if selected_days %}<span class="badge text-bg-primary">{{ selected_days|length }}</span>{% endif %}
+            </button>
             <ul class="dropdown-menu p-2" aria-labelledby="dropdownDayButton">
               {% for value, name in day_choices %}
                 <li>
@@ -74,12 +82,16 @@
             </ul>
           </div>
           <!-- Event Type Filter Dropdown -->
-          <div class="dropdown me-1">
+          <div class="dropdown">
             <button class="btn btn-outline-secondary dropdown-toggle"
                     type="button"
                     id="dropdownEventTypeButton"
                     data-bs-toggle="dropdown"
-                    aria-expanded="false">Event Type</button>
+                    data-bs-auto-close="outside"
+                    aria-expanded="false">
+              Event Type
+              {% if selected_event_types %}<span class="badge text-bg-primary">{{ selected_event_types|length }}</span>{% endif %}
+            </button>
             <ul class="dropdown-menu p-2" aria-labelledby="dropdownEventTypeButton">
               {% for value, name in event_choices %}
                 <li>
@@ -96,7 +108,11 @@
               {% endfor %}
             </ul>
           </div>
-          <a href="{{ request.path }}" class="btn btn-secondary">Clear</a>
+          {% if is_filtered %}
+            <a href="{{ request.path }}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-circle me-1"></i>Clear
+            </a>
+          {% endif %}
         </form>
       </div>
     </div>
