@@ -10,23 +10,23 @@
   <style>
     .platform-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
+      box-shadow: var(--bs-box-shadow-lg) !important;
       transition: all 0.3s ease;
     }
 
     .event-birthday {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-      border-color: #667eea !important;
+      background-color: var(--bs-primary) !important;
+      border-color: var(--bs-primary) !important;
     }
 
     .event-anniversary {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
-      border-color: #f093fb !important;
+      background-color: var(--bs-danger) !important;
+      border-color: var(--bs-danger) !important;
     }
 
     .event-yahrzeit {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
-      border-color: #4facfe !important;
+      background-color: var(--bs-info) !important;
+      border-color: var(--bs-info) !important;
     }
 
     #calendar {
@@ -364,11 +364,6 @@
       );
       return linkedText.replace(/\n/g, '<br />');
     }
-  </script>
-  <script>
-    (function() {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
   </script>
   <script>
     function copyCalendarUrl() {

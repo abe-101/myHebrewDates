@@ -420,7 +420,6 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
-    messages.success(request, "Calendar alarm set to " + alarm_time)
     logger.info(
         "update_calendar_links_htmx: %s for calendar: %s (%s)",
         request.user,
