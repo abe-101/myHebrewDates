@@ -63,7 +63,7 @@
             <button type="button"
                     hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
                     hx-target="closest tr"
-                    hx-swap="beforebegin settle:1s"
+                    hx-swap="beforebegin"
                     class="btn btn-sm btn-primary">
               <i class="bi bi-plus"></i> Add Hebrew Date
             </button>

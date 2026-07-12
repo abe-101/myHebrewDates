@@ -15,7 +15,7 @@
               hx-get="{{ request.path }}"
               hx-target="#calendar-table"
               hx-params="*"
-              hx-swap="outerHTML settle:1s"
+              hx-swap="outerHTML"
               hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
               hx-indicator=".htmx-indicator"
               hx-push-url="true">

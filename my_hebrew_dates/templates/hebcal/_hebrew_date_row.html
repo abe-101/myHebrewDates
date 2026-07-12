@@ -9,7 +9,7 @@
     <button type="button"
             hx-get="{% url 'hebcal:edit_hebrew_date_htmx' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}"
             hx-target="closest tr"
-            hx-swap="outerHTML settle:1s"
+            hx-swap="outerHTML"
             class="btn btn-sm btn-outline-secondary"
             title="Edit {{ hebrew_date.name }}"
             aria-label="Edit {{ hebrew_date.name }}">
@@ -19,7 +19,7 @@
     <button type="button"
             hx-post="{% url 'hebcal:delete_hebrew_date_htmx' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}"
             hx-target="closest tr"
-            hx-swap="outerHTML settle:1s"
+            hx-swap="outerHTML"
             hx-confirm="Are you sure you want to delete {{ hebrew_date.get_formatted_name }}?"
             class="btn btn-sm btn-outline-danger"
             title="Delete {{ hebrew_date.name }}"

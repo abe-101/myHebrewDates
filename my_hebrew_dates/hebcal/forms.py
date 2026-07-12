@@ -52,7 +52,7 @@ class HebrewDateForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             # Cancel editing: swap the row back to its display state
             cancel_button = HTML(
-                '<button type="button" class="btn btn-outline-secondary" title="Cancel" aria-label="Cancel" hx-get="{% url \'hebcal:edit_hebrew_date_htmx\' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}?cancel=True" hx-target="closest tr" hx-swap="outerHTML settle:1s"><i class="bi bi-x-lg"></i></button>',  # noqa: E501
+                '<button type="button" class="btn btn-outline-secondary" title="Cancel" aria-label="Cancel" hx-get="{% url \'hebcal:edit_hebrew_date_htmx\' uuid=hebrew_date.calendar.uuid pk=hebrew_date.pk %}?cancel=True" hx-target="closest tr" hx-swap="outerHTML"><i class="bi bi-x-lg"></i></button>',  # noqa: E501
             )
         else:
             # Cancel adding: the row only exists client-side, just remove it
