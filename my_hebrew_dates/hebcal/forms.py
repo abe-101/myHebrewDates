@@ -65,12 +65,12 @@ class HebrewDateForm(forms.ModelForm):
             Div(
                 Div(Field("name", wrapper_class="mb-0"), css_class="col-12 col-md-4"),
                 Div(Field("day", wrapper_class="mb-0"), css_class="col-6 col-md-2"),
-                Div(Field("month", wrapper_class="mb-0"), css_class="col-6 col-md-3"),
+                Div(Field("month", wrapper_class="mb-0"), css_class="col-6 col-md-2"),
                 Div(
                     Field("event_type", wrapper_class="mb-0"),
                     css_class="col-8 col-md-2",
                 ),
-                Div(button_div, css_class="col-4 col-md-1 d-flex align-items-end"),
+                Div(button_div, css_class="col-4 col-md-2 d-flex align-items-end"),
                 css_class="row g-2 align-items-end",
             ),
         )
