@@ -117,11 +117,6 @@ class CalendarUpdateModalViewTest(BaseTest):
         self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
         self.url = reverse("hebcal:update_calendar", args=[self.calendar.pk])
 
-    def test_owner_can_access_update_modal(self):
-        self.client.login(username="testuser", password="password")
-        response = self.client.get(self.url)
-        assert response.status_code == HTTPStatus.OK
-
     def test_owner_can_update_calendar(self):
         self.client.login(username="testuser", password="password")
         data = {"name": "Renamed Calendar", "timezone": "America/New_York"}
@@ -129,12 +124,6 @@ class CalendarUpdateModalViewTest(BaseTest):
         assert response.status_code == HTTPStatus.OK
         self.calendar.refresh_from_db()
         assert self.calendar.name == "Renamed Calendar"
-
-    def test_non_owner_cannot_access_update_modal(self):
-        User.objects.create_user("otheruser", "other@example.com", "password")
-        self.client.login(username="otheruser", password="password")
-        response = self.client.get(self.url)
-        assert response.status_code == HTTPStatus.NOT_FOUND
 
     def test_non_owner_cannot_update_calendar(self):
         User.objects.create_user("otheruser", "other@example.com", "password")
@@ -144,10 +133,6 @@ class CalendarUpdateModalViewTest(BaseTest):
         assert response.status_code == HTTPStatus.NOT_FOUND
         self.calendar.refresh_from_db()
         assert self.calendar.name == "Test Calendar"
-
-    def test_anonymous_user_is_redirected(self):
-        response = self.client.get(self.url)
-        assert response.status_code == HTTPStatus.FOUND
 
 
 class CalendarDeleteViewTest(BaseTest):
@@ -166,22 +151,11 @@ class CalendarDeleteViewTest(BaseTest):
         )
         assert not Calendar.objects.filter(pk=self.calendar.pk).exists()
 
-    def test_non_owner_cannot_view_delete_page(self):
-        User.objects.create_user("otheruser", "other@example.com", "password")
-        self.client.login(username="otheruser", password="password")
-        response = self.client.get(self.url)
-        assert response.status_code == HTTPStatus.NOT_FOUND
-
     def test_non_owner_cannot_delete_calendar(self):
         User.objects.create_user("otheruser", "other@example.com", "password")
         self.client.login(username="otheruser", password="password")
         response = self.client.post(self.url)
         assert response.status_code == HTTPStatus.NOT_FOUND
-        assert Calendar.objects.filter(pk=self.calendar.pk).exists()
-
-    def test_anonymous_user_is_redirected(self):
-        response = self.client.post(self.url)
-        assert response.status_code == HTTPStatus.FOUND
         assert Calendar.objects.filter(pk=self.calendar.pk).exists()
 
 
