@@ -111,12 +111,20 @@ def create_calendar_view(request: HttpRequest):
     return render(request, "hebcal/calendar_new.html", context)
 
 
-class CalendarUpdateModalView(SuccessMessageMixin, HtmxModalUpdateView):  # type: ignore[misc]
+class CalendarUpdateModalView(  # type: ignore[misc]
+    LoginRequiredMixin,
+    SuccessMessageMixin,
+    HtmxModalUpdateView,
+):
     model = Calendar
     modal_size = "md"
     form_class = CalendarForm
     detail_template_name = "hebcal/_calendar_name.html"
     success_message = "Calendar updated successfully"
+    login_url = reverse_lazy("users:redirect")
+
+    def get_queryset(self):
+        return Calendar.objects.filter(owner=self.request.user)
 
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
@@ -325,6 +333,9 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     object: Calendar  # type annotation for the object
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
+
+    def get_queryset(self):
+        return Calendar.objects.filter(owner=self.request.user)
 
 
 def serve_pixel(request, pixel_id: UUID, pk: int):
