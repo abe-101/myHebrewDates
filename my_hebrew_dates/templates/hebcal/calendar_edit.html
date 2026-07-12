@@ -23,7 +23,9 @@
             <input class="search-box form-control rounded"
                    type="search"
                    name="search"
-                   placeholder="Begin Typing To Search {{ calendar.name }} Calendar..." />
+                   value="{{ search_query|default:'' }}"
+                   aria-label="Search dates"
+                   placeholder="Search names..." />
           </div>
           <!-- Month Filter Dropdown -->
           <div class="dropdown me-1">
@@ -86,7 +88,8 @@
                            type="checkbox"
                            value="{{ value }}"
                            name="event_type"
-                           id="event-type-{{ value }}" />
+                           id="event-type-{{ value }}"
+                           {% if value in selected_event_types %}checked{% endif %} />
                     <label class="form-check-label" for="event-type-{{ value }}">{{ name }}</label>
                   </div>
                 </li>

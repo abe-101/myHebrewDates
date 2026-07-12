@@ -124,7 +124,7 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     month_values = request.GET.getlist("month")
     day_values = request.GET.getlist("day")
     search_query = request.GET.get("search", None)
-    event_type = request.GET.get("event_type", None)
+    event_type_values = request.GET.getlist("event_type")
 
     month_choices = HebrewMonthEnum.choices
     day_choices = HebrewDayEnum.choices
@@ -153,8 +153,12 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     if search_query:
         hebrew_dates = hebrew_dates.filter(name__icontains=search_query)
 
-    if event_type:
-        hebrew_dates = hebrew_dates.filter(event_type=event_type)
+    if event_type_values:
+        hebrew_dates = hebrew_dates.filter(event_type__in=event_type_values)
+
+    is_filtered = bool(
+        search_query or month_values or day_values or event_type_values,
+    )
 
     context = {
         "calendar": calendar,
@@ -164,8 +168,12 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "hebrew_dates": hebrew_dates,
         "selected_months": month_values,
         "selected_days": day_values,
+        "selected_event_types": event_type_values,
+        "search_query": search_query,
+        "is_filtered": is_filtered,
         "day_desc": day_desc,
         "month_desc": month_desc,
+        "sort_by": sort_by,
     }
 
     logger.info(
