@@ -118,8 +118,8 @@ class CalendarUpdateModalView(SuccessMessageMixin, HtmxModalUpdateView):  # type
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-    month_values = request.GET.getlist("month")
-    day_values = request.GET.getlist("day")
+    month_values = [v for v in request.GET.getlist("month") if v.isdigit()]
+    day_values = [v for v in request.GET.getlist("day") if v.isdigit()]
     search_query = request.GET.get("search", None)
     event_type_values = request.GET.getlist("event_type")
 
@@ -128,6 +128,8 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     event_choices = HebrewDate.EVENT_CHOICES
 
     sort_by = request.GET.get("sort", "day")
+    if sort_by not in ("day", "month"):
+        sort_by = "day"
     order = request.GET.get("order", "asc")
 
     # Determine if current sort is descending
@@ -139,11 +141,11 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     hebrew_dates = calendar.calendarOf.all().order_by(sort_order)
 
     # Filter by month if provided
-    if "month" in request.GET:
+    if month_values:
         hebrew_dates = hebrew_dates.filter(month__in=month_values)
 
     # Filter by day if provided
-    if "day" in request.GET:
+    if day_values:
         hebrew_dates = hebrew_dates.filter(day__in=day_values)
 
     # Additional filters can be added similarly
