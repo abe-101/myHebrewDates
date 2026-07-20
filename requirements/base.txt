@@ -8,7 +8,7 @@ hiredis==3.1.0  # https://github.com/redis/hiredis-py
 celery==5.5.3  # pyup: < 6.0  # https://github.com/celery/celery
 django-celery-beat==2.7.0  # https://github.com/celery/django-celery-beat
 pyluach
-icalendar==6.1.0  # https://github.com/collective/icalendar
+icalendar==7.2.2  # https://github.com/collective/icalendar
 python-json-logger==3.2.1  # https://github.com/nhairs/python-json-logger
 
 # Django
