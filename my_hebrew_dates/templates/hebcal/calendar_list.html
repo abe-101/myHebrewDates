@@ -43,7 +43,7 @@
                 <div class="d-flex justify-content-between align-items-start mb-3">
                   <div class="flex-grow-1">
                     <h5 class="card-title mb-1">
-                      <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                      <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
                          class="text-decoration-none">
                         <i class="bi bi-calendar-event text-primary me-2"></i>{{ calendar.name }}
                       </a>
@@ -60,19 +60,19 @@
                        id="calendar_file_url{{ calendar.uuid }}"
                        value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
                 <div class="d-grid gap-2 d-sm-flex">
-                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
                      class="btn btn-primary btn-sm">
-                    <i class="bi bi-eye me-1"></i>View
+                    <i class="bi bi-pencil-square me-1"></i>Manage Dates
+                  </a>
+                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                     class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-calendar-week me-1"></i>Subscribe &amp; Preview
                   </a>
                   <button onclick="shareFile('{{ calendar.uuid }}')"
                           class="btn btn-outline-secondary btn-sm"
                           type="button">
                     <i class="bi bi-share me-1"></i>Share
                   </button>
-                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-                     class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-pencil me-1"></i>Edit
-                  </a>
                   <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
                      class="btn btn-outline-danger btn-sm">
                     <i class="bi bi-trash me-1"></i>Delete

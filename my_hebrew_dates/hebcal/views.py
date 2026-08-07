@@ -35,9 +35,6 @@ logger = logging.getLogger(__name__)
 def calendar_list_view(request):
     user_owned_calendars = Calendar.objects.filter(owner=request.user)
 
-    if not user_owned_calendars.exists():
-        return redirect("hebcal:calendar_new")
-
     logger.info(
         "Calendar list view called for user: %s with calendars: %s",
         request.user,
@@ -129,16 +126,18 @@ class CalendarUpdateModalView(  # type: ignore[misc]
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-    month_values = request.GET.getlist("month")
-    day_values = request.GET.getlist("day")
+    month_values = [v for v in request.GET.getlist("month") if v.isdigit()]
+    day_values = [v for v in request.GET.getlist("day") if v.isdigit()]
     search_query = request.GET.get("search", None)
-    event_type = request.GET.get("event_type", None)
+    event_type_values = request.GET.getlist("event_type")
 
     month_choices = HebrewMonthEnum.choices
     day_choices = HebrewDayEnum.choices
     event_choices = HebrewDate.EVENT_CHOICES
 
     sort_by = request.GET.get("sort", "day")
+    if sort_by not in ("day", "month"):
+        sort_by = "day"
     order = request.GET.get("order", "asc")
 
     # Determine if current sort is descending
@@ -150,19 +149,23 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
     hebrew_dates = calendar.calendarOf.all().order_by(sort_order)
 
     # Filter by month if provided
-    if "month" in request.GET:
+    if month_values:
         hebrew_dates = hebrew_dates.filter(month__in=month_values)
 
     # Filter by day if provided
-    if "day" in request.GET:
+    if day_values:
         hebrew_dates = hebrew_dates.filter(day__in=day_values)
 
     # Additional filters can be added similarly
     if search_query:
         hebrew_dates = hebrew_dates.filter(name__icontains=search_query)
 
-    if event_type:
-        hebrew_dates = hebrew_dates.filter(event_type=event_type)
+    if event_type_values:
+        hebrew_dates = hebrew_dates.filter(event_type__in=event_type_values)
+
+    is_filtered = bool(
+        search_query or month_values or day_values or event_type_values,
+    )
 
     context = {
         "calendar": calendar,
@@ -172,8 +175,12 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "hebrew_dates": hebrew_dates,
         "selected_months": month_values,
         "selected_days": day_values,
+        "selected_event_types": event_type_values,
+        "search_query": search_query,
+        "is_filtered": is_filtered,
         "day_desc": day_desc,
         "month_desc": month_desc,
+        "sort_by": sort_by,
     }
 
     logger.info(
@@ -426,7 +433,6 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
-    messages.success(request, "Calendar alarm set to " + alarm_time)
     logger.info(
         "update_calendar_links_htmx: %s for calendar: %s (%s)",
         request.user,
