@@ -12,124 +12,124 @@
       {% endblock title %}
     </title>
     <meta property="og:title"
-          content="{% block og_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock og_title %}" />
-    <meta property="og:description"
-          content="{% block og_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock og_description %}" />
-    <meta property="og:image"
+      content="{% block og_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock og_title %}" />
+      <meta property="og:description"
+        content="{% block og_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock og_description %}" />
+        <meta property="og:image"
           content="{% block og_image %}https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}{% endblock og_image %}" />
-    <meta property="og:url"
-          content="{% block og_url %}https://www.MyHebrewDates.com/{% endblock og_url %}" />
-    <meta property="og:type" content="website" />
-    <!-- Twitter-specific tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title"
-          content="{% block twitter_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock twitter_title %}" />
-    <meta name="twitter:description"
-          content="{% block twitter_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock twitter_description %}" />
-    <meta name="twitter:image"
-          content="{% block twitter_image %}https://www.MyHebrewDates.com{% static 'images/favicon.png' %}{% endblock twitter_image %}" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description"
-          content="{% block meta_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock meta_description %}" />
-    <meta name="author" content="Abe Hanoka" />
-    <meta name="keywords"
-          content="{% block meta_keywords %}Hebrew calendar, Jewish holidays, event sync, icalendar, recurring events, yahrzeit, reminders, hebrew birthday, MyHebrewDates{% endblock meta_keywords %}" />
-    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-          rel="stylesheet" />
-    {% block css %}
-      <!-- Latest compiled and minified Bootstrap CSS -->
-      <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
-            integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer" />
-      <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
-            integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer" />
-      <!-- Your stuff: Third-party CSS libraries go here -->
-      <!-- This file stores project-specific CSS -->
-      {% compress css %}
-        <link href="{% static 'css/project.css' %}" rel="stylesheet" />
-        <link rel="stylesheet"
-              type="text/x-scss"
-              href="{% static "scss/custom-bootstrap.scss" %}" />
-      {% endcompress %}
-    {% endblock css %}
-    <!-- Le javascript
+          <meta property="og:url"
+            content="{% block og_url %}https://www.MyHebrewDates.com/{% endblock og_url %}" />
+            <meta property="og:type" content="website" />
+            <!-- Twitter-specific tags -->
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:title"
+              content="{% block twitter_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock twitter_title %}" />
+              <meta name="twitter:description"
+                content="{% block twitter_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock twitter_description %}" />
+                <meta name="twitter:image"
+                  content="{% block twitter_image %}https://www.MyHebrewDates.com{% static 'images/favicon.png' %}{% endblock twitter_image %}" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                  <meta name="description"
+                    content="{% block meta_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock meta_description %}" />
+                    <meta name="author" content="Abe Hanoka" />
+                    <meta name="keywords"
+                      content="{% block meta_keywords %}Hebrew calendar, Jewish holidays, event sync, icalendar, recurring events, yahrzeit, reminders, hebrew birthday, MyHebrewDates{% endblock meta_keywords %}" />
+                      <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
+                      <link rel="preconnect" href="https://fonts.googleapis.com" />
+                      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+                      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+                        rel="stylesheet" />
+                        {% block css %}
+                          <!-- Latest compiled and minified Bootstrap CSS -->
+                          <link rel="stylesheet"
+                            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+                            integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg=="
+                            crossorigin="anonymous"
+                            referrerpolicy="no-referrer" />
+                            <link rel="stylesheet"
+                              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
+                              integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
+                              crossorigin="anonymous"
+                              referrerpolicy="no-referrer" />
+                              <!-- Your stuff: Third-party CSS libraries go here -->
+                              <!-- This file stores project-specific CSS -->
+                              {% compress css %}
+                                <link href="{% static 'css/project.css' %}" rel="stylesheet" />
+                                <link rel="stylesheet"
+                                  type="text/x-scss"
+                                  href="{% static "scss/custom-bootstrap.scss" %}" />
+                              {% endcompress %}
+                        {% endblock css %}
+                        <!-- Le javascript
     ================================================== -->
-    {# Placed at the top of the document so pages load faster with defer #}
-    {% block javascript %}
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                        {# Placed at the top of the document so pages load faster with defer #}
+                        {% block javascript %}
+                          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
               integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
               crossorigin="anonymous"></script>
-      <script defer
+                          <script defer
               src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js"
               integrity="sha512-WW8/jxkELe2CAiE4LvQfwm1rajOS8PHasCCx+knHG0gBHt8EXxS6T6tJRTGuDQVnluuAvMxWF4j8SNFDKceLFg=="
               crossorigin="anonymous"
               referrerpolicy="no-referrer"></script>
-      <!-- Your stuff: Third-party javascript libraries go here -->
-      <!-- Google tag (gtag.js) -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=G-MLL490GGCR"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
+                          <!-- Your stuff: Third-party javascript libraries go here -->
+                          <!-- Google tag (gtag.js) -->
+                          <script async src="https://www.googletagmanager.com/gtag/js?id=G-MLL490GGCR"></script>
+                          <script>
+                            window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-          dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
+                            function gtag() {
+                              dataLayer.push(arguments);
+                            }
+                            gtag('js', new Date());
 
-        gtag('config', 'G-MLL490GGCR');
-      </script>
-      <!-- ICAL.js Library -->
-      <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
+                            gtag('config', 'G-MLL490GGCR');
+                          </script>
+                          <!-- ICAL.js Library -->
+                          <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
               integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons="
               crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"
+                          <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"
               integrity="sha256-J37ZtjEw94oWBNZ9w/XC73raGXE9t10//XHJfKz2QCM="
               crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js"
+                          <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.10/index.global.min.js"
               integrity="sha256-io4G+JpruJtt8SoSUOgLQrhBj/YtQXFgIvkGzBxQAUQ="
               crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-      <!-- place project specific Javascript in this file -->
-      {% compress js %}
-        <script defer src="{% static 'js/project.js' %}"></script>
-        <script defer src="{% static 'js/theme-toggler.js' %}"></script>
-        <script defer src="{% static 'js/htmx.min.js' %}"></script>
-        <script defer src="{% static 'toasts.js' %}"></script>
-      {% endcompress %}
-      {% django_htmx_script %}
-      {% htmx_modal_script %}
-    {% endblock javascript %}
-  </head>
-  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">
-    <div class="container flex-grow-1 mb-5">
-      <div class="mb-1">{% include '_navbar.html' %}</div>
-      <div class="container">
-        {% block body %}
-          {% block main %}
-            {% block content %}
-              <p>Use this document as a way to quick start any new project.</p>
-            {% endblock content %}
-          {% endblock main %}
-          {% include 'toasts.html' %}
-        {% endblock body %}
-      </div>
-      <!-- /container -->
-    </div>
-    <!-- flex-shrink-0 container -->
-    {% include '_footer.html' %}
-    <!-- /container -->
-    {% block modal %}
-    {% endblock modal %}
-    {% block inline_javascript %}
-      {% comment %}
+                          <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                          <!-- place project specific Javascript in this file -->
+                          {% compress js %}
+                            <script defer src="{% static 'js/project.js' %}"></script>
+                            <script defer src="{% static 'js/theme-toggler.js' %}"></script>
+                            <script defer src="{% static 'js/htmx.min.js' %}"></script>
+                            <script defer src="{% static 'toasts.js' %}"></script>
+                          {% endcompress %}
+                          {% django_htmx_script %}
+                          {% htmx_modal_script %}
+                        {% endblock javascript %}
+                      </head>
+                      <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">
+                        <div class="container flex-grow-1 mb-5">
+                          <div class="mb-1">{% include '_navbar.html' %}</div>
+                          <div class="container">
+                            {% block body %}
+                              {% block main %}
+                                {% block content %}
+                                  <p>Use this document as a way to quick start any new project.</p>
+                                {% endblock content %}
+                              {% endblock main %}
+                              {% include 'toasts.html' %}
+                            {% endblock body %}
+                          </div>
+                          <!-- /container -->
+                        </div>
+                        <!-- flex-shrink-0 container -->
+                        {% include '_footer.html' %}
+                        <!-- /container -->
+                        {% block modal %}
+                        {% endblock modal %}
+                        {% block inline_javascript %}
+                          {% comment %}
     Script tags with only code, no src (defer by default). To run
     with a "defer" so that you run inline code:
     <script>
@@ -137,8 +137,8 @@
         /* Run whatever you want */
       });
     </script>
-      {% endcomment %}
-      <script data-name="BMC-Widget"
+                          {% endcomment %}
+                          <script data-name="BMC-Widget"
               data-cfasync="false"
               src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
               data-id="abe101"
@@ -148,9 +148,9 @@
               data-position="Right"
               data-x_margin="18"
               data-y_margin="18"></script>
-    {% endblock inline_javascript %}
-  </body>
-  {# djlint:off #}
+                        {% endblock inline_javascript %}
+                      </body>
+                      {# djlint:off #}
 <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog && window.posthog.__loaded)||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init Dr Ur fi Lr zr ci Or jr capture Ai calculateEventProperties qr register register_once register_for_session unregister unregister_for_session Jr getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey displaySurvey cancelPendingSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty Gr Br createPersonProfile Vr Cr Kr opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing get_explicit_consent_status is_capturing clear_opt_in_out_capturing Hr debug O Wr getPageViewId captureTraceFeedback captureTraceMetric Rr".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
     posthog.init('phc_ll05cGvHTZbaL1zJlnl6o7W7BGUJykM4Audp4DvfVke', {
@@ -168,5 +168,5 @@
     })
 </script>
   {% endif %}
-  {# djlint:on #}
-</html>
+                      {# djlint:on #}
+                    </html>
