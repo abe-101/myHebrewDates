@@ -1,4 +1,4 @@
-# ruff: noqa: S324, ERA001
+# ruff: noqa: S324
 import logging
 from base64 import urlsafe_b64encode
 from datetime import datetime
