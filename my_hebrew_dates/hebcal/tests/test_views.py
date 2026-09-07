@@ -3,8 +3,10 @@ from http import HTTPStatus
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
+from django.db import connection
 from django.test import Client
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.models import Calendar
@@ -276,3 +278,24 @@ class CalendarFileViewTest(BaseTest):
 
         assert "X-WR-TIMEZONE:UTC" in google.content.decode()
         assert "X-WR-TIMEZONE:America/New_York" in apple.content.decode()
+
+    def test_generating_the_file_does_not_scale_with_the_event_count(self):
+        """The events are read in one query, however many there are."""
+
+        def queries_for(count):
+            HebrewDate.objects.filter(calendar=self.calendar).delete()
+            HebrewDate.objects.bulk_create(
+                HebrewDate(
+                    name=f"Person {i}",
+                    month=1,
+                    day=1,
+                    event_type="\N{BIRTHDAY CAKE}",
+                    calendar=self.calendar,
+                )
+                for i in range(count)
+            )
+            with CaptureQueriesContext(connection) as captured:
+                self.client.get(self.url)
+            return len(captured.captured_queries)
+
+        assert queries_for(50) == queries_for(2)
