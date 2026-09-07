@@ -221,3 +221,58 @@ class CalendarEditViewTest(BaseTest):
         self.assertContains(response, self.hebrew_date1.name)
         self.assertContains(response, self.hebrew_date2.name)
         self.assertContains(response, self.hebrew_date3.name)
+
+
+class CalendarFileViewTest(BaseTest):
+    def setUp(self):
+        super().setUp()
+        self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
+        self.url = reverse("hebcal:calendar_file", args=[self.calendar.uuid])
+
+    def test_new_event_is_not_masked_by_the_cache(self):
+        first = self.client.get(self.url)
+        assert first.status_code == HTTPStatus.OK
+        assert "Moshe" not in first.content.decode()
+
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+
+        second = self.client.get(self.url)
+        assert "Moshe" in second.content.decode()
+
+    def test_deleted_event_is_not_masked_by_the_cache(self):
+        hebrew_date = HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+        assert "Moshe" in self.client.get(self.url).content.decode()
+
+        hebrew_date.delete()
+
+        assert "Moshe" not in self.client.get(self.url).content.decode()
+
+    def test_google_and_apple_get_their_own_cache_entries(self):
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+
+        google = self.client.get(self.url, headers={"user-agent": "Google-Calendar"})
+        apple = self.client.get(
+            self.url,
+            headers={"user-agent": "iOS/17.0 dataaccessd"},
+        )
+
+        assert "X-WR-TIMEZONE:UTC" in google.content.decode()
+        assert "X-WR-TIMEZONE:America/New_York" in apple.content.decode()

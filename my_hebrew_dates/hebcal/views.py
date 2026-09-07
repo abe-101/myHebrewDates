@@ -1,19 +1,22 @@
 import base64
 import logging
 from datetime import timedelta
+from hashlib import sha1
 from uuid import UUID
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
+from django.core.cache import cache
+from django.db.models import Count
+from django.db.models import Max
 from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 from django_htmx_modal_forms import HtmxModalUpdateView
@@ -364,7 +367,49 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-@cache_page(60 * 60)  # Cache the page for 15 minutes
+CALENDAR_FILE_CACHE_SECONDS = 60 * 60
+
+
+def _calendar_file_cache_key(
+    calendar: Calendar,
+    user_agent: str,
+    alarm_trigger: timedelta,
+    expirimental: bool,  # noqa: FBT001
+) -> str:
+    """
+    Build a cache key that changes whenever the calendar's contents change.
+
+    The key embeds a cheap "version" of the calendar (its own ``modified``
+    stamp plus the count and latest ``modified`` of its dates), so adding,
+    editing or deleting an event immediately produces a new key instead of
+    serving a stale .ics file. Stale keys simply age out.
+    """
+    dates = calendar.calendarOf.aggregate(
+        last_modified=Max("modified"),
+        count=Count("id"),
+    )
+    version = "|".join(
+        [
+            calendar.modified.isoformat(),
+            str(dates["last_modified"]),
+            str(dates["count"]),
+            calendar.timezone,
+        ],
+    )
+    # generate_ical() branches on the user agent, so it is part of the key.
+    is_google = "google" in user_agent.lower()
+    variant = "|".join(
+        [
+            str(int(alarm_trigger.total_seconds())),
+            str(int(expirimental)),
+            str(int(is_google)),
+        ],
+    )
+    # Hash the parts so the key stays short and free of whitespace.
+    digest = sha1(f"{version}:{variant}".encode()).hexdigest()  # noqa: S324
+    return f"hebcal:ics:{calendar.uuid}:{digest}"
+
+
 def calendar_file(request, uuid: UUID):
     x_forwarded_for = request.headers.get("x-forwarded-for")
     ip = (
@@ -382,9 +427,7 @@ def calendar_file(request, uuid: UUID):
         logger.warning("Invalid alarm trigger value: %s", alarm_trigger_hours)
         alarm_trigger = timedelta(hours=9)
 
-    calendar: Calendar = get_object_or_404(
-        Calendar.objects.filter(uuid=uuid).prefetch_related("calendarOf"),
-    )
+    calendar: Calendar = get_object_or_404(Calendar, uuid=uuid)
 
     logger.info(
         "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
@@ -393,19 +436,24 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    expirimental = request.GET.get("expirimental", False)
-    if expirimental:
-        calendar_str = generate_ical_experimental(
+    expirimental = bool(request.GET.get("expirimental", False))
+
+    cache_key = _calendar_file_cache_key(
+        calendar=calendar,
+        user_agent=user_agent,
+        alarm_trigger=alarm_trigger,
+        expirimental=expirimental,
+    )
+    calendar_str = cache.get(cache_key)
+
+    if calendar_str is None:
+        generate = generate_ical_experimental if expirimental else generate_ical
+        calendar_str = generate(
             model_calendar=calendar,
             user_agent=user_agent,
             alarm_trigger=alarm_trigger,
         )
-    else:
-        calendar_str = generate_ical(
-            model_calendar=calendar,
-            user_agent=user_agent,
-            alarm_trigger=alarm_trigger,
-        )
+        cache.set(cache_key, calendar_str, CALENDAR_FILE_CACHE_SECONDS)
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
     response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
