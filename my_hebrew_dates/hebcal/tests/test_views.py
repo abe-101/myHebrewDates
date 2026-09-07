@@ -3,8 +3,10 @@ from http import HTTPStatus
 from uuid import uuid4
 
 from django.contrib.auth import get_user_model
+from django.db import connection
 from django.test import Client
 from django.test import TestCase
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.models import Calendar
@@ -221,3 +223,103 @@ class CalendarEditViewTest(BaseTest):
         self.assertContains(response, self.hebrew_date1.name)
         self.assertContains(response, self.hebrew_date2.name)
         self.assertContains(response, self.hebrew_date3.name)
+
+
+class CalendarFileViewTest(BaseTest):
+    def setUp(self):
+        super().setUp()
+        self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
+        self.url = reverse("hebcal:calendar_file", args=[self.calendar.uuid])
+
+    def test_new_event_is_not_masked_by_the_cache(self):
+        first = self.client.get(self.url)
+        assert first.status_code == HTTPStatus.OK
+        assert "Moshe" not in first.content.decode()
+
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+
+        second = self.client.get(self.url)
+        assert "Moshe" in second.content.decode()
+
+    def test_deleted_event_is_not_masked_by_the_cache(self):
+        hebrew_date = HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+        assert "Moshe" in self.client.get(self.url).content.decode()
+
+        hebrew_date.delete()
+
+        assert "Moshe" not in self.client.get(self.url).content.decode()
+
+    def test_google_and_apple_get_their_own_cache_entries(self):
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+
+        google = self.client.get(self.url, headers={"user-agent": "Google-Calendar"})
+        apple = self.client.get(
+            self.url,
+            headers={"user-agent": "iOS/17.0 dataaccessd"},
+        )
+
+        assert "X-WR-TIMEZONE:UTC" in google.content.decode()
+        assert "X-WR-TIMEZONE:America/New_York" in apple.content.decode()
+
+    def test_generating_the_file_does_not_scale_with_the_event_count(self):
+        """The events are read in one query, however many there are."""
+
+        def queries_for(count):
+            HebrewDate.objects.filter(calendar=self.calendar).delete()
+            HebrewDate.objects.bulk_create(
+                HebrewDate(
+                    name=f"Person {i}",
+                    month=1,
+                    day=1,
+                    event_type="\N{BIRTHDAY CAKE}",
+                    calendar=self.calendar,
+                )
+                for i in range(count)
+            )
+            with CaptureQueriesContext(connection) as captured:
+                self.client.get(self.url)
+            return len(captured.captured_queries)
+
+        assert queries_for(50) == queries_for(2)
+
+    def test_experimental_flag_is_parsed_explicitly(self):
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="\N{BIRTHDAY CAKE}",
+            calendar=self.calendar,
+        )
+
+        def is_experimental(query):
+            response = self.client.get(self.url + query)
+            return "RRULE" in response.content.decode()
+
+        assert not is_experimental("")
+        assert not is_experimental("?expirimental=0")
+        assert not is_experimental("?expirimental=false")
+        assert not is_experimental("?expirimental=OFF")
+
+        assert is_experimental("?expirimental")
+        assert is_experimental("?expirimental=1")
+        assert is_experimental("?expirimental=true")
+        # The corrected spelling works too.
+        assert is_experimental("?experimental=1")
