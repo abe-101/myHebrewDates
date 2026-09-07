@@ -299,3 +299,27 @@ class CalendarFileViewTest(BaseTest):
             return len(captured.captured_queries)
 
         assert queries_for(50) == queries_for(2)
+
+    def test_experimental_flag_is_parsed_explicitly(self):
+        HebrewDate.objects.create(
+            name="Moshe",
+            month=1,
+            day=1,
+            event_type="\N{BIRTHDAY CAKE}",
+            calendar=self.calendar,
+        )
+
+        def is_experimental(query):
+            response = self.client.get(self.url + query)
+            return "RRULE" in response.content.decode()
+
+        assert not is_experimental("")
+        assert not is_experimental("?expirimental=0")
+        assert not is_experimental("?expirimental=false")
+        assert not is_experimental("?expirimental=OFF")
+
+        assert is_experimental("?expirimental")
+        assert is_experimental("?expirimental=1")
+        assert is_experimental("?expirimental=true")
+        # The corrected spelling works too.
+        assert is_experimental("?experimental=1")

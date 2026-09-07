@@ -369,6 +369,23 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 
 CALENDAR_FILE_CACHE_SECONDS = 60 * 60
 
+# Values that turn a flag off when it is spelled out in the query string.
+FALSY_QUERY_VALUES = frozenset({"0", "false", "no", "off"})
+
+
+def _query_flag(request: HttpRequest, *names: str) -> bool:
+    """
+    Read a boolean flag from the query string.
+
+    A bare ``?flag`` counts as on, ``?flag=0`` (or false/no/off) as off, and
+    any other value as on. Several names can be given so a misspelled
+    parameter keeps working alongside its corrected spelling.
+    """
+    for name in names:
+        if name in request.GET:
+            return request.GET[name].strip().lower() not in FALSY_QUERY_VALUES
+    return False
+
 
 def _calendar_file_cache_key(
     calendar: Calendar,
@@ -436,7 +453,8 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    expirimental = bool(request.GET.get("expirimental", False))
+    # "expirimental" is the original misspelling, kept for existing links.
+    expirimental = _query_flag(request, "expirimental", "experimental")
 
     cache_key = _calendar_file_cache_key(
         calendar=calendar,
