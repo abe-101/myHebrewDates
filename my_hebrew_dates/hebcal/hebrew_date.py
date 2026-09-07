@@ -36,3 +36,14 @@ def create_hebrew_to_english_dict() -> dict[str, list[object]]:
 
 
 hebrew_to_english_dict: dict[str, list[object]] = create_hebrew_to_english_dict()
+
+
+def is_valid_hebrew_date(month: int, day: int) -> bool:
+    """Whether the day exists in that Hebrew month in at least some years.
+
+    Cheshvan, Kislev and Adar I vary in length by year, so their longest
+    possible length is used.
+    """
+    if not 1 <= month <= ADAR_2:
+        return False
+    return 1 <= day <= lengths_of_months[month]

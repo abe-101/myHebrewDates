@@ -3,12 +3,14 @@ import uuid
 import zoneinfo
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
 from my_hebrew_dates.core.models import TimeStampedModel
 
 from .hebrew_date import hebrew_to_english_dict
+from .hebrew_date import is_valid_hebrew_date
 
 
 class HebrewMonthEnum(models.IntegerChoices):
@@ -123,6 +125,26 @@ class HebrewDate(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        super().clean()
+        if self.month is None or self.day is None:
+            return
+        if self.month not in HebrewMonthEnum.values:
+            # An unknown month is already reported by the choices validator.
+            return
+        if not is_valid_hebrew_date(self.month, self.day):
+            month_name = HebrewMonthEnum(self.month).label
+            msg = "There is no day %(day)s in %(month)s."
+            raise ValidationError(
+                {
+                    "day": ValidationError(
+                        msg,
+                        code="invalid_hebrew_date",
+                        params={"day": self.day, "month": month_name},
+                    ),
+                },
+            )
 
     def get_absolute_url(self):
         return reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
