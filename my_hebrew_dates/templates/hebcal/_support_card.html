@@ -1,0 +1,67 @@
+{% comment %}
+Optional support card. Renders only when at least one SUPPORT_* URL is configured
+(see config/settings/base.py). Every option is an outbound link to a hosted
+checkout page, so nothing here touches payment data.
+{% endcomment %}
+{% if support.enabled %}
+  <div class="card mb-4 shadow-sm border-primary-subtle" id="supportCard">
+    <div class="card-body">
+      <div class="d-flex gap-3">
+        <i class="bi bi-heart-fill fs-3 text-primary d-none d-sm-block"
+           aria-hidden="true"></i>
+        <div class="flex-grow-1">
+          <h5 class="card-title mb-2">Keep this calendar running</h5>
+          <p class="text-body-secondary mb-2">
+            Every device subscribed to this calendar checks back with our server every
+            day, for years. My Hebrew Dates is run by one person, and that adds up.
+          </p>
+          <p class="text-body-secondary mb-3">
+            If it's useful to your family, you're welcome to chip in. The service stays
+            free either way.
+          </p>
+          <div class="row row-cols-1 row-cols-sm-3 g-2">
+            {% for option in support.options %}
+              <div class="col">
+                <a href="{{ option.url }}"
+                   class="btn btn-sm w-100 {% if forloop.first %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   data-support-tier="{{ option.key }}">
+                  <i class="bi {{ option.icon }}"></i> {{ option.label }}
+                </a>
+                <small class="text-body-secondary d-block text-center mt-1">{{ option.hint }}</small>
+              </div>
+            {% endfor %}
+          </div>
+          {% if support.portal_url %}
+            <p class="mb-0 mt-3">
+              <small class="text-body-secondary">
+                Already supporting?
+                <a href="{{ support.portal_url }}"
+                   class="link-secondary"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   data-support-tier="portal">Manage or cancel your contribution</a>
+                using the email address you paid with.
+              </small>
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      var card = document.getElementById('supportCard');
+      if (!card || !window.posthog) return;
+      posthog.capture('support_card_viewed');
+      card.querySelectorAll('[data-support-tier]').forEach(function(link) {
+        link.addEventListener('click', function() {
+          posthog.capture('support_link_clicked', {
+            tier: link.dataset.supportTier
+          });
+        });
+      });
+    });
+  </script>
+{% endif %}

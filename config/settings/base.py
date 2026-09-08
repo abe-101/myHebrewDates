@@ -217,6 +217,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "my_hebrew_dates.users.context_processors.allauth_settings",
+                "my_hebrew_dates.core.context_processors.support_links",
             ],
         },
     },
@@ -406,3 +407,19 @@ MESSAGE_TAGS = {
 
 # django-libsass
 COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+
+# Support / donation links
+# ------------------------------------------------------------------------------
+# Hosted checkout URLs (Stripe Payment Links, Buy Me a Coffee, ...). These are
+# public URLs, not secrets, and the site holds no payment integration of its own:
+# each one is rendered as a plain link. Leaving a value blank hides that option,
+# and blanking them all hides the support card entirely.
+SUPPORT_MONTHLY_URL = env("SUPPORT_MONTHLY_URL", default="")
+SUPPORT_ANNUAL_URL = env("SUPPORT_ANNUAL_URL", default="")
+SUPPORT_ONETIME_URL = env(
+    "SUPPORT_ONETIME_URL",
+    default="https://www.buymeacoffee.com/abe101",
+)
+# Stripe's no-code customer portal login link: supporters sign in with the email
+# they paid with to update their card, download invoices or cancel.
+SUPPORT_PORTAL_URL = env("SUPPORT_PORTAL_URL", default="")

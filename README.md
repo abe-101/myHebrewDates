@@ -157,6 +157,27 @@ The system is set up with reasonable defaults, including 404 logging and integra
 
 You must set the DSN url in production.
 
+### Support links
+
+The calendar detail page can show an optional "Keep this calendar running" card
+offering recurring and one-time ways to support the project. Every option is a
+plain link to a provider-hosted checkout page (Stripe Payment Links, Buy Me a
+Coffee, and so on). The site itself holds no payment integration, stores nothing
+about supporters, and gates no features behind a contribution.
+
+Configure it with these environment variables, all optional:
+
+| Variable | Purpose |
+| --- | --- |
+| `SUPPORT_MONTHLY_URL` | Recurring monthly checkout. Use a $1/month price with adjustable quantity so supporters pick their own amount. |
+| `SUPPORT_ANNUAL_URL` | Recurring yearly checkout. Same trick, and far less is lost to per-transaction fees than on twelve monthly charges. |
+| `SUPPORT_ONETIME_URL` | One-time contribution. Stripe's "customers choose what to pay" works here; defaults to the existing Buy Me a Coffee page. |
+| `SUPPORT_PORTAL_URL` | Stripe's no-code customer portal login link, where supporters manage or cancel on their own. |
+
+Leaving a variable blank hides that option; blanking all three checkout URLs hides
+the card entirely. Stripe does not support customer-chosen amounts on recurring
+prices, which is why the recurring links rely on an adjustable quantity instead.
+
 ## Deployment
 
 The following details how to deploy this application.
