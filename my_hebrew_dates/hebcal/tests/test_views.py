@@ -38,10 +38,11 @@ class CalendarListViewTest(BaseTest):
         assert response.status_code == HTTPStatus.OK
         self.assertTemplateUsed(response, "hebcal/calendar_list.html")
 
-    def test_no_calendars_redirects_to_create(self):
+    def test_no_calendars_shows_empty_state(self):
         self.client.login(username="testuser", password="password")
         response = self.client.get(self.url)
-        self.assertRedirects(response, reverse("hebcal:calendar_new"))
+        assert response.status_code == HTTPStatus.OK
+        self.assertContains(response, "No calendars yet")
 
     def test_only_user_owned_calendars_are_listed(self):
         self.client.login(username="testuser", password="password")
