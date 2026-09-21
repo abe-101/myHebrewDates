@@ -1,4 +1,4 @@
-# ruff: noqa: S324, ERA001
+# ruff: noqa: S324
 from base64 import urlsafe_b64encode
 from datetime import datetime
 from datetime import timedelta
@@ -159,8 +159,7 @@ def generate_ical_experimental(
         )
         event.add("summary", title)
         base_description = (
-            f"{title}\n\n"
-            f"Keep your credit cards active. Prevent closures → {CHARJ_URL}"
+            f"{title}\n\nKeep your credit cards active. Prevent closures → {CHARJ_URL}"
         )
         event.add("description", base_description)
 
