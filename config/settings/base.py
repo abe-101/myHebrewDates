@@ -406,3 +406,7 @@ MESSAGE_TAGS = {
 
 # django-libsass
 COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
+
+# posthog
+# Read in core.apps.CoreConfig.ready, which loads under every settings module.
+POSTHOG_API_KEY = ""
