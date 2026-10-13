@@ -4,7 +4,7 @@
 
 - My Hebrew Dates syncs recurring Hebrew calendar events (birthdays, anniversaries, yahrzeits) to digital calendars
   through iCalendar (.ics) subscription feeds.
-- This is a Django project generated from Cookiecutter Django, running on Python 3.12.
+- This is a Django project generated from Cookiecutter Django, running on Python 3.13.
 - User authentication uses `django-allauth`.
 - The front end is standard Django views and templates, with HTMX for dynamic interactions and
   `django_htmx_modal_forms` for modal forms.

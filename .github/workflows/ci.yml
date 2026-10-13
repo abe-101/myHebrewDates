@@ -28,7 +28,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.13'
       # Consider using pre-commit.ci for open source project
       - name: Run pre-commit
         uses: abe-101/pre-commit@v3.0.3
@@ -44,12 +44,12 @@ jobs:
         id: cache-uv
         with:
           path: ~/.cache/uv
-          key: ${{ runner.os }}-python-3.12-uv
+          key: ${{ runner.os }}-python-3.13-uv
 
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -94,7 +94,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
+          python-version: '3.13'
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
