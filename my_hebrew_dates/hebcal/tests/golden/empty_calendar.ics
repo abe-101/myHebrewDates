@@ -1,0 +1,9 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//MyHebrewDates.com//Hebrew Calendar Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALDESC:Hebrew calendar events created by MyHebrewDates.com
+X-WR-CALNAME:Golden Calendar
+X-WR-TIMEZONE:America/New_York
+END:VCALENDAR

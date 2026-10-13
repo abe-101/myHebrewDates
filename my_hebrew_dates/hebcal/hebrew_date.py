@@ -11,10 +11,18 @@ lengths_of_months = [0, 30, 29, 30, 29, 30, 29, 30, 30, 30, 29, 30, 30, 29]
 ADAR_2 = 13
 
 
-def create_hebrew_to_english_dict() -> dict[str, list[object]]:
+def create_hebrew_to_english_dict(
+    start_year: int | None = None,
+) -> dict[str, list[object]]:
+    """
+    Map "month-day" to the Gregorian dates it falls on over three years.
+
+    ``start_year`` pins the window to a fixed Hebrew year instead of the
+    current one, which keeps generated iCalendar output reproducible.
+    """
     logger.info("Creating hebrew_to_english_dict")
     hebrew_to_english_dict: dict[str, list[object]] = {}
-    today_year = dates.HebrewDate.today().year
+    today_year = start_year or dates.HebrewDate.today().year
 
     for year in range(today_year, today_year + 3):  # three years
         for month in range(1, 14):
