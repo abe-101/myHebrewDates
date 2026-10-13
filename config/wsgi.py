@@ -1,4 +1,4 @@
-# ruff: noqa
+# ruff: noqa: ERA001
 """
 WSGI config for My Hebrew Dates project.
 

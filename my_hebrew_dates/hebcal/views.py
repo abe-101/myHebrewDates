@@ -1,6 +1,7 @@
 import base64
 import logging
 from datetime import timedelta
+from typing import TYPE_CHECKING
 from typing import cast
 from uuid import UUID
 
@@ -28,7 +29,9 @@ from my_hebrew_dates.hebcal.models import HebrewDayEnum
 from my_hebrew_dates.hebcal.models import HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
 from my_hebrew_dates.hebcal.utils import generate_ical_experimental
-from my_hebrew_dates.users.models import User
+
+if TYPE_CHECKING:
+    from my_hebrew_dates.users.models import User
 
 # Setup logger
 logger = logging.getLogger(__name__)
@@ -126,7 +129,7 @@ class CalendarUpdateModalView(  # type: ignore[misc]
     login_url = reverse_lazy("users:redirect")
 
     def get_queryset(self):
-        return Calendar.objects.filter(owner=cast(User, self.request.user))
+        return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
@@ -337,7 +340,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = "uuid"
 
     def get_queryset(self):
-        return Calendar.objects.filter(owner=cast(User, self.request.user))
+        return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
 def serve_pixel(request, pixel_id: UUID, pk: int):

@@ -7,18 +7,18 @@ wiring: without them the fixture could be broken or removed and only
 the tests that happen to assert a timestamp would notice.
 """
 
-import datetime
+import datetime as dt
 
 import pytest
 from django.utils import timezone
 
 from my_hebrew_dates.conftest import FROZEN_NOW
 
-HELD_INSTANT = datetime.datetime.fromisoformat(
+HELD_INSTANT = dt.datetime.fromisoformat(
     FROZEN_NOW.replace(" +0000", "+00:00"),
 )
 ELSEWHERE = "2030-01-02 03:04:05 +0000"
-ELSEWHERE_INSTANT = datetime.datetime.fromisoformat(
+ELSEWHERE_INSTANT = dt.datetime.fromisoformat(
     ELSEWHERE.replace(" +0000", "+00:00"),
 )
 

@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}"data-bs-theme="light"">
+<html lang="{{ LANGUAGE_CODE }}" data-bs-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -110,7 +110,7 @@
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">
     <div class="container flex-grow-1 mb-5">
-      <div class="mb-1">{% include '_navbar.html' %}</div>
+      <div class="mb-1">{% include "_navbar.html" %}</div>
       <div class="container">
         {% block body %}
           {% block main %}
@@ -118,13 +118,13 @@
               <p>Use this document as a way to quick start any new project.</p>
             {% endblock content %}
           {% endblock main %}
-          {% include 'toasts.html' %}
+          {% include "toasts.html" %}
         {% endblock body %}
       </div>
       <!-- /container -->
     </div>
     <!-- flex-shrink-0 container -->
-    {% include '_footer.html' %}
+    {% include "_footer.html" %}
     <!-- /container -->
     {% block modal %}
     {% endblock modal %}
