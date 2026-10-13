@@ -85,7 +85,7 @@ class TestUserRedirectView:
 class TestUserDetailView:
     def test_authenticated(self, user: User, rf: RequestFactory):
         request = rf.get("/fake-url/")
-        request.user = UserFactory()
+        request.user = UserFactory.create()
         response = user_detail_view(request, username=user.username)
 
         assert response.status_code == HTTPStatus.OK
