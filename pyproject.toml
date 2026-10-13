@@ -6,6 +6,9 @@ python_files = [
     "tests.py",
     "test_*.py",
 ]
+markers = [
+    "time_ticks: let real time pass instead of holding the clock still",
+]
 
 # ==== Coverage ====
 [tool.coverage.run]

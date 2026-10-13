@@ -1,6 +1,7 @@
 # ruff: noqa: RUF001, DJ001
 import uuid
 import zoneinfo
+from functools import cache
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -62,6 +63,27 @@ class HebrewDayEnum(models.IntegerChoices):
     LAMED = 30, "ל"
 
 
+@cache
+def get_timezone_choices() -> tuple[tuple[str, str], ...]:
+    """
+    Build the timezone choices from the system tz database.
+
+    Passed to the field as a callable rather than an evaluated tuple so
+    the list is resolved at runtime. Django serialises an evaluated
+    tuple into the migration, which made every tzdata update produce
+    another AlterField (see migrations 0004, 0007 and 0008).
+
+    Cached because Django re-runs a callable every time it iterates the
+    field's choices - twice per form render, and again on validation -
+    and scanning the tz database costs about 5ms a call. The list only
+    changes when tzdata does, which needs a restart to pick up anyway.
+    """
+    timezones = set(zoneinfo.available_timezones())
+    timezones.discard("Factory")
+    timezones.discard("localtime")
+    return tuple((name, name) for name in sorted(timezones, key=str.lower))
+
+
 class Calendar(TimeStampedModel):
     name = models.CharField(max_length=255)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
@@ -69,14 +91,10 @@ class Calendar(TimeStampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    _timezone_set = set(zoneinfo.available_timezones())
-    _timezone_set.discard("Factory")
-    _timezone_set.discard("localtime")
-    TIMEZONE_CHOICES = tuple((x, x) for x in sorted(_timezone_set, key=str.lower))
 
     timezone = models.CharField(
         "Timezone",
-        choices=TIMEZONE_CHOICES,
+        choices=get_timezone_choices,
         max_length=250,
         default="America/New_York",
         help_text="Select the timezone that matches your local time. This ensures your events show up at the correct times.",  # noqa: E501
