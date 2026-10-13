@@ -275,3 +275,6 @@ my_hebrew_dates/media/
 
 .pytest_cache/
 mailpit
+
+# Database backups (contain user PII and password hashes - never commit)
+backups/
