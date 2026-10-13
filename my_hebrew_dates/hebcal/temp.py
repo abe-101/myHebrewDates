@@ -122,7 +122,7 @@ def generate_ical(
 
         events.append(event)
 
-    sorted_events = sorted(events, key=lambda e: e["dtstart"].dt)
+    sorted_events = sorted(events, key=lambda e: e.start)
 
     for event in sorted_events:
         newcal.add_component(event)
