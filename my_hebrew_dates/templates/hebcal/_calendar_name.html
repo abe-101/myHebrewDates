@@ -4,7 +4,8 @@
       <h1 class="mb-1">{{ calendar.name }}</h1>
       <small class="text-muted">Timezone: {{ calendar.timezone }}</small>
     </div>
-    <button hx-get="{% url 'hebcal:update_calendar' pk=calendar.pk %}"
+    <button type="button"
+            hx-get="{% url 'hebcal:update_calendar' pk=calendar.pk %}"
             hx-target="body"
             hx-swap="beforeend"
             data-bs-toggle="tooltip"
