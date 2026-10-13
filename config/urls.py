@@ -1,4 +1,4 @@
-# ruff: noqa
+# ruff: noqa: COM812, I001, RUF005
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_not_required

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# ruff: noqa
+# ruff: noqa: B904, COM812, EM101, F401, TRY003
 import os
 import sys
 from pathlib import Path
