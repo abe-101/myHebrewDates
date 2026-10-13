@@ -33,6 +33,33 @@ jobs:
       - name: Run pre-commit
         uses: abe-101/pre-commit@v3.0.3
 
+  mypy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v7
+
+      - uses: actions/cache@v6
+        id: cache-uv
+        with:
+          path: ~/.cache/uv
+          key: ${{ runner.os }}-python-3.12-uv
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Install Dependencies
+        run: uv pip install --system -r requirements/local.txt
+
+      - name: Type check with mypy
+        run: mypy my_hebrew_dates
+
   # With no caching at all the entire ci process takes 3m to complete!
   pytest:
     runs-on: ubuntu-latest
