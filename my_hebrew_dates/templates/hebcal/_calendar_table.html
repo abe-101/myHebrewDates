@@ -1,5 +1,4 @@
-<div id="calendar-table" class="fade-me-in>
-  <!-- Calendar Table -->
+<div id="calendar-table" class="fade-me-in> <!-- Calendar Table -->
   <div class="table-responsive">
     <table class="table table-striped table-hover">
       <thead>
@@ -8,20 +7,20 @@
           <th>
             Hebrew Day
             <button type="button"
-              hx-get=""
-              class="btn btn-sm"
-              hx-vals='{"sort": "day", "order": "{% if day_desc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table">
+                    hx-get=""
+                    class="btn btn-sm"
+                    hx-vals='{"sort": "day", "order": "{% if day_desc %}asc{% else %}desc{% endif %}"}'
+                    hx-target="#calendar-table">
               <i class="bi bi-arrow-{% if day_desc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
           <th>
             Hebrew Month
             <button type="button"
-              hx-get=""
-              class="btn btn-sm"
-              hx-vals='{"sort": "month", "order": "{% if month_desc %}asc{% else %}desc{% endif %}"}'
-              hx-target="#calendar-table">
+                    hx-get=""
+                    class="btn btn-sm"
+                    hx-vals='{"sort": "month", "order": "{% if month_desc %}asc{% else %}desc{% endif %}"}'
+                    hx-target="#calendar-table">
               <i class="bi bi-arrow-{% if month_desc %}down{% else %}up{% endif %}"></i>
             </button>
           </th>
@@ -36,10 +35,10 @@
         <tr id="new-date-button">
           <td colspan="5">
             <button type="button"
-              hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
-              hx-target="closest tr"
-              hx-swap="beforebegin settle:1s"
-              class="btn btn-sm btn-primary">
+                    hx-get="{% url 'hebcal:create_hebrew_date_htmx' uuid=calendar.uuid %}"
+                    hx-target="closest tr"
+                    hx-swap="beforebegin settle:1s"
+                    class="btn btn-sm btn-primary">
               <i class="bi bi-plus"></i> Add Hebrew Date
             </button>
           </td>
