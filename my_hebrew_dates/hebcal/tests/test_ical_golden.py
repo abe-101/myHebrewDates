@@ -153,11 +153,30 @@ class TestGoldenOutput:
             events=[
                 (NISAN, 15, BIRTHDAY, "Avraham"),
                 (ADAR_I, 10, YARTZEIT, "Adar One"),
+                (CHESHVAN, 30, YARTZEIT, "Cheshvan Thirty"),
             ],
         )
         ical = generate_ical_experimental(calendar, user_agent=APPLE_USER_AGENT)
         assert "RSCALE=HEBREW" in ical.upper()
         assert_matches_golden("experimental_rrule", ical)
+
+    def test_experimental_skip_keeps_event_in_the_right_month(self, make_calendar):
+        """
+        Without SKIP, RFC 7529 defaults to OMIT and the event vanishes in
+        years where the Hebrew date does not exist.
+        """
+        calendar = make_calendar(
+            events=[
+                (NISAN, 15, BIRTHDAY, "Always Exists"),
+                (ADAR_I, 10, YARTZEIT, "Adar One"),
+                (CHESHVAN, 30, YARTZEIT, "Cheshvan Thirty"),
+            ],
+        )
+        ical = generate_ical_experimental(calendar, user_agent=APPLE_USER_AGENT)
+
+        assert "BYMONTH=5L;SKIP=FORWARD" in ical
+        assert "BYMONTHDAY=30;BYMONTH=2;SKIP=BACKWARD" in ical
+        assert "BYMONTHDAY=15;BYMONTH=7\r\n" in ical
 
     def test_experimental_uids_differ_from_default_feed(self, make_calendar):
         """

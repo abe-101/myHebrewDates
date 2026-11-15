@@ -198,15 +198,16 @@ def generate_ical_experimental(
 
         alarm.add("trigger", alarm_trigger)
         event.add_component(alarm)
-        event.add(
-            "rrule",
-            {
-                "rscale": "hebrew",
-                "freq": "yearly",
-                "bymonth": hebrew_date.get_rfc7529_month(),
-                "bymonthday": hebrew_date.day,
-            },
-        )
+        rrule = {
+            "rscale": "hebrew",
+            "freq": "yearly",
+            "bymonth": hebrew_date.get_rfc7529_month(),
+            "bymonthday": hebrew_date.day,
+        }
+        skip = hebrew_date.get_rfc7529_skip()
+        if skip:
+            rrule["skip"] = skip
+        event.add("rrule", rrule)
 
         events.append(event)
 
