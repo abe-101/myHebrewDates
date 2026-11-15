@@ -144,6 +144,7 @@ def generate_ical_experimental(
                 hebrew_date.event_type
                 + hebrew_date.name
                 + hebrew_date.get_hebrew_date()
+                + "rrule"
             ).encode("utf-8"),
         ).digest()
         eng_date = hebrew_date.get_english_dates()[0]
@@ -183,6 +184,10 @@ def generate_ical_experimental(
             ["Hebrew Date", str(hebrew_date.get_event_type_display())],
         )
 
+        # Microsoft compatibility
+        event.add("x-microsoft-cdo-alldayevent", "TRUE")
+        event.add("x-microsoft-cdo-busystatus", "FREE")
+
         # Add alarm to the event
         alarm = Alarm()
         alarm.add("action", "DISPLAY")
@@ -193,15 +198,16 @@ def generate_ical_experimental(
 
         alarm.add("trigger", alarm_trigger)
         event.add_component(alarm)
-        event.add(
-            "rrule",
-            {
-                "rscale": "hebrew",
-                "freq": "yearly",
-                "bymonth": hebrew_date.get_rfc7529_month(),
-                "bymonthday": hebrew_date.day,
-            },
-        )
+        rrule = {
+            "rscale": "hebrew",
+            "freq": "yearly",
+            "bymonth": hebrew_date.get_rfc7529_month(),
+            "bymonthday": hebrew_date.day,
+        }
+        skip = hebrew_date.get_rfc7529_skip()
+        if skip:
+            rrule["skip"] = skip
+        event.add("rrule", rrule)
 
         events.append(event)
 

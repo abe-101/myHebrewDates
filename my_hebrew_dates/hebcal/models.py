@@ -13,6 +13,8 @@ from my_hebrew_dates.core.models import TimeStampedModel
 from .hebrew_date import hebrew_to_english_dict
 from .hebrew_date import is_valid_hebrew_date
 
+LONG_MONTH_DAY = 30
+
 
 class HebrewMonthEnum(models.IntegerChoices):
     NISAN = 1, "ניסן"
@@ -213,3 +215,19 @@ class HebrewDate(TimeStampedModel):
         Get the month number according to RFC 7529 specification.
         """
         return self._month_to_rfc(self.month)
+
+    def get_rfc7529_skip(self) -> str:
+        """
+        Pick the SKIP that keeps the event in the right Hebrew month.
+
+        RFC 7529 defaults to SKIP=OMIT, which drops the occurrence entirely in
+        years where the date does not exist. Adar I is absent from every
+        non-leap year, and RFC 7529 section 4.3.3 moves such an anniversary
+        FORWARD into Adar. Day 30 is absent from short Cheshvan and Kislev,
+        where moving BACKWARD to the 29th stays in the intended month.
+        """
+        if self.month == HebrewMonthEnum.ADAR_A:
+            return "FORWARD"
+        if self.day == LONG_MONTH_DAY:
+            return "BACKWARD"
+        return ""
