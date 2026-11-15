@@ -144,6 +144,7 @@ def generate_ical_experimental(
                 hebrew_date.event_type
                 + hebrew_date.name
                 + hebrew_date.get_hebrew_date()
+                + "rrule"
             ).encode("utf-8"),
         ).digest()
         eng_date = hebrew_date.get_english_dates()[0]
@@ -182,6 +183,10 @@ def generate_ical_experimental(
             "categories",
             ["Hebrew Date", str(hebrew_date.get_event_type_display())],
         )
+
+        # Microsoft compatibility
+        event.add("x-microsoft-cdo-alldayevent", "TRUE")
+        event.add("x-microsoft-cdo-busystatus", "FREE")
 
         # Add alarm to the event
         alarm = Alarm()
