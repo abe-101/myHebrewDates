@@ -398,8 +398,8 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    expirimental = request.GET.get("expirimental", False)
-    if expirimental:
+    experimental = request.GET.get("experimental", False)
+    if experimental:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             user_agent=user_agent,
