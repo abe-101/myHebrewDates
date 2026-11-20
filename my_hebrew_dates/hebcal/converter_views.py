@@ -56,6 +56,8 @@ def converter_view(request: HttpRequest):
     context = {
         "form": form,
         "english_date": request.GET.get("english_date", ""),
+        "english_date_invalid": bool(request.GET.get("english_date"))
+        and from_english is None,
         "after_sunset": after_sunset,
         "hebrew_date": hebrew_date,
         "english_label": english_label,

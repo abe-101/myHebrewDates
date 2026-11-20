@@ -18,8 +18,9 @@
       <form method="get"
             action="{% url 'converter' %}"
             hx-get="{% url 'converter' %}"
-            hx-target="#converter"
-            hx-select="#converter"
+            hx-trigger="change, submit"
+            hx-target="#converter-result"
+            hx-select="#converter-result"
             hx-swap="outerHTML"
             hx-push-url="true"
             class="mb-4">
@@ -61,7 +62,10 @@
         <p class="small text-body-secondary mt-2 mb-0">The Hebrew day starts at sunset, so an evening date belongs to the next Hebrew day.</p>
       </form>
     </div>
-    <div class="col-lg-5 offset-lg-1" aria-live="polite">
+    <div id="converter-result" class="col-lg-5 offset-lg-1" aria-live="polite">
+      {% if english_date_invalid %}
+        <div class="alert alert-warning">That isn’t a real date. Check the day, month, and year.</div>
+      {% endif %}
       {% if hebrew_date %}
         <h2 class="h5 mb-3">
           <span lang="he" dir="rtl">{{ hebrew_date }}</span> ({{ english_label }}) falls on
