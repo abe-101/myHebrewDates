@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 import pytest
 import time_machine
 
-from my_hebrew_dates.users.models import User
 from my_hebrew_dates.users.tests.factories import UserFactory
+
+if TYPE_CHECKING:
+    from my_hebrew_dates.users.models import User
 
 # Tests run at one fixed instant so that anything derived from the
 # clock - DTSTAMP, auto_now columns, token expiry - is reproducible.

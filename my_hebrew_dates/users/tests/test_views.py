@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import TYPE_CHECKING
 
 import pytest
 from django.conf import settings
@@ -8,16 +9,19 @@ from django.contrib.messages.middleware import MessageMiddleware
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.http import HttpRequest
 from django.http import HttpResponseRedirect
-from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from my_hebrew_dates.users.forms import UserAdminChangeForm
-from my_hebrew_dates.users.models import User
 from my_hebrew_dates.users.tests.factories import UserFactory
 from my_hebrew_dates.users.views import UserRedirectView
 from my_hebrew_dates.users.views import UserUpdateView
 from my_hebrew_dates.users.views import user_detail_view
+
+if TYPE_CHECKING:
+    from django.test import RequestFactory
+
+    from my_hebrew_dates.users.models import User
 
 pytestmark = pytest.mark.django_db
 

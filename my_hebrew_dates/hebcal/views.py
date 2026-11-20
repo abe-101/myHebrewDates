@@ -3,13 +3,11 @@ import logging
 from datetime import timedelta
 from typing import TYPE_CHECKING
 from typing import cast
-from uuid import UUID
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.models import Site
-from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -31,6 +29,10 @@ from my_hebrew_dates.hebcal.utils import generate_ical
 from my_hebrew_dates.hebcal.utils import generate_ical_experimental
 
 if TYPE_CHECKING:
+    from uuid import UUID
+
+    from django.http import HttpRequest
+
     from my_hebrew_dates.users.models import User
 
 # Setup logger
