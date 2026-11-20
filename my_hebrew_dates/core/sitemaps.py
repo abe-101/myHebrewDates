@@ -20,6 +20,7 @@ class StaticViewSitemap(Sitemap):
             "guide_iphone",
             "guide_outlook",
             "guide_yahrzeit",
+            "guide_anniversary",
             "about",
         ]
 

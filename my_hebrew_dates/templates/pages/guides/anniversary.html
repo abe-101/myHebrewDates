@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+  How to Keep Track of a Hebrew Anniversary | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  A Hebrew wedding anniversary falls on a different English date each year. Here's how to find the Hebrew date and get it on the right day every year in Google, Apple, or Outlook calendar.
+{% endblock meta_description %}
+{% block content %}
+  <article class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-3">How to keep track of a Hebrew anniversary</h1>
+      <p>
+        A Hebrew wedding anniversary is kept on the Hebrew date of the wedding, so it moves to a different English date each year. Calendar apps only repeat events by the English date, so a yearly event set up after the wedding drifts off the right day.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Find the Hebrew date of the wedding</h2>
+      <p>
+        If you know only the English date, use the <a href="{% url 'converter' %}">Hebrew date converter</a>. Many weddings take place in the evening. If the chuppah was after sunset, tick <strong>After sunset</strong>, because the Hebrew day had already changed.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Add it to your calendar</h2>
+      <ol>
+        <li class="mb-2">
+          <a href="{% url 'account_signup' %}">Sign up</a> and make a calendar.
+        </li>
+        <li class="mb-2">
+          Add the couple, for example “David &amp; Sarah”, choose <strong>Anniversary</strong>, and enter the Hebrew date.
+        </li>
+        <li class="mb-2">
+          On the calendar's <strong>Add to your calendar</strong> page, pick a reminder time, then choose Google Calendar, Apple Calendar, or Outlook to subscribe.
+        </li>
+      </ol>
+      <p>
+        From then on, the anniversary appears on the right day every year. You can keep birthdays and yahrzeits in the same calendar.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Sharing with family</h2>
+      <p>
+        Send family members the link to the calendar's <strong>Add to your calendar</strong> page. They don't need an account, and each person picks their own reminder time.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Weddings in Adar</h2>
+      <p>
+        In a Hebrew leap year there are two months of Adar. If the wedding was in a year with a single Adar, choose whether to keep the anniversary in Adar I or Adar II when you add the date.
+      </p>
+      {% include "pages/guides/_get_started.html" %}
+    </div>
+  </article>
+{% endblock content %}
