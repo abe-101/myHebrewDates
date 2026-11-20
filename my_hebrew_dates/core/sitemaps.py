@@ -18,6 +18,7 @@ class StaticViewSitemap(Sitemap):
             "guides",
             "guide_google_calendar",
             "guide_iphone",
+            "guide_outlook",
             "guide_yahrzeit",
             "about",
         ]
