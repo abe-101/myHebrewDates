@@ -46,4 +46,15 @@
       <p class="small text-body-secondary mt-2">The same Hebrew date lands on a different English day each year.</p>
     </div>
   </div>
+  <div class="row mt-5 pt-lg-4">
+    <div class="col-lg-8 col-xl-7">
+      <h2 class="h4 mb-3">Questions</h2>
+      {% include "pages/_home_questions.html" %}
+      {% if not user.is_authenticated %}
+        <p class="mt-4 mb-0">
+          Ready to add your family’s dates? <a href="{% url 'account_signup' %}">Sign up</a>
+        </p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock content %}
