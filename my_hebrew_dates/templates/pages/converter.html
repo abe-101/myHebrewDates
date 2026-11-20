@@ -62,31 +62,36 @@
         <p class="small text-body-secondary mt-2 mb-0">The Hebrew day starts at sunset, so an evening date belongs to the next Hebrew day.</p>
       </form>
     </div>
-    <div id="converter-result" class="col-lg-5 offset-lg-1" aria-live="polite">
-      {% if english_date_invalid %}
-        <div class="alert alert-warning">That isn’t a real date. Check the day, month, and year.</div>
-      {% endif %}
-      {% if hebrew_date %}
-        <h2 class="h5 mb-3">
-          <span lang="he" dir="rtl">{{ hebrew_date }}</span> ({{ english_label }}) falls on
-        </h2>
-        <ul class="list-group mb-3">
-          {% for english_date in upcoming %}
-            <li class="list-group-item">{{ english_date|date:"l, F j, Y" }}</li>
-          {% endfor %}
-        </ul>
-        <p class="small text-body-secondary">Save it to a calendar and it keeps showing up on the right day every year.</p>
-        {% if user.is_authenticated %}
-          {% for calendar in calendars %}
-            <a href="{% url 'hebcal:hebrew_date_new' calendar.uuid %}?day={{ form.cleaned_data.day }}&month={{ form.cleaned_data.month }}"
-               class="btn btn-primary btn-sm mb-2">Add to {{ calendar.name }}</a>
-          {% empty %}
-            <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-sm">Make a calendar</a>
-          {% endfor %}
-        {% else %}
-          <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Sign up to save it</a>
+    <div class="col-lg-5 offset-lg-1" aria-live="polite">
+      <div id="converter-result">
+        {% if request.htmx and form.day.value and form.month.value %}
+          {% for error in form.day.errors %}<div class="alert alert-warning">{{ error }}</div>{% endfor %}
         {% endif %}
-      {% endif %}
+        {% if english_date_invalid %}
+          <div class="alert alert-warning">That isn’t a real date. Check the day, month, and year.</div>
+        {% endif %}
+        {% if hebrew_date %}
+          <h2 class="h5 mb-3">
+            <span lang="he" dir="rtl">{{ hebrew_date }}</span> ({{ english_label }}) falls on
+          </h2>
+          <ul class="list-group mb-3">
+            {% for english_date in upcoming %}
+              <li class="list-group-item">{{ english_date|date:"l, F j, Y" }}</li>
+            {% endfor %}
+          </ul>
+          <p class="small text-body-secondary">Save it to a calendar and it keeps showing up on the right day every year.</p>
+          {% if user.is_authenticated %}
+            {% for calendar in calendars %}
+              <a href="{% url 'hebcal:hebrew_date_new' calendar.uuid %}?day={{ form.cleaned_data.day }}&month={{ form.cleaned_data.month }}"
+                 class="btn btn-primary btn-sm mb-2">Add to {{ calendar.name }}</a>
+            {% empty %}
+              <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-sm">Make a calendar</a>
+            {% endfor %}
+          {% else %}
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Sign up to save it</a>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
   </div>
 {% endblock content %}
