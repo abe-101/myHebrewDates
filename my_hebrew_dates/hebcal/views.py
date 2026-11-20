@@ -93,12 +93,9 @@ def create_calendar_view(request: HttpRequest):
             )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
         messages.error(request, "Please correct the errors in the form.")
-        log_msg = (
-            "user: %s attempted to create a calendar with invalid form data. ",
-            "Errors: %s",
-        )
         logger.warning(
-            log_msg,
+            "user: %s attempted to create a calendar with invalid form data. "
+            "Errors: %s",
             request.user,
             form.errors,
         )
