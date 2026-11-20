@@ -1,10 +1,21 @@
-<footer class="bg-primary py-3 mt-auto">
-  <div class="container d-flex flex-column justify-content-center align-items-center">
-    <p class="mb-0 text-center text-white">
-      © <span id="currentYear"></span> My Hebrew Dates. All rights reserved.
-    </p>
+{% load i18n %}
+
+<footer class="site-footer py-4 mt-auto">
+  <div class="container d-flex flex-column flex-sm-row gap-3 justify-content-between small text-body-secondary">
+    <p class="mb-0">© {% now "Y" %} My Hebrew Dates</p>
+    <ul class="list-inline mb-0">
+      <li class="list-inline-item me-3">
+        <a href="{% url 'about' %}">{% translate "About" %}</a>
+      </li>
+      <li class="list-inline-item me-3">
+        <a href="mailto:support@myHebrewDates.com?subject=Feedback%20on%20MyHebrewDates">{% translate "Email us" %}</a>
+      </li>
+      <li class="list-inline-item me-3">
+        <a href="https://discord.gg/2vqUzSpt6N">Discord</a>
+      </li>
+      <li class="list-inline-item">
+        <a href="https://github.com/abe-101/myhebrewdates">GitHub</a>
+      </li>
+    </ul>
   </div>
 </footer>
-<script>
-  document.getElementById("currentYear").textContent = new Date().getFullYear();
-</script>

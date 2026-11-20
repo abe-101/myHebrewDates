@@ -1,143 +1,60 @@
 {% extends "base.html" %}
 
-{% load static compress %}
-
-{% block css %}
-  {{ block.super }}
-  {% compress css %}
-    <link rel="stylesheet"
-          type="text/x-scss"
-          href="{% static "scss/home.scss" %}" />
-  {% endcompress %}
-{% endblock css %}
+{% block title %}
+  Hebrew Birthday and Yahrzeit Calendar | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.
+{% endblock meta_description %}
 {% block content %}
-  <!-- Hero Section -->
-  <header>
-    <div class="bg-body-tertiary py-5">
-      <div class="container text-center">
-        <h1 class="display-4">My Hebrew Dates</h1>
-        <p class="lead">Add Hebrew calendar events to your Google, Apple, or Outlook calendar with the click of a button!</p>
-        <div class="d-flex justify-content-center gap-3">
-          {% if user.is_authenticated %}
-            <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-lg">Get Started</a>
-          {% else %}
-            <a href="{% url 'account_login' %}" class="btn btn-primary btn-lg">Sign In</a>
-            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign Up</a>
-          {% endif %}
-        </div>
-      </div>
+  <div class="row gy-5">
+    <div class="col-lg-6">
+      <h1 class="h2 mb-3">Hebrew birthdays, anniversaries, and yahrzeits in your calendar</h1>
+      <p class="text-body-secondary mb-4">
+        Add each date once, by its Hebrew date. Every year it shows up on the right English day in Google Calendar, Apple Calendar, or Outlook.
+      </p>
+      {% if user.is_authenticated %}
+        <a href="{% url 'hebcal:calendar_list' %}" class="btn btn-primary">Go to my calendars</a>
+      {% else %}
+        <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign up</a>
+        <p class="small text-body-secondary mt-2 mb-0">
+          Free. Already have an account? <a href="{% url 'account_login' %}">Sign in</a>
+        </p>
+      {% endif %}
+      <h2 class="h5 mt-5 mb-3">How it works</h2>
+      <ol class="mb-0">
+        <li class="mb-2">Make a calendar for your family.</li>
+        <li class="mb-2">Add each person’s Hebrew birthday, anniversary, or yahrzeit.</li>
+        <li class="mb-2">
+          Subscribe to it once from Google Calendar, Apple Calendar, or Outlook. Dates you add later show up there on their own.
+        </li>
+        <li>Share the link so the rest of the family can subscribe too.</li>
+      </ol>
     </div>
-  </header>
-  <!-- Features Section -->
-  <section>
-    <div class="container text-center py-5">
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-calendar4-event display-3 text-primary"></i>
-          </div>
-          <h2>Create Personalized Calendars</h2>
-          <p class="text-body-secondary">
-            Create custom Hebrew event calendars for your family, including birthdays, anniversaries, and more.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-file-earmark-arrow-up display-3 text-primary"></i>
-          </div>
-          <h2>Corresponding English Events</h2>
-          <p class="text-body-secondary">
-            Automatically generate English event labels that correspond to your Hebrew dates for easy understanding.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="text-center mb-4">
-            <i class="bi bi-link-45deg display-3 text-primary"></i>
-          </div>
-          <h2>Share with Family Members</h2>
-          <p class="text-body-secondary">
-            Share your personalized calendar with family members by providing them with a unique URL to subscribe to.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- Testimonials Section -->
-  <section class="py-5 bg-body-tertiary">
-    <div class="container">
-      <h2 class="text-center mb-5">What Our Users Say</h2>
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
-                "My Hebrew Dates has made it so much easier for our family to remember
-                and celebrate important Hebrew events. Highly recommended!"
-              </p>
-              <h5 class="card-title">Ezra Cohen</h5>
+    <div class="col-lg-5 offset-lg-1">
+      <h2 class="h6 text-body-secondary mb-2">What shows up in your calendar</h2>
+      <ul class="list-group">
+        {% for english_date in example_dates %}
+          <li class="list-group-item py-3">
+            <div class="fw-semibold">
+              <span lang="he" dir="rtl">כג אייר</span> | 🎂 Savta Rivka
             </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
-                "I love using My Hebrew Dates to keep track of all our family birthdays
-                and other special dates. It's a fantastic tool!"
-              </p>
-              <h5 class="card-title">Leah Rosenberg</h5>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="card h-100">
-            <div class="card-body">
-              <p class="card-text">
-                "My Hebrew Dates has brought our family closer together by helping us
-                stay connected through our shared calendar. Thank you!"
-              </p>
-              <h5 class="card-title">Benjamin Steinberg</h5>
-            </div>
-          </div>
-        </div>
-      </div>
+            <div class="small text-body-secondary">{{ english_date|date:"l, F j, Y" }} · all day</div>
+          </li>
+        {% endfor %}
+      </ul>
+      <p class="small text-body-secondary mt-2">The same Hebrew date lands on a different English day each year.</p>
     </div>
-  </section>
-  <!-- How It Works Section -->
-  <section class="py-5 text-center">
-    <div class="container">
-      <h2 class="mb-5">How It Works</h2>
-      <div class="row g-4">
-        <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-pencil-square display-3 text-primary"></i>
-          </div>
-          <h5>Create Your Calendar</h5>
-          <p class="text-body-secondary">
-            Sign up and create a personalized Hebrew event calendar for your family. Add events to the list and set the
-            Hebrew date.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-link-45deg display-3 text-primary"></i>
-          </div>
-          <h5>Share the URL</h5>
-          <p class="text-body-secondary">
-            With the click of a button, generate a unique URL to share your calendar with your family members.
-          </p>
-        </div>
-        <div class="col-lg-4">
-          <div class="mb-4">
-            <i class="bi bi-calendar-check display-3 text-primary"></i>
-          </div>
-          <h5>Stay Connected</h5>
-          <p class="text-body-secondary">
-            Your family members can subscribe to the calendar and receive updates for the Hebrew events that will
-            automatically appear in their calendar feed.
-          </p>
-        </div>
-      </div>
+  </div>
+  <div class="row mt-5 pt-lg-4">
+    <div class="col-lg-8 col-xl-7">
+      <h2 class="h4 mb-3">Questions</h2>
+      {% include "pages/_home_questions.html" %}
+      {% if not user.is_authenticated %}
+        <p class="mt-4 mb-0">
+          Ready to add your family’s dates? <a href="{% url 'account_signup' %}">Sign up</a>
+        </p>
+      {% endif %}
     </div>
-  </section>
+  </div>
 {% endblock content %}

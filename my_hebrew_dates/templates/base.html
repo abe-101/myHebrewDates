@@ -18,7 +18,8 @@
     <meta property="og:image"
           content="{% block og_image %}https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}{% endblock og_image %}" />
     <meta property="og:url"
-          content="{% block og_url %}https://www.MyHebrewDates.com/{% endblock og_url %}" />
+          content="{% block og_url %}https://myhebrewdates.com{{ request.path }}{% endblock og_url %}" />
+    <link rel="canonical" href="https://myhebrewdates.com{{ request.path }}" />
     <meta property="og:type" content="website" />
     <!-- Twitter-specific tags -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -35,17 +36,7 @@
     <meta name="keywords"
           content="{% block meta_keywords %}Hebrew calendar, Jewish holidays, event sync, icalendar, recurring events, yahrzeit, reminders, hebrew birthday, MyHebrewDates{% endblock meta_keywords %}" />
     <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
-          rel="stylesheet" />
     {% block css %}
-      <!-- Latest compiled and minified Bootstrap CSS -->
-      <link rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
-            integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer" />
       <link rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css"
             integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ=="
@@ -109,23 +100,19 @@
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         class="{% block bodyclass %}d-flex flex-column min-vh-100{% endblock bodyclass %}">
-    <div class="container flex-grow-1 mb-5">
-      <div class="mb-1">{% include "_navbar.html" %}</div>
-      <div class="container">
-        {% block body %}
-          {% block main %}
+    {% include "_navbar.html" %}
+    <main class="flex-grow-1">
+      {% block body %}
+        {% block main %}
+          <div class="container py-4 py-lg-5">
             {% block content %}
-              <p>Use this document as a way to quick start any new project.</p>
             {% endblock content %}
-          {% endblock main %}
-          {% include "toasts.html" %}
-        {% endblock body %}
-      </div>
-      <!-- /container -->
-    </div>
-    <!-- flex-shrink-0 container -->
+          </div>
+        {% endblock main %}
+        {% include "toasts.html" %}
+      {% endblock body %}
+    </main>
     {% include "_footer.html" %}
-    <!-- /container -->
     {% block modal %}
     {% endblock modal %}
     {% block inline_javascript %}
