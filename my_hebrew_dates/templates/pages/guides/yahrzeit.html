@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+  How to Get a Yahrzeit Reminder Every Year | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  A yahrzeit falls on the Hebrew date of passing and begins the evening before. Here's how to get a reminder on the right day every year in Google, Apple, or Outlook calendar.
+{% endblock meta_description %}
+{% block content %}
+  <article class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-3">How to get a yahrzeit reminder every year</h1>
+      <p>
+        A yahrzeit is kept on the Hebrew date of a person's passing, so it falls on a different English date each year. It begins at sunset the evening before, which is when the yahrzeit candle is usually lit.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Find the Hebrew date</h2>
+      <p>
+        If you know only the English date of passing, use the <a href="{% url 'converter' %}">Hebrew date converter</a>. If the passing was after sunset, tick <strong>After sunset</strong>, because the Hebrew day had already changed.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Set up a reminder</h2>
+      <ol>
+        <li class="mb-2">
+          <a href="{% url 'account_signup' %}">Sign up</a> and make a calendar.
+        </li>
+        <li class="mb-2">Add the person, choose <strong>Yahrzeit</strong>, and enter the Hebrew date.</li>
+        <li class="mb-2">
+          On the calendar's <strong>Add to your calendar</strong> page, pick a reminder time. Because the yahrzeit begins the evening before, a reminder such as <strong>7 PM the evening before</strong> gives you time to light the candle.
+        </li>
+        <li class="mb-2">Choose Google Calendar, Apple Calendar, or Outlook to subscribe.</li>
+      </ol>
+      <p>
+        From then on, the yahrzeit appears on the right day every year, and family members you share the link with can subscribe and pick their own reminder time.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Adar and leap years</h2>
+      <p>
+        In a Hebrew leap year there are two months of Adar. Customs differ on which one to use for a passing in a year with a single Adar, so ask your rabbi if you're unsure, then choose Adar I or Adar II when you add the date.
+      </p>
+      {% include "pages/guides/_get_started.html" %}
+    </div>
+  </article>
+{% endblock content %}

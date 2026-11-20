@@ -37,6 +37,34 @@ urlpatterns = [
         name="converter",
     ),
     path(
+        "guides/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/guides/index.html")
+        ),
+        name="guides",
+    ),
+    path(
+        "guides/google-calendar-hebrew-birthdays/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/guides/google_calendar.html")
+        ),
+        name="guide_google_calendar",
+    ),
+    path(
+        "guides/iphone-hebrew-birthdays/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/guides/iphone.html")
+        ),
+        name="guide_iphone",
+    ),
+    path(
+        "guides/yahrzeit-reminder/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/guides/yahrzeit.html")
+        ),
+        name="guide_yahrzeit",
+    ),
+    path(
         "about/",
         login_not_required(TemplateView.as_view(template_name="pages/about.html")),
         name="about",

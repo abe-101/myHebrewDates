@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}
+  How to Add Hebrew Birthdays and Yahrzeits to iPhone Calendar | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  Get Hebrew birthdays, anniversaries, and yahrzeits on the right day every year in Apple Calendar on iPhone, iPad, and Mac.
+{% endblock meta_description %}
+{% block content %}
+  <article class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-3">How to add Hebrew birthdays and yahrzeits to your iPhone calendar</h1>
+      <p>
+        Apple Calendar repeats events by the English calendar, so a Hebrew birthday or yahrzeit set to repeat yearly ends up on the wrong day. Subscribing to a calendar that follows the Hebrew dates keeps every date on the right day, year after year.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Steps</h2>
+      <ol>
+        <li class="mb-2">
+          <a href="{% url 'account_signup' %}">Sign up</a> and make a calendar for your family.
+        </li>
+        <li class="mb-2">
+          Add each person's Hebrew birthday, anniversary, or yahrzeit. If you only know the English date, enter that and the Hebrew date is filled in for you.
+        </li>
+        <li class="mb-2">
+          On your iPhone, open the calendar's <strong>Add to your calendar</strong> page and tap <strong>Apple Calendar</strong>.
+        </li>
+        <li class="mb-2">Your iPhone asks whether to subscribe. Confirm, and the dates appear in the Calendar app.</li>
+      </ol>
+      <p>
+        The same steps work on an iPad or a Mac. Calendars you subscribe to on one device may also appear on your others if you use iCloud.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Sharing with family</h2>
+      <p>
+        Send family members the link to the calendar's <strong>Add to your calendar</strong> page. They don't need an account. They tap their calendar app and subscribe, and see every date you add.
+      </p>
+      {% include "pages/guides/_get_started.html" %}
+    </div>
+  </article>
+{% endblock content %}
