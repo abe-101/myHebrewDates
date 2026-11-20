@@ -111,3 +111,25 @@ def test_hebrew_lookup_updates_when_a_select_changes(client, db):
 
     assert 'hx-trigger="change, submit"' in content
     assert 'hx-target="#converter-result"' in content
+
+
+def test_live_update_shows_an_impossible_hebrew_date_in_the_results(client, db):
+    response = client.get(
+        reverse("converter"),
+        {"day": 30, "month": HebrewMonthEnum.IYAR},
+        headers={"HX-Request": "true"},
+    )
+
+    results = response.content.decode().split('id="converter-result"')[1]
+    assert "There is no day 30 in" in results
+
+
+def test_live_update_stays_quiet_while_the_date_is_half_chosen(client, db):
+    response = client.get(
+        reverse("converter"),
+        {"day": 30, "month": ""},
+        headers={"HX-Request": "true"},
+    )
+
+    results = response.content.decode().split('id="converter-result"')[1]
+    assert "alert" not in results.split("</main>")[0]
