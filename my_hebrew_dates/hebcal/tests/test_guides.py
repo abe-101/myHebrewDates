@@ -1,7 +1,13 @@
 import pytest
 from django.urls import reverse
 
-GUIDES = ["guides", "guide_google_calendar", "guide_iphone", "guide_yahrzeit"]
+GUIDES = [
+    "guides",
+    "guide_google_calendar",
+    "guide_iphone",
+    "guide_outlook",
+    "guide_yahrzeit",
+]
 
 
 @pytest.mark.parametrize("name", GUIDES)
