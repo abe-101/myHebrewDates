@@ -15,3 +15,7 @@ updates:
     # Every weekday
     schedule:
       interval: 'daily'
+    ignore:
+      # django-celery-beat 2.9.0 caps Django below 6.1.
+      - dependency-name: 'django'
+        versions: ['>=6.1']
