@@ -167,7 +167,7 @@
                 <div class="card h-100">
                   <div class="card-body">
                     <h6 class="card-subtitle mb-2 text-muted">Description</h6>
-                    <div id="eventDescription"></div>
+                    <div id="eventDescription" class="text-pre-line"></div>
                   </div>
                 </div>
               </div>
@@ -285,17 +285,12 @@
           // Set description if available
           var descriptionEl = document.getElementById('eventDescription');
           if (event.extendedProps.description) {
-            descriptionEl.innerHTML = parseDescription(event.extendedProps.description);
+            showDescription(descriptionEl, event.extendedProps.description);
           } else {
-            descriptionEl.innerHTML = '<p class="text-muted">No additional details.</p>';
+            descriptionEl.textContent = 'No additional details.';
           }
 
           modal.show();
-        },
-        eventContent: function(arg) {
-          return {
-            html: `<div class="fc-event-title">${arg.event.title}</div>`
-          };
         }
       });
 
@@ -337,13 +332,22 @@
       return `${startStr} - ${endStr}`;
     }
 
-    function parseDescription(description) {
-      // Convert URLs to links and preserve line breaks
-      var linkedText = description.replace(
-        /(https?:\/\/[^\s]+)/g,
-        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-      );
-      return linkedText.replace(/\n/g, '<br />');
+    // Event text comes from what users typed, so it is added as text nodes,
+    // never as HTML. Only http(s) URLs become links.
+    function showDescription(element, description) {
+      element.textContent = '';
+      description.split(/(https?:\/\/\S+)/).forEach(function(part) {
+        if (/^https?:\/\//.test(part)) {
+          var link = document.createElement('a');
+          link.href = part;
+          link.textContent = part;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          element.appendChild(link);
+        } else {
+          element.appendChild(document.createTextNode(part));
+        }
+      });
     }
   </script>
   <script>
