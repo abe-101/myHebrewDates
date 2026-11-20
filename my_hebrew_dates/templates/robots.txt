@@ -2,3 +2,5 @@ User-Agent: *
 
 Disallow: /calendars/
 Disallow: /calendars/*
+
+Sitemap: https://myhebrewdates.com/sitemap.xml

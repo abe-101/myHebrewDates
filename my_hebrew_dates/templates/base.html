@@ -12,11 +12,16 @@
       {% endblock title %}
     </title>
     <meta property="og:title"
-          content="{% block og_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock og_title %}" />
+          content="{% block og_title %}My Hebrew Dates: Hebrew birthdays and yahrzeits in your calendar{% endblock og_title %}" />
     <meta property="og:description"
-          content="{% block og_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock og_description %}" />
+          content="{% block og_description %}Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.{% endblock og_description %}" />
     <meta property="og:image"
-          content="{% block og_image %}https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}{% endblock og_image %}" />
+          content="{% block og_image %}https://myhebrewdates.com{% static 'images/share.jpg' %}{% endblock og_image %}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt"
+          content="My Hebrew Dates: Hebrew birthdays, anniversaries and yahrzeits in your calendar" />
+    <meta property="og:site_name" content="My Hebrew Dates" />
     <meta property="og:url"
           content="{% block og_url %}https://myhebrewdates.com{{ request.path }}{% endblock og_url %}" />
     <link rel="canonical" href="https://myhebrewdates.com{{ request.path }}" />
@@ -24,14 +29,14 @@
     <!-- Twitter-specific tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title"
-          content="{% block twitter_title %}MyHebrewDates | Sync Recurring Hebrew Calendar Events{% endblock twitter_title %}" />
+          content="{% block twitter_title %}My Hebrew Dates: Hebrew birthdays and yahrzeits in your calendar{% endblock twitter_title %}" />
     <meta name="twitter:description"
-          content="{% block twitter_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock twitter_description %}" />
+          content="{% block twitter_description %}Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.{% endblock twitter_description %}" />
     <meta name="twitter:image"
-          content="{% block twitter_image %}https://www.MyHebrewDates.com{% static 'images/favicon.png' %}{% endblock twitter_image %}" />
+          content="{% block twitter_image %}https://myhebrewdates.com{% static 'images/share.jpg' %}{% endblock twitter_image %}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description"
-          content="{% block meta_description %}Automatically sync recurring Hebrew calendar events, like birthdays and anniversaries, to your digital calendar.{% endblock meta_description %}" />
+          content="{% block meta_description %}Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.{% endblock meta_description %}" />
     <meta name="author" content="Abe Hanoka" />
     <meta name="keywords"
           content="{% block meta_keywords %}Hebrew calendar, Jewish holidays, event sync, icalendar, recurring events, yahrzeit, reminders, hebrew birthday, MyHebrewDates{% endblock meta_keywords %}" />
