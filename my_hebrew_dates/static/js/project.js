@@ -1,56 +1,28 @@
 /* Project specific Javascript goes here. */
-function copyFileUrl(pk) {
-  // Get the text field
-  var copyText = document.getElementById('calendar_file_url' + pk);
 
-  // Select the text field
-  copyText.select();
-  copyText.setSelectionRange(0, 99999); // For mobile devices
-
-  // Copy the text inside the text field
-  navigator.clipboard.writeText(copyText.value);
-
-  // Alert the copied text
-  //createToast({message: "Copied the text:\n" + copyText.value, tags: "text-white bg-success"})
-  //alert("Copied the text: " + copyText.value);
-}
-function shareFile(calendarUuid) {
-  const fileUrlInput = document.getElementById(
-    `calendar_file_url${calendarUuid}`,
+// Any button with data-copy="text" copies that text and says "Copied" for a moment.
+document.addEventListener('click', function (e) {
+  const button = e.target.closest('[data-copy]');
+  if (!button || button.dataset.copying) return;
+  button.dataset.copying = 'true';
+  const label = button.querySelector('.copy-label') || button;
+  const original = label.textContent;
+  let finished = false;
+  navigator.clipboard.writeText(button.dataset.copy).then(
+    function () {
+      if (!finished) label.textContent = 'Copied';
+    },
+    function () {
+      if (!finished) label.textContent = 'Copy failed';
+    },
   );
-  const fileUrl = fileUrlInput.value;
-
-  if (navigator.share) {
-    navigator
-      .share({
-        url: fileUrl,
-      })
-      .then(() => {
-        console.log('File shared successfully.');
-      })
-      .catch((error) => {
-        console.error('Error sharing file:', error);
-        copyFileUrlToClipboard(fileUrl);
-        notifyUser('Link copied to clipboard.');
-      });
-  } else {
-    copyFileUrlToClipboard(fileUrl);
-    notifyUser('URL copied to clipboard.');
-  }
-}
-
-function copyFileUrlToClipboard(url) {
-  const el = document.createElement('textarea');
-  el.value = url;
-  document.body.appendChild(el);
-  el.select();
-  document.execCommand('copy');
-  document.body.removeChild(el);
-}
-
-function notifyUser(message) {
-  alert(message);
-}
+  // The clipboard can stall, so the button resets on a timer, not on the promise.
+  setTimeout(function () {
+    finished = true;
+    label.textContent = original;
+    delete button.dataset.copying;
+  }, 2000);
+});
 
 document.addEventListener('htmx:confirm', function (e) {
   e.preventDefault();

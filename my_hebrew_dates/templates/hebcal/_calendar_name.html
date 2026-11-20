@@ -1,18 +1,15 @@
-<div id="calendar-{{ calendar.id }}" class="mb-4">
-  <div class="d-flex align-items-center gap-3">
-    <div>
-      <h1 class="mb-1">{{ calendar.name }}</h1>
-      <small class="text-muted">Timezone: {{ calendar.timezone }}</small>
-    </div>
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">{{ calendar.name }}</h1>
+    <p class="small text-body-secondary mb-0">Time zone: {{ calendar.timezone }}</p>
+  </div>
+  {% if calendar.owner == request.user %}
     <button type="button"
             hx-get="{% url 'hebcal:update_calendar' pk=calendar.pk %}"
             hx-target="body"
             hx-swap="beforeend"
-            data-bs-toggle="tooltip"
-            class="btn btn-primary align-self-start mt-2"
-            title="Edit Calendar">
-      <i class="bi bi-pencil-square me-1"></i>
-      Edit
+            class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-gear me-1" aria-hidden="true"></i>Calendar settings
     </button>
-  </div>
+  {% endif %}
 </div>
