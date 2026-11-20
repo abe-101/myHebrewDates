@@ -94,6 +94,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "django_htmx_modal_forms",
     "django_htmx_messages",
+    "health_check",
 ]
 
 LOCAL_APPS = [
