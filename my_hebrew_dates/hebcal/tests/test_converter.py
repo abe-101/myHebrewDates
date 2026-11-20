@@ -1,3 +1,4 @@
+import pytest
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.models import Calendar
@@ -73,3 +74,24 @@ def test_converter_is_in_the_sitemap(client, db):
     content = client.get("/sitemap.xml").content.decode()
 
     assert reverse("converter") in content
+
+
+@pytest.mark.parametrize(
+    "query",
+    [
+        {"english_date": "2027-02-30"},
+        {"english_date": "9999-12-31", "after_sunset": "on"},
+    ],
+)
+def test_impossible_english_dates_do_not_crash(client, user, query):
+    calendar = Calendar.objects.create(name="Family", owner=user)
+    client.force_login(user)
+
+    converter = client.get(reverse("converter"), query)
+    add_page = client.get(
+        reverse("hebcal:hebrew_date_new", args=[calendar.uuid]),
+        query,
+    )
+
+    assert converter.status_code == 200  # noqa: PLR2004
+    assert add_page.status_code == 200  # noqa: PLR2004

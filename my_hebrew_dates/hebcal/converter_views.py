@@ -3,11 +3,10 @@ from typing import cast
 
 from django.shortcuts import render
 from django.utils import timezone
-from django.utils.dateparse import parse_date
 
 from my_hebrew_dates.hebcal.forms import ENGLISH_MONTH_NAMES
 from my_hebrew_dates.hebcal.forms import HebrewDateLookupForm
-from my_hebrew_dates.hebcal.hebrew_date import hebrew_date_from_english
+from my_hebrew_dates.hebcal.hebrew_date import hebrew_date_from_english_input
 from my_hebrew_dates.hebcal.hebrew_date import hebrew_to_english_dict
 from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.models import HebrewDayEnum
@@ -21,11 +20,14 @@ if TYPE_CHECKING:
 
 
 def converter_view(request: HttpRequest):
-    english_date = parse_date(request.GET.get("english_date", ""))
     after_sunset = "after_sunset" in request.GET
     data: Mapping[str, object] | None = request.GET if "month" in request.GET else None
-    if english_date:
-        month, day = hebrew_date_from_english(english_date, after_sunset=after_sunset)
+    from_english = hebrew_date_from_english_input(
+        request.GET.get("english_date", ""),
+        after_sunset=after_sunset,
+    )
+    if from_english:
+        month, day = from_english
         data = {"day": day, "month": month}
     form = HebrewDateLookupForm(data)
 
