@@ -3,17 +3,17 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-  Hebrew Date Converter: Find the English Date of a Hebrew Birthday or Yahrzeit | My Hebrew Dates
+  When Is My Hebrew Birthday This Year? Hebrew Date Converter | My Hebrew Dates
 {% endblock title %}
 {% block meta_description %}
-  Free Hebrew date converter. See which English dates a Hebrew birthday, anniversary, or yahrzeit falls on in the coming years, or find the Hebrew date of any English date.
+  Find out when your Hebrew birthday falls this year. Enter your English date of birth, or the Hebrew date, and see the next English date it falls on, and the years after. Works for anniversaries and yahrzeits too.
 {% endblock meta_description %}
 {% block content %}
   <div id="converter" class="row gy-5">
     <div class="col-lg-6">
       <h1 class="h2 mb-2">Hebrew date converter</h1>
       <p class="text-body-secondary mb-4">
-        See which English dates a Hebrew birthday, anniversary, or yahrzeit falls on, or find the Hebrew date of an English date.
+        Find out when a Hebrew birthday, anniversary, or yahrzeit falls next, and in the years after. If you only know the English date of birth, start with that and the Hebrew date is worked out for you.
       </p>
       <form method="get"
             action="{% url 'converter' %}"
@@ -24,7 +24,7 @@
             hx-swap="outerHTML"
             hx-push-url="true"
             class="mb-4">
-        <h2 class="h6">From a Hebrew date</h2>
+        <h2 class="h6">Know the Hebrew date?</h2>
         <div class="row g-2 align-items-start">
           <div class="col-4">{{ form.day|as_crispy_field }}</div>
           <div class="col-8">{{ form.month|as_crispy_field }}</div>
@@ -38,7 +38,7 @@
             hx-select="#converter"
             hx-swap="outerHTML"
             hx-push-url="true">
-        <h2 class="h6">From an English date</h2>
+        <h2 class="h6">Only know the English date?</h2>
         <div class="d-flex flex-wrap align-items-end gap-2">
           <div>
             <label for="english_date" class="form-label">English date</label>
