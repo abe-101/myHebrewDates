@@ -44,7 +44,7 @@ dev = [
     "psycopg[binary]==3.3.6",
     "watchfiles==1.3.0",
     "rich==15.0.0",
-    "mypy==2.4.0",
+    "mypy==2.4.1",
     "django-stubs[compatible-mypy]==6.1.2",
     "pytest==9.1.1",
     "pytest-sugar==1.1.1",
