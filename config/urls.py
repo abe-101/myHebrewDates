@@ -65,6 +65,13 @@ urlpatterns = [
         name="guide_outlook",
     ),
     path(
+        "guides/hebrew-anniversary/",
+        login_not_required(
+            TemplateView.as_view(template_name="pages/guides/anniversary.html")
+        ),
+        name="guide_anniversary",
+    ),
+    path(
         "guides/yahrzeit-reminder/",
         login_not_required(
             TemplateView.as_view(template_name="pages/guides/yahrzeit.html")

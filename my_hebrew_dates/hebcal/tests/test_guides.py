@@ -7,6 +7,7 @@ GUIDES = [
     "guide_iphone",
     "guide_outlook",
     "guide_yahrzeit",
+    "guide_anniversary",
 ]
 
 
