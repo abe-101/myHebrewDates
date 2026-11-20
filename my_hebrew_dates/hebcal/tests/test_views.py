@@ -201,8 +201,8 @@ class CalendarEditViewTest(BaseTest):
             f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/",
         )
 
-    def test_search_functionality(self):
-        response = self.client.get(self.url, {"search": "Test Hebrew Date "})
-        self.assertContains(response, self.hebrew_date1.name)
+    def test_search_shows_only_matching_dates(self):
+        response = self.client.get(self.url, {"search": "date 2"})
         self.assertContains(response, self.hebrew_date2.name)
-        self.assertContains(response, self.hebrew_date3.name)
+        self.assertNotContains(response, self.hebrew_date1.name)
+        self.assertNotContains(response, self.hebrew_date3.name)
