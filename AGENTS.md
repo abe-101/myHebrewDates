@@ -30,15 +30,15 @@
 
 ## Commands you can run
 
-The app runs natively. Postgres and Redis run as local services, and Python runs from the virtualenv in `venv/`
-(`source venv/bin/activate`).
+The app runs natively. Postgres and Redis run as local services. Dependencies are managed with uv: `pyproject.toml`
+lists them and `uv.lock` pins the full tree. Add one with `uv add <pkg>` (runtime) or `uv add --dev <pkg>` (dev only).
+Run commands through `uv run`, or activate `.venv` (`source .venv/bin/activate`).
 
 ### First-time Setup
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements/local.txt
+uv sync
+source .venv/bin/activate
 pre-commit install
 createdb my_hebrew_dates
 python manage.py migrate
