@@ -17,3 +17,10 @@ def test_user_name_cannot_break_out_of_the_analytics_script(client, user):
     content = client.get(reverse("home")).content.decode()
 
     assert 'name: "Moshe\\u005C\\u0022 \\u003C/script\\u003E"' in content
+
+
+def test_sitemap_uses_the_canonical_lowercase_https_domain(client, db):
+    content = client.get("/sitemap.xml").content.decode()
+
+    assert "<loc>https://myhebrewdates.com/</loc>" in content
+    assert "MyHebrewDates.com" not in content
