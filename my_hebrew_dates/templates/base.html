@@ -140,8 +140,8 @@
   {% if request.user.is_authenticated %}
     <script>
     posthog.identify('{{ request.user.id }}', {
-      name: "{{ request.user.name }}",
-      email: "{{ request.user.email }}"
+      name: "{{ request.user.name|escapejs }}",
+      email: "{{ request.user.email|escapejs }}"
     })
 </script>
   {% endif %}
