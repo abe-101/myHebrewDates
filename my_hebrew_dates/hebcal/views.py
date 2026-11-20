@@ -1,4 +1,3 @@
-import base64
 import logging
 from datetime import date
 from datetime import timedelta
@@ -243,37 +242,8 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
-def client_ip(request: HttpRequest) -> str | None:
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    if x_forwarded_for:
-        return x_forwarded_for.split(",")[0]
-    return request.META.get("REMOTE_ADDR")
-
-
-def serve_pixel(request, pixel_id: UUID, pk: int):
-    pixel_data = (
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h"
-        "HgAHggJ/PchI7wAAAABJRU5ErkJggg=="
-    )
-
-    ip = client_ip(request)
-    user_agent = request.headers.get("user-agent", "")
-
-    # Log the information along with the UUID
-    logger.info(
-        "Pixel requested. IP: %s, User Agent: %s, UUID: %s, PK: %s",
-        ip,
-        user_agent,
-        str(pixel_id),
-        str(pk),
-    )
-
-    return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
-
-
 @cache_page(60 * 60)
 def calendar_file(request, uuid: UUID):
-    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm") or "9"
     try:
@@ -287,9 +257,8 @@ def calendar_file(request, uuid: UUID):
     )
 
     logger.info(
-        "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
+        "Calendar file requested for %s User-Agent %s, Alarm: %s",
         calendar.name,
-        ip,
         user_agent,
         alarm_trigger,
     )
