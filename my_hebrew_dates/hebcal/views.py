@@ -269,7 +269,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-@cache_page(60 * 60)  # Cache the page for 15 minutes
+@cache_page(60 * 60)
 def calendar_file(request, uuid: UUID):
     x_forwarded_for = request.headers.get("x-forwarded-for")
     ip = (
