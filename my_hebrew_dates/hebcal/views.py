@@ -1,5 +1,6 @@
 import base64
 import logging
+from datetime import date
 from datetime import timedelta
 from typing import TYPE_CHECKING
 from typing import cast
@@ -13,6 +14,8 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.utils import timezone
+from django.utils.dateparse import parse_date
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
@@ -21,10 +24,9 @@ from django_htmx_modal_forms import HtmxModalUpdateView
 from my_hebrew_dates.hebcal.decorators import requires_htmx
 from my_hebrew_dates.hebcal.forms import CalendarForm
 from my_hebrew_dates.hebcal.forms import HebrewDateForm
+from my_hebrew_dates.hebcal.hebrew_date import hebrew_date_from_english
 from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.models import HebrewDate
-from my_hebrew_dates.hebcal.models import HebrewDayEnum
-from my_hebrew_dates.hebcal.models import HebrewMonthEnum
 from my_hebrew_dates.hebcal.utils import generate_ical
 from my_hebrew_dates.hebcal.utils import generate_ical_experimental
 
@@ -134,180 +136,85 @@ class CalendarUpdateModalView(  # type: ignore[misc]
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-    month_values = request.GET.getlist("month")
-    day_values = request.GET.getlist("day")
-    search_query = request.GET.get("search", None)
-    event_type = request.GET.get("event_type", None)
+    search_query = request.GET.get("search", "")
 
-    month_choices = HebrewMonthEnum.choices
-    day_choices = HebrewDayEnum.choices
-    event_choices = HebrewDate.EVENT_CHOICES
-
-    sort_by = request.GET.get("sort", "day")
-    order = request.GET.get("order", "asc")
-
-    # Determine if current sort is descending
-    day_desc = sort_by == "day" and order == "desc"
-    month_desc = sort_by == "month" and order == "desc"
-
-    # Apply sorting to your queryset
-    sort_order = f"-{sort_by}" if order == "desc" else sort_by
-    hebrew_dates = calendar.calendarOf.all().order_by(sort_order)
-
-    # Filter by month if provided
-    if "month" in request.GET:
-        hebrew_dates = hebrew_dates.filter(month__in=month_values)
-
-    # Filter by day if provided
-    if "day" in request.GET:
-        hebrew_dates = hebrew_dates.filter(day__in=day_values)
-
-    # Additional filters can be added similarly
+    hebrew_dates = calendar.calendarOf.all()
     if search_query:
         hebrew_dates = hebrew_dates.filter(name__icontains=search_query)
 
-    if event_type:
-        hebrew_dates = hebrew_dates.filter(event_type=event_type)
+    today = timezone.localdate()
+    upcoming = []
+    for hebrew_date in hebrew_dates:
+        english_dates = hebrew_date.get_english_dates() or []
+        next_date = next(
+            (english_date for english_date in english_dates if english_date >= today),
+            None,
+        )
+        upcoming.append((next_date, hebrew_date))
+    upcoming.sort(key=lambda pair: pair[0] or date.max)
 
     context = {
         "calendar": calendar,
-        "month_choices": month_choices,
-        "day_choices": day_choices,
-        "event_choices": event_choices,
-        "hebrew_dates": hebrew_dates,
-        "selected_months": month_values,
-        "selected_days": day_values,
-        "day_desc": day_desc,
-        "month_desc": month_desc,
+        "hebrew_dates": upcoming,
+        "search_query": search_query,
     }
-
     logger.info(
         "user: %s accessed calendar_edit_view for calendar: %s (%s)",
         request.user,
         calendar.name,
         calendar.uuid,
     )
-
-    if hasattr(request, "htmx") and request.htmx:
-        log_msg = "search_query: %s | Month: %s | Day: %s | Sort: %s | Order: %s"
-        logger.info(
-            log_msg,
-            search_query,
-            month_values,
-            day_values,
-            sort_by,
-            order,
-        )
-        return render(request, "hebcal/_calendar_table.html", context)
     return render(request, "hebcal/calendar_edit.html", context)
 
 
-@requires_htmx
-def edit_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
+def hebrew_date_form_view(request: HttpRequest, uuid: UUID, pk: int | None = None):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-    hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
-    cancel = request.GET.get("cancel", False)
+    hebrew_date = None
+    if pk is not None:
+        hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
 
     if request.method == "POST":
         form = HebrewDateForm(request.POST, instance=hebrew_date)
         if form.is_valid():
-            form.save()
+            saved = form.save(commit=False)
+            saved.calendar = calendar
+            saved.save()
             logger.info(
-                "user: %s updated HebrewDate: %s (%s)",
+                "user: %s saved HebrewDate: %s (%s)",
                 request.user,
-                hebrew_date.name,
-                pk,
+                saved.name,
+                saved.pk,
             )
-            messages.success(request, f"{hebrew_date.name} updated successfully.")
-
-            return render(
-                request,
-                "hebcal/_hebrew_date_row.html",
-                {"hebrew_date": hebrew_date},
-            )
-        log_msg = (
-            "user: %s attempted to update HebrewDate: ",
-            "%s (%s) with invalid form data. ",
-        )
-        logger.warning(
-            log_msg,
-            request.user,
-            hebrew_date.name,
-            pk,
-            form.errors,
-        )
-        messages.error(request, "Please correct the errors in the form.")
+            if hebrew_date is None:
+                messages.success(request, f"Added {saved.get_formatted_name()}.")
+            else:
+                messages.success(request, f"Saved {saved.get_formatted_name()}.")
+            if "add_another" in request.POST:
+                return redirect("hebcal:hebrew_date_new", uuid=calendar.uuid)
+            return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
     else:
-        form = HebrewDateForm(instance=hebrew_date)
+        initial: dict[str, object] = {
+            field: request.GET[field]
+            for field in ("name", "event_type")
+            if field in request.GET
+        }
+        english_date = parse_date(request.GET.get("english_date", ""))
+        if english_date:
+            month, day = hebrew_date_from_english(
+                english_date,
+                after_sunset="after_sunset" in request.GET,
+            )
+            initial.update({"month": month, "day": day})
+        form = HebrewDateForm(instance=hebrew_date, initial=initial)
 
     context = {
         "calendar": calendar,
         "hebrew_date": hebrew_date,
         "form": form,
+        "english_date": request.GET.get("english_date", ""),
+        "after_sunset": "after_sunset" in request.GET,
     }
-    if cancel:
-        logger.info(
-            "user: %s cancelled edit for HebrewDate: %s (%s)",
-            request.user,
-            hebrew_date.name,
-            pk,
-        )
-
-        return render(
-            request,
-            "hebcal/_hebrew_date_row.html",
-            {"hebrew_date": hebrew_date},
-        )
-
-    logger.info(
-        "user: %s initialized edit for HebrewDate: %s (%s)",
-        request.user,
-        hebrew_date.name,
-        pk,
-    )
-
-    return render(request, "hebcal/_hebrew_date_form.html", context)
-
-
-@requires_htmx
-def create_hebrew_date_htmx(request: HttpRequest, uuid: UUID):
-    calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
-
-    if request.method == "POST":
-        form = HebrewDateForm(request.POST)
-        if form.is_valid():
-            hebrew_date = form.save(commit=False)
-            hebrew_date.calendar = calendar
-            hebrew_date.save()
-            logger.info(
-                "user: %s created HebrewDate: %s (%s)",
-                request.user,
-                hebrew_date.name,
-                hebrew_date.pk,
-            )
-            messages.success(request, f"{hebrew_date.name} created successfully.")
-
-            return render(
-                request,
-                "hebcal/_hebrew_date_row.html",
-                {"hebrew_date": hebrew_date},
-            )
-        messages.error(request, "Please correct the errors in the form.")
-    else:
-        form = HebrewDateForm()
-
-    context = {
-        "calendar": calendar,
-        "form": form,
-        "new": True,
-    }
-
-    logger.info(
-        "user: %s initialized create for HebrewDate",
-        request.user,
-    )
-
-    return render(request, "hebcal/_hebrew_date_form.html", context)
+    return render(request, "hebcal/hebrew_date_form.html", context)
 
 
 @require_POST
@@ -325,7 +232,7 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
             hebrew_date.name,
             pk,
         )
-        messages.success(request, f"{formatted_name} deleted successfully.")
+        messages.success(request, f"Removed {formatted_name}.")
         return HttpResponse()
     return None
 

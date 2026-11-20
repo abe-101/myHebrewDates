@@ -1,5 +1,7 @@
 # ruff: noqa: PLW2901
 import logging
+from datetime import date
+from datetime import timedelta
 
 from pyluach import dates
 from pyluach.utils import _is_leap as is_leap
@@ -55,3 +57,22 @@ def is_valid_hebrew_date(month: int, day: int) -> bool:
     if not 1 <= month <= ADAR_2:
         return False
     return 1 <= day <= lengths_of_months[month]
+
+
+def hebrew_date_from_english(
+    english_date: date,
+    *,
+    after_sunset: bool,
+) -> tuple[int, int]:
+    """
+    Return the (month, day) of the Hebrew date for an English date.
+
+    The Hebrew day starts at sunset. Plain Adar in a year with one Adar is
+    returned as Adar II, which the calendar treats as Adar in those years.
+    """
+    if after_sunset:
+        english_date += timedelta(days=1)
+    hebrew = dates.HebrewDate.from_pydate(english_date)
+    if hebrew.month == ADAR_2 - 1 and not is_leap(hebrew.year):
+        return ADAR_2, hebrew.day
+    return hebrew.month, hebrew.day

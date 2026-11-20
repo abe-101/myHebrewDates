@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  {% if hebrew_date %}
+    Edit {{ hebrew_date.name }}
+  {% else %}
+    Add a date
+  {% endif %}
+{% endblock title %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-8 col-lg-6">
+      <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+         class="small d-inline-block mb-3">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>{{ calendar.name }}
+      </a>
+      <h1 class="h3 mb-4">
+        {% if hebrew_date %}
+          Edit {{ hebrew_date.name }}
+        {% else %}
+          Add a date
+        {% endif %}
+      </h1>
+      <form method="post" id="hebrew-date-form">
+        {% csrf_token %}
+        {{ form.name|as_crispy_field }}
+        {{ form.event_type|as_crispy_field }}
+        <fieldset class="mb-3">
+          <legend class="form-label fs-6">Hebrew date</legend>
+          <div id="hebrew-date-fields" class="row g-2">
+            <div class="col-4">{{ form.day|as_crispy_field }}</div>
+            <div class="col-8">{{ form.month|as_crispy_field }}</div>
+          </div>
+          <details class="small mt-1" {% if english_date %}open{% endif %}>
+            <summary>Only know the English date?</summary>
+            <div class="d-flex flex-wrap align-items-end gap-2 mt-2">
+              <div>
+                <label for="english_date" class="form-label">English date</label>
+                <input type="date"
+                       id="english_date"
+                       name="english_date"
+                       value="{{ english_date }}"
+                       class="form-control form-control-sm" />
+              </div>
+              <div class="form-check mb-1">
+                <input class="form-check-input"
+                       type="checkbox"
+                       id="after_sunset"
+                       name="after_sunset"
+                       {% if after_sunset %}checked{% endif %} />
+                <label class="form-check-label" for="after_sunset">After sunset</label>
+              </div>
+              <button type="submit"
+                      formmethod="get"
+                      class="btn btn-outline-secondary btn-sm"
+                      hx-get="{{ request.path }}"
+                      hx-include="#hebrew-date-form"
+                      hx-target="#hebrew-date-fields"
+                      hx-select="#hebrew-date-fields"
+                      hx-swap="outerHTML">Fill in the Hebrew date</button>
+            </div>
+            <p class="text-body-secondary mt-2 mb-0">The Hebrew day starts at sunset, so a birth in the evening falls on the next Hebrew date.</p>
+          </details>
+        </fieldset>
+        <div class="d-flex flex-wrap gap-2">
+          {% if hebrew_date %}
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          {% else %}
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" name="add_another" class="btn btn-outline-primary">Save and add another</button>
+          {% endif %}
+          <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+             class="btn btn-link">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock content %}

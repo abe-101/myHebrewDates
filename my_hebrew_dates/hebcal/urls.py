@@ -8,9 +8,8 @@ from my_hebrew_dates.hebcal.views import calendar_edit_view
 from my_hebrew_dates.hebcal.views import calendar_file
 from my_hebrew_dates.hebcal.views import calendar_list_view
 from my_hebrew_dates.hebcal.views import create_calendar_view
-from my_hebrew_dates.hebcal.views import create_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
-from my_hebrew_dates.hebcal.views import edit_hebrew_date_htmx
+from my_hebrew_dates.hebcal.views import hebrew_date_form_view
 from my_hebrew_dates.hebcal.views import serve_pixel
 from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
 
@@ -18,10 +17,11 @@ app_name = "hebcal"
 
 urlpatterns = [
     path("<uuid:uuid>/edit/", calendar_edit_view, name="calendar_edit"),
+    path("<uuid:uuid>/dates/new/", hebrew_date_form_view, name="hebrew_date_new"),
     path(
-        "<uuid:uuid>/edit-hebrew-date-htmx/<int:pk>/",
-        edit_hebrew_date_htmx,
-        name="edit_hebrew_date_htmx",
+        "<uuid:uuid>/dates/<int:pk>/edit/",
+        hebrew_date_form_view,
+        name="hebrew_date_edit",
     ),
     path(
         "<int:pk>/update-calendar-modal/",
@@ -32,11 +32,6 @@ urlpatterns = [
         "<uuid:uuid>/delete-hebrew-date-htmx/<int:pk>/",
         delete_hebrew_date_htmx,
         name="delete_hebrew_date_htmx",
-    ),
-    path(
-        "<uuid:uuid>/create-hebrew-date-htmx/",
-        create_hebrew_date_htmx,
-        name="create_hebrew_date_htmx",
     ),
     path("<uuid:uuid>/delete/", CalendarDeleteView.as_view(), name="calendar_delete"),
     path("new/", create_calendar_view, name="calendar_new"),

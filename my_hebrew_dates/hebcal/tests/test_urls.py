@@ -9,9 +9,8 @@ from my_hebrew_dates.hebcal.views import calendar_detail_view
 from my_hebrew_dates.hebcal.views import calendar_edit_view
 from my_hebrew_dates.hebcal.views import calendar_file
 from my_hebrew_dates.hebcal.views import create_calendar_view
-from my_hebrew_dates.hebcal.views import create_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
-from my_hebrew_dates.hebcal.views import edit_hebrew_date_htmx
+from my_hebrew_dates.hebcal.views import hebrew_date_form_view
 from my_hebrew_dates.hebcal.views import serve_pixel
 from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
 
@@ -52,11 +51,11 @@ class TestUrls(SimpleTestCase):
         url = reverse("hebcal:calendar_file", args=[uuid])
         assert resolve(url).func == calendar_file
 
-    def test_edit_hebrew_date_htmx_url(self):
+    def test_hebrew_date_edit_url(self):
         uuid = self.generate_uuid()
         pk = 1  # Example primary key
-        url = reverse("hebcal:edit_hebrew_date_htmx", args=[uuid, pk])
-        assert resolve(url).func == edit_hebrew_date_htmx
+        url = reverse("hebcal:hebrew_date_edit", args=[uuid, pk])
+        assert resolve(url).func == hebrew_date_form_view
 
     def test_delete_hebrew_date_htmx_url(self):
         uuid = self.generate_uuid()
@@ -64,10 +63,10 @@ class TestUrls(SimpleTestCase):
         url = reverse("hebcal:delete_hebrew_date_htmx", args=[uuid, pk])
         assert resolve(url).func == delete_hebrew_date_htmx
 
-    def test_create_hebrew_date_htmx_url(self):
+    def test_hebrew_date_new_url(self):
         uuid = self.generate_uuid()
-        url = reverse("hebcal:create_hebrew_date_htmx", args=[uuid])
-        assert resolve(url).func == create_hebrew_date_htmx
+        url = reverse("hebcal:hebrew_date_new", args=[uuid])
+        assert resolve(url).func == hebrew_date_form_view
 
     def test_serve_pixel_url(self):
         uuid = self.generate_uuid()

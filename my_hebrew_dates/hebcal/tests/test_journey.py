@@ -48,16 +48,16 @@ def test_new_user_signs_up_and_subscribes_to_a_hebrew_date(client, mailoutbox):
     assert response.url == reverse("hebcal:calendar_edit", args=[calendar.uuid])
 
     response = client.post(
-        reverse("hebcal:create_hebrew_date_htmx", args=[calendar.uuid]),
+        reverse("hebcal:hebrew_date_new", args=[calendar.uuid]),
         {
             "name": "Grandpa Moshe",
             "month": HebrewMonthEnum.SHEVAT,
             "day": 15,
             "event_type": "🎂",
         },
-        headers={"HX-Request": "true"},
     )
-    assert response.status_code == HTTPStatus.OK
+    assert response.url == reverse("hebcal:calendar_edit", args=[calendar.uuid])
+    response = client.get(response.url)
     assert "Grandpa Moshe" in response.content.decode()
 
     client.logout()
