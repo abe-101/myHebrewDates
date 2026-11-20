@@ -748,18 +748,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-model-utils"
-version = "5.0.0"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/81/60/5e232c32a2c977cc1af8c70a38ef436598bc649ad89c2c4568454edde2c9/django_model_utils-5.0.0.tar.gz", hash = "sha256:041cdd6230d2fbf6cd943e1969318bce762272077f4ecd333ab2263924b4e5eb", size = 80559, upload-time = "2024-09-04T11:35:22.858Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/fd/13/87a42048700c54bfce35900a34e2031245132775fb24363fc0e33664aa9c/django_model_utils-5.0.0-py3-none-any.whl", hash = "sha256:fec78e6c323d565a221f7c4edc703f4567d7bb1caeafe1acd16a80c5ff82056b", size = 42630, upload-time = "2024-09-04T11:36:23.166Z" },
-]
-
-[[package]]
 name = "django-redis"
 version = "7.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1338,12 +1326,10 @@ dependencies = [
     { name = "django-cors-headers" },
     { name = "django-crispy-forms" },
     { name = "django-environ" },
-    { name = "django-extensions" },
     { name = "django-htmx" },
     { name = "django-htmx-messages" },
     { name = "django-htmx-modal-forms" },
     { name = "django-libsass" },
-    { name = "django-model-utils" },
     { name = "django-redis" },
     { name = "django-storages", extra = ["s3"] },
     { name = "djangorestframework" },
@@ -1356,7 +1342,6 @@ dependencies = [
     { name = "psycopg2-binary" },
     { name = "pyluach" },
     { name = "python-json-logger" },
-    { name = "python-slugify" },
     { name = "rcssmin" },
     { name = "redis" },
     { name = "sentry-sdk" },
@@ -1369,6 +1354,7 @@ dev = [
     { name = "django-browser-reload" },
     { name = "django-coverage-plugin" },
     { name = "django-debug-toolbar" },
+    { name = "django-extensions" },
     { name = "django-stubs", extra = ["compatible-mypy"] },
     { name = "djangorestframework-stubs" },
     { name = "djlint" },
@@ -1404,12 +1390,10 @@ requires-dist = [
     { name = "django-cors-headers", specifier = "==4.9.0" },
     { name = "django-crispy-forms", specifier = "==2.7" },
     { name = "django-environ", specifier = "==0.14.0" },
-    { name = "django-extensions", specifier = "==4.1" },
     { name = "django-htmx", specifier = "==1.29.0" },
     { name = "django-htmx-messages", specifier = "==0.1.1" },
     { name = "django-htmx-modal-forms", specifier = "==0.4.0" },
     { name = "django-libsass", specifier = "==0.9" },
-    { name = "django-model-utils", specifier = "==5.0.0" },
     { name = "django-redis", specifier = "==7.0.0" },
     { name = "django-storages", extras = ["s3"], specifier = "==1.14.6" },
     { name = "djangorestframework", specifier = "==3.18.3" },
@@ -1422,7 +1406,6 @@ requires-dist = [
     { name = "psycopg2-binary", specifier = "==2.9.13" },
     { name = "pyluach", specifier = "==2.3.0" },
     { name = "python-json-logger", specifier = "==4.2.0" },
-    { name = "python-slugify", specifier = "==9.1.3" },
     { name = "rcssmin", specifier = "==1.3.0" },
     { name = "redis", specifier = "==6.4.0" },
     { name = "sentry-sdk", specifier = "==2.72.0" },
@@ -1435,6 +1418,7 @@ dev = [
     { name = "django-browser-reload", specifier = "==1.21.0" },
     { name = "django-coverage-plugin", specifier = "==3.2.2" },
     { name = "django-debug-toolbar", specifier = "==8.0.0" },
+    { name = "django-extensions", specifier = "==4.1" },
     { name = "django-stubs", extras = ["compatible-mypy"], specifier = "==6.1.2" },
     { name = "djangorestframework-stubs", specifier = "==3.18.1" },
     { name = "djlint", specifier = "==1.46.4" },
@@ -1845,18 +1829,6 @@ wheels = [
 ]
 
 [[package]]
-name = "python-slugify"
-version = "9.1.3"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "text-unidecode" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/e8/26b1af09d728d604dc16427a39f53985b22a170dbd61addac3f48db73f03/python_slugify-9.1.3.tar.gz", hash = "sha256:90e997f2e0987239ce95e12f700086eb18e1d1d3ee22624fbbdbd095afca42b6", size = 66093, upload-time = "2026-10-07T01:06:20.101Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/47/67/5598c98725332a6a4084c7b622d5a1ebe7d6745c1d2f434c9e4e89e04cba/python_slugify-9.1.3-py3-none-any.whl", hash = "sha256:9aced0670e54c5603e2335c0fa9a4011ad4bc41ecb3c46e8097294c46fd60ed4", size = 16032, upload-time = "2026-10-07T01:06:18.891Z" },
-]
-
-[[package]]
 name = "pyyaml"
 version = "6.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -2244,15 +2216,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/46/79/cf31d7a93a8fdc6aa0fbb665be84426a8c5a557d9240b6239e9e11e35fc5/termcolor-3.3.0.tar.gz", hash = "sha256:348871ca648ec6a9a983a13ab626c0acce02f515b9e1983332b17af7979521c5", size = 14434, upload-time = "2025-12-29T12:55:21.882Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/33/d1/8bb87d21e9aeb323cc03034f5eaf2c8f69841e40e4853c2627edf8111ed3/termcolor-3.3.0-py3-none-any.whl", hash = "sha256:cf642efadaf0a8ebbbf4bc7a31cec2f9b5f21a9f726f4ccbb08192c9c26f43a5", size = 7734, upload-time = "2025-12-29T12:55:20.718Z" },
-]
-
-[[package]]
-name = "text-unidecode"
-version = "1.3"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ab/e2/e9a00f0ccb71718418230718b3d900e71a5d16e701a3dae079a21e9cd8f8/text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93", size = 76885, upload-time = "2019-08-30T21:36:45.405Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/a5/c0b6468d3824fe3fde30dbb5e1f687b291608f9473681bbf7dabbf5a87d7/text_unidecode-1.3-py2.py3-none-any.whl", hash = "sha256:1311f10e8b895935241623731c2ba64f4c455287888b18189350b67134a822e8", size = 78154, upload-time = "2019-08-30T21:37:03.543Z" },
 ]
 
 [[package]]
