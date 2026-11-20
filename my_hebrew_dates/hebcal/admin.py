@@ -56,6 +56,7 @@ class HebrewDateAdmin(admin.ModelAdmin):
         "modified",
     )
     list_filter = ("event_type", "calendar", "month", "day")
+    readonly_fields = ("public_id",)
     search_fields = (
         "name",
         "calendar__name",
