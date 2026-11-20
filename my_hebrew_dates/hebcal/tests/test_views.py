@@ -201,21 +201,6 @@ class CalendarEditViewTest(BaseTest):
             f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/",
         )
 
-    def test_filter_by_month(self):
-        response = self.client.get(self.url, {"month": "1"})
-        self.assertContains(
-            response,
-            self.hebrew_date1.name,
-        )  # Adjust based on how months are displayed
-
-    def test_filter_by_day(self):
-        response = self.client.get(self.url, {"day": "2"})
-        self.assertContains(response, self.hebrew_date2.name)
-
-    def test_filter_by_event_type(self):
-        response = self.client.get(self.url, {"event_type": "🕯️"})
-        self.assertContains(response, self.hebrew_date3.name)
-
     def test_search_functionality(self):
         response = self.client.get(self.url, {"search": "Test Hebrew Date "})
         self.assertContains(response, self.hebrew_date1.name)

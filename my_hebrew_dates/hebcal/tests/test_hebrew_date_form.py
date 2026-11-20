@@ -80,3 +80,16 @@ def test_dates_are_listed_by_next_occurrence(client, user, pinned_hebrew_dates):
 
     names = [hebrew_date.name for _, hebrew_date in response.context["hebrew_dates"]]
     assert names == ["Sooner", "Later"]
+
+
+def test_a_day_the_month_never_has_is_an_error_not_a_crash(client, user):
+    calendar = make_calendar(client, user)
+
+    response = client.post(
+        reverse("hebcal:hebrew_date_new", args=[calendar.uuid]),
+        {"name": "Moshe", "event_type": "🎂", "day": 30, "month": HebrewMonthEnum.IYAR},
+    )
+
+    assert response.status_code == 200  # noqa: PLR2004
+    assert "There is no day 30 in" in response.content.decode()
+    assert not calendar.calendarOf.exists()

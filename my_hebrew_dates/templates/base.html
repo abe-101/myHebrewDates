@@ -76,7 +76,6 @@
 
         gtag('config', 'G-MLL490GGCR');
       </script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
       <!-- place project specific Javascript in this file -->
       {% compress js %}
         <script defer src="{% static 'js/project.js' %}"></script>
@@ -140,8 +139,8 @@
   {% if request.user.is_authenticated %}
     <script>
     posthog.identify('{{ request.user.id }}', {
-      name: "{{ request.user.name }}",
-      email: "{{ request.user.email }}"
+      name: "{{ request.user.name|escapejs }}",
+      email: "{{ request.user.email|escapejs }}"
     })
 </script>
   {% endif %}
