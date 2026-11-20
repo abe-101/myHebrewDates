@@ -28,7 +28,7 @@ dependencies = [
     "drf-spectacular==0.30.0",
     "django-htmx-modal-forms==0.4.0",
     "django-htmx-messages==0.1.1",
-    "gunicorn==26.2.0",
+    "gunicorn==27.0.1",
     "psycopg2-binary==2.9.13",
     "sentry-sdk==2.75.0",
     "django-storages[s3]==1.14.6",
