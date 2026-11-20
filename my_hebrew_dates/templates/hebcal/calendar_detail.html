@@ -3,18 +3,9 @@
 {% block title %}
   {{ calendar.name }}: Hebrew dates calendar
 {% endblock title %}
-{% block og_title %}
-  {{ calendar.name }}: Hebrew dates calendar
-{% endblock og_title %}
-{% block twitter_title %}
-  {{ calendar.name }}: Hebrew dates calendar
-{% endblock twitter_title %}
-{% block og_description %}
+{% block meta_description %}
   Hebrew birthdays, anniversaries, and yahrzeits. Add them to your Google, Apple, or Outlook calendar.
-{% endblock og_description %}
-{% block twitter_description %}
-  Hebrew birthdays, anniversaries, and yahrzeits. Add them to your Google, Apple, or Outlook calendar.
-{% endblock twitter_description %}
+{% endblock meta_description %}
 {% block javascript %}
   {{ block.super }}
   <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
