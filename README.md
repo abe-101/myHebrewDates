@@ -26,46 +26,40 @@ git clone https://github.com/abe-101/myHebrewDates.git
 cd myHebrewDates
 ```
 
-2. Create and activate a virtual environment:
+2. Install the dependencies with [uv](https://docs.astral.sh/uv/) and activate the virtual environment:
 
 ```shell
-python3 -m venv venv
-source venv/bin/activate
+uv sync
+source .venv/bin/activate
 ```
 
-3. Install the local dependencies:
-
-```shell
-pip install -r requirements/local.txt
-```
-
-4. Pre-Commit Install:
+3. Pre-Commit Install:
 
 ```shell
 pre-commit install
 ```
 
-5. Create Database:
+4. Create Database:
 
 ```shell
 createdb --username=<USERNAME> my_hebrew_dates
 ```
 
-6. Create `.env` File and add these:
+5. Create `.env` File and add these:
 
 ```shell
 DATABASE_URL=postgres://<USERNAME>:<PASSWORD>@127.0.0.1:5432/my_hebrew_dates
 CELERY_BROKER_URL=redis://localhost:6379/0
 ```
 
-7. Set up the database:
+6. Set up the database:
 
 ```shell
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-8. Start the Server
+7. Start the Server
 
 ```shell
 python manage.py runserver

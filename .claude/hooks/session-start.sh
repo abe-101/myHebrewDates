@@ -24,16 +24,16 @@ su postgres -c "psql -tAc \"SELECT 1 FROM pg_database WHERE datname='my_hebrew_d
 
 redis-cli ping >/dev/null 2>&1 || redis-server --daemonize yes >/dev/null
 
-[ -x venv/bin/python ] || python3 -m venv venv
-venv/bin/pip install --quiet -r requirements/local.txt
+command -v uv >/dev/null || python3 -m pip install --quiet uv
+uv sync --frozen --quiet
 
 # Later Bash calls in the session pick up the virtualenv without activating it by hand.
 if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-  echo "source \"$PWD/venv/bin/activate\"" >> "$CLAUDE_ENV_FILE"
+  echo "source \"$PWD/.venv/bin/activate\"" >> "$CLAUDE_ENV_FILE"
 fi
 
 # Import the whole project, so a session never starts believing it can run the tests when
 # something the suite imports is broken.
-venv/bin/python manage.py check >/dev/null
+uv run python manage.py check >/dev/null
 
-echo "Ready: Postgres and Redis up, my_hebrew_dates database present, $(venv/bin/python -V) and dependencies installed."
+echo "Ready: Postgres and Redis up, my_hebrew_dates database present, $(uv run python -V) and dependencies installed."
