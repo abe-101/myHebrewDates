@@ -12,6 +12,7 @@ from health_check.views import HealthCheckView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
+from my_hebrew_dates.hebcal.hebrew_date import hebrew_to_english_dict
 
 sitemaps = {
     "static": StaticViewSitemap,
@@ -21,7 +22,12 @@ sitemaps = {
 urlpatterns = [
     path(
         "",
-        login_not_required(TemplateView.as_view(template_name="pages/home.html")),
+        login_not_required(
+            TemplateView.as_view(
+                template_name="pages/home.html",
+                extra_context={"example_dates": hebrew_to_english_dict["2-23"]},
+            )
+        ),
         name="home",
     ),
     path(
