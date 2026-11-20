@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+  Hebrew Date Converter: Find the English Date of a Hebrew Birthday or Yahrzeit | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  Free Hebrew date converter. See which English dates a Hebrew birthday, anniversary, or yahrzeit falls on in the coming years, or find the Hebrew date of any English date.
+{% endblock meta_description %}
+{% block content %}
+  <div id="converter" class="row gy-5">
+    <div class="col-lg-6">
+      <h1 class="h2 mb-2">Hebrew date converter</h1>
+      <p class="text-body-secondary mb-4">
+        See which English dates a Hebrew birthday, anniversary, or yahrzeit falls on, or find the Hebrew date of an English date.
+      </p>
+      <form method="get"
+            action="{% url 'converter' %}"
+            hx-get="{% url 'converter' %}"
+            hx-target="#converter"
+            hx-select="#converter"
+            hx-swap="outerHTML"
+            hx-push-url="true"
+            class="mb-4">
+        <h2 class="h6">From a Hebrew date</h2>
+        <div class="row g-2 align-items-start">
+          <div class="col-4">{{ form.day|as_crispy_field }}</div>
+          <div class="col-8">{{ form.month|as_crispy_field }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Show English dates</button>
+      </form>
+      <form method="get"
+            action="{% url 'converter' %}"
+            hx-get="{% url 'converter' %}"
+            hx-target="#converter"
+            hx-select="#converter"
+            hx-swap="outerHTML"
+            hx-push-url="true">
+        <h2 class="h6">From an English date</h2>
+        <div class="d-flex flex-wrap align-items-end gap-2">
+          <div>
+            <label for="english_date" class="form-label">English date</label>
+            <input type="date"
+                   id="english_date"
+                   name="english_date"
+                   value="{{ english_date }}"
+                   required
+                   class="form-control" />
+          </div>
+          <div class="form-check mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   id="after_sunset"
+                   name="after_sunset"
+                   {% if after_sunset %}checked{% endif %} />
+            <label class="form-check-label" for="after_sunset">After sunset</label>
+          </div>
+          <button type="submit" class="btn btn-outline-primary">Find the Hebrew date</button>
+        </div>
+        <p class="small text-body-secondary mt-2 mb-0">The Hebrew day starts at sunset, so an evening date belongs to the next Hebrew day.</p>
+      </form>
+    </div>
+    <div class="col-lg-5 offset-lg-1" aria-live="polite">
+      {% if hebrew_date %}
+        <h2 class="h5 mb-3">
+          <span lang="he" dir="rtl">{{ hebrew_date }}</span> ({{ english_label }}) falls on
+        </h2>
+        <ul class="list-group mb-3">
+          {% for english_date in upcoming %}
+            <li class="list-group-item">{{ english_date|date:"l, F j, Y" }}</li>
+          {% endfor %}
+        </ul>
+        <p class="small text-body-secondary">Save it to a calendar and it keeps showing up on the right day every year.</p>
+        {% if user.is_authenticated %}
+          {% for calendar in calendars %}
+            <a href="{% url 'hebcal:hebrew_date_new' calendar.uuid %}?day={{ form.cleaned_data.day }}&month={{ form.cleaned_data.month }}"
+               class="btn btn-primary btn-sm mb-2">Add to {{ calendar.name }}</a>
+          {% empty %}
+            <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary btn-sm">Make a calendar</a>
+          {% endfor %}
+        {% else %}
+          <a href="{% url 'account_signup' %}" class="btn btn-primary btn-sm">Sign up to save it</a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endblock content %}

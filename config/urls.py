@@ -12,6 +12,7 @@ from health_check.views import HealthCheckView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
+from my_hebrew_dates.hebcal.converter_views import converter_view
 from my_hebrew_dates.hebcal.hebrew_date import hebrew_to_english_dict
 
 sitemaps = {
@@ -29,6 +30,11 @@ urlpatterns = [
             )
         ),
         name="home",
+    ),
+    path(
+        "hebrew-date-converter/",
+        login_not_required(converter_view),
+        name="converter",
     ),
     path(
         "about/",

@@ -15,7 +15,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.utils.dateparse import parse_date
 from django.views.decorators.cache import cache_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
@@ -24,7 +23,7 @@ from django_htmx_modal_forms import HtmxModalUpdateView
 from my_hebrew_dates.hebcal.decorators import requires_htmx
 from my_hebrew_dates.hebcal.forms import CalendarForm
 from my_hebrew_dates.hebcal.forms import HebrewDateForm
-from my_hebrew_dates.hebcal.hebrew_date import hebrew_date_from_english
+from my_hebrew_dates.hebcal.hebrew_date import hebrew_date_from_english_input
 from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.models import HebrewDate
 from my_hebrew_dates.hebcal.utils import generate_ical
@@ -195,15 +194,15 @@ def hebrew_date_form_view(request: HttpRequest, uuid: UUID, pk: int | None = Non
     else:
         initial: dict[str, object] = {
             field: request.GET[field]
-            for field in ("name", "event_type")
+            for field in ("name", "event_type", "day", "month")
             if field in request.GET
         }
-        english_date = parse_date(request.GET.get("english_date", ""))
-        if english_date:
-            month, day = hebrew_date_from_english(
-                english_date,
-                after_sunset="after_sunset" in request.GET,
-            )
+        from_english = hebrew_date_from_english_input(
+            request.GET.get("english_date", ""),
+            after_sunset="after_sunset" in request.GET,
+        )
+        if from_english:
+            month, day = from_english
             initial.update({"month": month, "day": day})
         form = HebrewDateForm(instance=hebrew_date, initial=initial)
 

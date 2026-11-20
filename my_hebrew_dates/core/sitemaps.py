@@ -12,7 +12,7 @@ class StaticViewSitemap(Sitemap):
         return super().get_domain(site).lower()
 
     def items(self):
-        return ["home", "about"]
+        return ["home", "converter", "about"]
 
     def location(self, item):
         return reverse(item)

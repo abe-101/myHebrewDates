@@ -3,6 +3,7 @@ import logging
 from datetime import date
 from datetime import timedelta
 
+from django.utils.dateparse import parse_date
 from pyluach import dates
 from pyluach.utils import _is_leap as is_leap
 
@@ -76,3 +77,22 @@ def hebrew_date_from_english(
     if hebrew.month == ADAR_2 - 1 and not is_leap(hebrew.year):
         return ADAR_2, hebrew.day
     return hebrew.month, hebrew.day
+
+
+def hebrew_date_from_english_input(
+    value: str,
+    *,
+    after_sunset: bool,
+) -> tuple[int, int] | None:
+    """
+    Like hebrew_date_from_english, for a YYYY-MM-DD string from a request.
+
+    Returns None for anything that isn't a usable date, such as 2027-02-30.
+    """
+    try:
+        english_date = parse_date(value)
+        if english_date is None:
+            return None
+        return hebrew_date_from_english(english_date, after_sunset=after_sunset)
+    except ValueError, OverflowError:
+        return None
