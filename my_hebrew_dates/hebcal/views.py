@@ -243,18 +243,20 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
+def client_ip(request: HttpRequest) -> str | None:
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    if x_forwarded_for:
+        return x_forwarded_for.split(",")[0]
+    return request.META.get("REMOTE_ADDR")
+
+
 def serve_pixel(request, pixel_id: UUID, pk: int):
     pixel_data = (
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h"
         "HgAHggJ/PchI7wAAAABJRU5ErkJggg=="
     )
 
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = (
-        x_forwarded_for.split(",")[0]
-        if x_forwarded_for
-        else request.META.get("REMOTE_ADDR")
-    )
+    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
 
     # Log the information along with the UUID
@@ -271,12 +273,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 
 @cache_page(60 * 60)
 def calendar_file(request, uuid: UUID):
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = (
-        x_forwarded_for.split(",")[0]
-        if x_forwarded_for
-        else request.META.get("REMOTE_ADDR")
-    )
+    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm", "9")
     if alarm_trigger_hours == "":
