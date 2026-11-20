@@ -11,7 +11,6 @@ from my_hebrew_dates.hebcal.views import calendar_file
 from my_hebrew_dates.hebcal.views import create_calendar_view
 from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import hebrew_date_form_view
-from my_hebrew_dates.hebcal.views import serve_pixel
 from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
 
 
@@ -67,12 +66,6 @@ class TestUrls(SimpleTestCase):
         uuid = self.generate_uuid()
         url = reverse("hebcal:hebrew_date_new", args=[uuid])
         assert resolve(url).func == hebrew_date_form_view
-
-    def test_serve_pixel_url(self):
-        uuid = self.generate_uuid()
-        pk = 1  # Example primary key
-        url = reverse("hebcal:serve_pixel", args=[uuid, pk])
-        assert resolve(url).func == serve_pixel
 
     def test_update_calendar_links_htmx_url(self):
         uuid = self.generate_uuid()

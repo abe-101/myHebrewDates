@@ -10,7 +10,6 @@ from my_hebrew_dates.hebcal.views import calendar_list_view
 from my_hebrew_dates.hebcal.views import create_calendar_view
 from my_hebrew_dates.hebcal.views import delete_hebrew_date_htmx
 from my_hebrew_dates.hebcal.views import hebrew_date_form_view
-from my_hebrew_dates.hebcal.views import serve_pixel
 from my_hebrew_dates.hebcal.views import update_calendar_links_htmx
 
 app_name = "hebcal"
@@ -47,11 +46,6 @@ urlpatterns = [
         name="legacy_calendar_file",
     ),
     path("<uuid:uuid>.ics", login_not_required(calendar_file), name="calendar_file"),
-    path(
-        "serve-image/<uuid:pixel_id>/<int:pk>",
-        login_not_required(serve_pixel),
-        name="serve_pixel",
-    ),
     path(
         "update-calendar-links-htmx/<uuid:uuid>/",
         login_not_required(update_calendar_links_htmx),
