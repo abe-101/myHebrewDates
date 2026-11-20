@@ -1,107 +1,66 @@
 {% extends "base.html" %}
 
-{% load static %}
-
 {% block title %}
   Dates in {{ calendar.name }}
 {% endblock title %}
 {% block content %}
   {% include "hebcal/_calendar_header.html" with active_tab="dates" %}
-  <div>
-    <div class="row mb-4">
-      <div class="col">
-        <form id="filter-form"
-              class="d-flex justify-content-end"
-              hx-get="{{ request.path }}"
-              hx-target="#calendar-table"
-              hx-params="*"
-              hx-swap="outerHTML settle:1s"
-              hx-trigger="change, input changed delay:500ms from:.search-box, search from:.search-box"
-              hx-indicator=".htmx-indicator"
-              hx-push-url="true">
-          <div class="me-2">
-            <input class="search-box form-control rounded"
-                   type="search"
-                   name="search"
-                   placeholder="Begin Typing To Search {{ calendar.name }} Calendar..." />
-          </div>
-          <!-- Month Filter Dropdown -->
-          <div class="dropdown me-1">
-            <button class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownMonthButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">Month</button>
-            <ul class="dropdown-menu p-2" aria-labelledby="dropdownMonthButton">
-              {% for value, name in month_choices %}
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           name="month"
-                           value="{{ value }}"
-                           id="month-{{ value }}"
-                           {% if value|stringformat:"s" in selected_months %}checked{% endif %} />
-                    <label class="form-check-label" for="month-{{ value }}">{{ name }}</label>
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <!-- Day Filter Dropdown -->
-          <div class="dropdown me-1">
-            <button class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownDayButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">Day</button>
-            <ul class="dropdown-menu p-2" aria-labelledby="dropdownDayButton">
-              {% for value, name in day_choices %}
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           name="day"
-                           value="{{ value }}"
-                           id="day-{{ value }}"
-                           {% if value|stringformat:"s" in selected_days %}checked{% endif %} />
-                    <label class="form-check-label" for="day-{{ value }}">{{ name }}</label>
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <!-- Event Type Filter Dropdown -->
-          <div class="dropdown me-1">
-            <button class="btn btn-outline-secondary dropdown-toggle"
-                    type="button"
-                    id="dropdownEventTypeButton"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">Event Type</button>
-            <ul class="dropdown-menu p-2" aria-labelledby="dropdownEventTypeButton">
-              {% for value, name in event_choices %}
-                <li>
-                  <div class="form-check">
-                    <input class="form-check-input"
-                           type="checkbox"
-                           value="{{ value }}"
-                           name="event_type"
-                           id="event-type-{{ value }}" />
-                    <label class="form-check-label" for="event-type-{{ value }}">{{ name }}</label>
-                  </div>
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-          <a href="{{ request.path }}" class="btn btn-secondary">Clear</a>
-        </form>
-      </div>
-    </div>
-    <div class="htmx-indicator d-flex justify-content-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-    {% include "hebcal/_calendar_table.html" %}
+  <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+    <a href="{% url 'hebcal:hebrew_date_new' calendar.uuid %}"
+       class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>Add a date
+    </a>
+    {% if hebrew_dates or search_query %}
+      <form method="get"
+            class="ms-sm-auto"
+            hx-get="{{ request.path }}"
+            hx-trigger="input changed delay:300ms from:input, search"
+            hx-target="#date-list"
+            hx-select="#date-list"
+            hx-swap="outerHTML"
+            role="search">
+        <input class="form-control"
+               type="search"
+               name="search"
+               value="{{ search_query }}"
+               placeholder="Search by name"
+               aria-label="Search by name" />
+      </form>
+    {% endif %}
+  </div>
+  <div id="date-list">
+    {% if hebrew_dates %}
+      <ul class="list-group">
+        {% for next_date, hebrew_date in hebrew_dates %}
+          <li class="list-group-item py-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+              <div>
+                <div class="fw-semibold">{{ hebrew_date.event_type }} {{ hebrew_date.name }}</div>
+                <div class="small text-body-secondary">
+                  <span lang="he" dir="rtl">{{ hebrew_date.get_hebrew_date }}</span>
+                  {% if next_date %}· Next: {{ next_date|date:"D, M j, Y" }}{% endif %}
+                </div>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="{% url 'hebcal:hebrew_date_edit' calendar.uuid hebrew_date.pk %}"
+                   class="btn btn-outline-secondary btn-sm">Edit</a>
+                <button type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        hx-post="{% url 'hebcal:delete_hebrew_date_htmx' uuid=calendar.uuid pk=hebrew_date.pk %}"
+                        hx-target="closest li"
+                        hx-swap="outerHTML"
+                        hx-confirm="Remove {{ hebrew_date.get_formatted_name }}? It will disappear from everyone's calendar.">
+                  Remove
+                </button>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% elif search_query %}
+      <p class="text-body-secondary">No dates match “{{ search_query }}”.</p>
+    {% else %}
+      <p class="text-body-secondary">No dates yet. Add a birthday, anniversary, or yahrzeit to get started.</p>
+    {% endif %}
   </div>
 {% endblock content %}
