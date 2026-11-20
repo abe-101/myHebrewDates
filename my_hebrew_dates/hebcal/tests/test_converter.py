@@ -95,3 +95,19 @@ def test_impossible_english_dates_do_not_crash(client, user, query):
 
     assert converter.status_code == 200  # noqa: PLR2004
     assert add_page.status_code == 200  # noqa: PLR2004
+
+
+def test_impossible_english_date_says_so(client, db):
+    content = client.get(
+        reverse("converter"),
+        {"english_date": "2027-02-30"},
+    ).content.decode()
+
+    assert "a real date. Check the day, month, and year." in content
+
+
+def test_hebrew_lookup_updates_when_a_select_changes(client, db):
+    content = client.get(reverse("converter")).content.decode()
+
+    assert 'hx-trigger="change, submit"' in content
+    assert 'hx-target="#converter-result"' in content
