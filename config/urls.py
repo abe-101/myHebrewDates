@@ -8,6 +8,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from health_check.views import HealthCheckView
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.sitemaps.views import sitemap
 from my_hebrew_dates.core.sitemaps import StaticViewSitemap
@@ -58,6 +59,15 @@ urlpatterns = [
     path("users/", include("my_hebrew_dates.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
     path("calendars/", include("my_hebrew_dates.hebcal.urls", namespace="hebcal")),
+    path(
+        "ht/",
+        login_not_required(
+            HealthCheckView.as_view(
+                checks=["health_check.checks.Database", "health_check.checks.Cache"]
+            )
+        ),
+        name="health_check",
+    ),
     # Media files
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]

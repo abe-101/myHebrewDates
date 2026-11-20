@@ -53,6 +53,7 @@ def main(ctx=None):
         },
         start="gunicorn config.wsgi:application",
         preDeploy="python manage.py migrate",
+        healthcheck="/ht/",
         deploy={"restartPolicyType": "ON_FAILURE", "restartPolicyMaxRetries": 10},
         replicas={"us-west2": 1},
         domains=["myhebrewdates.com"],
