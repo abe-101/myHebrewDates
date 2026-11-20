@@ -1,0 +1,33 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb small mb-2">
+    <li class="breadcrumb-item">
+      <a href="{% url 'home' %}">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'guides' %}">Guides</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{{ name }}</li>
+  </ol>
+</nav>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://myhebrewdates.com{% url 'home' %}"
+    }, {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Guides",
+      "item": "https://myhebrewdates.com{% url 'guides' %}"
+    }, {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ name|escapejs }}",
+      "item": "https://myhebrewdates.com{{ request.path }}"
+    }]
+  }
+</script>
