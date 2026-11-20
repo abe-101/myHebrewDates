@@ -201,8 +201,50 @@ class CalendarEditViewTest(BaseTest):
             f"/accounts/login/?next=/calendars/{self.calendar.uuid}/edit/",
         )
 
-    def test_search_functionality(self):
-        response = self.client.get(self.url, {"search": "Test Hebrew Date "})
-        self.assertContains(response, self.hebrew_date1.name)
+    def test_search_shows_only_matching_dates(self):
+        response = self.client.get(self.url, {"search": "date 2"})
         self.assertContains(response, self.hebrew_date2.name)
-        self.assertContains(response, self.hebrew_date3.name)
+        self.assertNotContains(response, self.hebrew_date1.name)
+        self.assertNotContains(response, self.hebrew_date3.name)
+
+
+class DeleteHebrewDateViewTest(BaseTest):
+    def setUp(self):
+        super().setUp()
+        self.calendar = Calendar.objects.create(name="Test Calendar", owner=self.user)
+        self.hebrew_date = HebrewDate.objects.create(
+            name="Savta Rivka",
+            month=1,
+            day=1,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+        self.url = reverse(
+            "hebcal:delete_hebrew_date_htmx",
+            args=[self.calendar.uuid, self.hebrew_date.pk],
+        )
+
+    def test_owner_can_delete_date(self):
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(self.url, headers={"HX-Request": "true"})
+        assert response.status_code == HTTPStatus.OK
+        assert not HebrewDate.objects.filter(pk=self.hebrew_date.pk).exists()
+
+    def test_non_owner_cannot_delete_date(self):
+        User.objects.create_user("otheruser", "other@example.com", "password")
+        self.client.login(username="otheruser", password="password")
+        response = self.client.post(self.url, headers={"HX-Request": "true"})
+        assert response.status_code == HTTPStatus.NOT_FOUND
+        assert HebrewDate.objects.filter(pk=self.hebrew_date.pk).exists()
+
+    def test_delete_requires_htmx(self):
+        self.client.login(username="testuser", password="password")
+        response = self.client.post(self.url)
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert HebrewDate.objects.filter(pk=self.hebrew_date.pk).exists()
+
+    def test_delete_requires_post(self):
+        self.client.login(username="testuser", password="password")
+        response = self.client.get(self.url, headers={"HX-Request": "true"})
+        assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
+        assert HebrewDate.objects.filter(pk=self.hebrew_date.pk).exists()

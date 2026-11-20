@@ -93,12 +93,9 @@ def create_calendar_view(request: HttpRequest):
             )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
         messages.error(request, "Please correct the errors in the form.")
-        log_msg = (
-            "user: %s attempted to create a calendar with invalid form data. ",
-            "Errors: %s",
-        )
         logger.warning(
-            log_msg,
+            "user: %s attempted to create a calendar with invalid form data. "
+            "Errors: %s",
             request.user,
             form.errors,
         )
@@ -222,18 +219,15 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
     hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
     formatted_name = hebrew_date.get_formatted_name()
-
-    if request.method == "POST":
-        hebrew_date.delete()
-        logger.info(
-            "user: %s deleted HebrewDate: %s (%s)",
-            request.user,
-            hebrew_date.name,
-            pk,
-        )
-        messages.success(request, f"Removed {formatted_name}.")
-        return HttpResponse()
-    return None
+    hebrew_date.delete()
+    logger.info(
+        "user: %s deleted HebrewDate: %s (%s)",
+        request.user,
+        hebrew_date.name,
+        pk,
+    )
+    messages.success(request, f"Removed {formatted_name}.")
+    return HttpResponse()
 
 
 class CalendarDeleteView(LoginRequiredMixin, DeleteView):
@@ -249,18 +243,20 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
+def client_ip(request: HttpRequest) -> str | None:
+    x_forwarded_for = request.headers.get("x-forwarded-for")
+    if x_forwarded_for:
+        return x_forwarded_for.split(",")[0]
+    return request.META.get("REMOTE_ADDR")
+
+
 def serve_pixel(request, pixel_id: UUID, pk: int):
     pixel_data = (
         "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+h"
         "HgAHggJ/PchI7wAAAABJRU5ErkJggg=="
     )
 
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = (
-        x_forwarded_for.split(",")[0]
-        if x_forwarded_for
-        else request.META.get("REMOTE_ADDR")
-    )
+    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
 
     # Log the information along with the UUID
@@ -275,18 +271,11 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
     return HttpResponse(base64.b64decode(pixel_data), content_type="image/png")
 
 
-@cache_page(60 * 60)  # Cache the page for 15 minutes
+@cache_page(60 * 60)
 def calendar_file(request, uuid: UUID):
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    ip = (
-        x_forwarded_for.split(",")[0]
-        if x_forwarded_for
-        else request.META.get("REMOTE_ADDR")
-    )
+    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
-    alarm_trigger_hours = request.GET.get("alarm", "9")
-    if alarm_trigger_hours == "":
-        alarm_trigger_hours = "9"
+    alarm_trigger_hours = request.GET.get("alarm") or "9"
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
     except ValueError:
