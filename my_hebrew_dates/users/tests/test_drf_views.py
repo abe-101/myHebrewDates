@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 import pytest
 from rest_framework.test import APIRequestFactory
 
 from my_hebrew_dates.users.api.views import UserViewSet
-from my_hebrew_dates.users.models import User
+
+if TYPE_CHECKING:
+    from my_hebrew_dates.users.models import User
 
 
 class TestUserViewSet:

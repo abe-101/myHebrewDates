@@ -4,6 +4,7 @@ from base64 import urlsafe_b64encode
 from datetime import datetime
 from datetime import timedelta
 from hashlib import sha1
+from typing import TYPE_CHECKING
 from zoneinfo import ZoneInfo
 
 from icalendar import Alarm
@@ -11,7 +12,8 @@ from icalendar import Calendar
 from icalendar import Event
 from icalendar import Timezone
 
-from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
+if TYPE_CHECKING:
+    from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
 
 logger = logging.getLogger(__name__)
 
