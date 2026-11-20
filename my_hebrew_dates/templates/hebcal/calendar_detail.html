@@ -6,31 +6,19 @@
 {% block title %}
   {{ calendar.name }}
 {% endblock title %}
+{% block javascript %}
+  {{ block.super }}
+  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
+          integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.22/index.global.min.js"
+          integrity="sha384-a9qx08ufzJ+0qbHzdqA+GYiSayQQB5BK2YGS/HQT9cxhQm+GhiXFj1ByVXa93ZRR"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.22/index.global.min.js"
+          integrity="sha384-vvS92ORLaHziRRVFsPbGNAecrGfBMOlYoTgsFypdkV3JtVpzcFwYt99mEkF/ll1b"
+          crossorigin="anonymous"></script>
+{% endblock javascript %}
 {% block content %}
-  <style>
-    .event-birthday {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-      border-color: #667eea !important;
-    }
-
-    .event-anniversary {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
-      border-color: #f093fb !important;
-    }
-
-    .event-yahrzeit {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
-      border-color: #4facfe !important;
-    }
-
-    #calendar {
-      min-height: 600px;
-    }
-
-    #calendarLoading {
-      z-index: 10;
-    }
-  </style>
   {% include "hebcal/_calendar_header.html" with active_tab="subscribe" %}
   <div class="row">
     <div class="col-lg-8">
@@ -88,66 +76,31 @@
   </div>
   <section class="mb-4">
     <h2 class="h5 mb-3">Preview</h2>
-    <div id="calendarContainer" class="position-relative">
-      <div id="calendarLoading"
-           class="position-absolute top-50 start-50 translate-middle text-center">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="mt-2">Loading calendar...</p>
-      </div>
-      <div id="calendar"></div>
-    </div>
+    <p id="calendarLoading" class="text-body-secondary" role="status">Loading dates…</p>
+    <div id="calendar"></div>
   </section>
-  <!-- Event Details Modal -->
   <div class="modal fade"
        id="eventModal"
        tabindex="-1"
        aria-labelledby="eventModalLabel"
        aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header bg-primary text-white">
-          <h5 class="modal-title" id="eventModalLabel"></h5>
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="eventModalLabel"></h2>
           <button type="button"
-                  class="btn-close btn-close-white"
+                  class="btn-close"
                   data-bs-dismiss="modal"
                   aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="col-md-6">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item py-3" id="eventTimeItem">
-                  <i class="bi bi-clock me-2"></i>
-                  <span id="eventTime"></span>
-                </li>
-                <li class="list-group-item py-3" id="eventTypeItem">
-                  <i class="bi bi-tag me-2"></i>
-                  <span id="eventType"></span>
-                </li>
-                <li class="list-group-item py-3" id="eventLocationItem">
-                  <i class="bi bi-geo-alt me-2"></i>
-                  <span id="eventLocation"></span>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-6">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-muted">Description</h6>
-                  <div id="eventDescription" class="text-pre-line"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <p id="eventTime" class="fw-semibold"></p>
+          <div id="eventDescription" class="text-pre-line small text-body-secondary"></div>
         </div>
         <div class="modal-footer">
           <button type="button"
                   class="btn btn-outline-secondary"
-                  data-bs-dismiss="modal">
-            <i class="bi bi-x-circle me-2"></i>Close
-          </button>
+                  data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -156,149 +109,57 @@
 {% block inline_javascript %}
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM content loaded');
-      var calendarEl = document.getElementById('calendar');
       var loadingEl = document.getElementById('calendarLoading');
-
-      if (!calendarEl) {
-        console.error('Calendar element not found');
-        return;
-      }
-
-      var calendar = new FullCalendar.Calendar(calendarEl, {
+      var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-        themeSystem: 'bootstrap5',
+        initialView: 'listUpcoming',
+        views: {
+          listUpcoming: {
+            type: 'list',
+            duration: {
+              days: 365
+            },
+            buttonText: 'Upcoming',
+          },
+        },
         headerToolbar: {
-          start: 'prev,next today',
+          start: 'prev,next',
           center: 'title',
-          end: 'dayGridMonth,timeGridWeek,listYear,multiMonthYear'
+          end: 'listUpcoming,dayGridMonth',
         },
-        buttonIcons: {
-          prev: 'arrow-left',
-          next: 'arrow-right',
+        buttonText: {
+          month: 'Month',
         },
-        eventClassNames: function(arg) {
-          var event = arg.event;
-          var title = event.title.toLowerCase();
-          var description = event.extendedProps.description ? event.extendedProps.description.toLowerCase() : '';
-
-          if (title.includes('birthday') || description.includes('birthday')) {
-            return ['event-birthday'];
-          } else if (title.includes('anniversary') || description.includes('anniversary')) {
-            return ['event-anniversary'];
-          } else if (title.includes('yahrzeit') || title.includes('yartzeit') || description.includes('yahrzeit') || description.includes('yartzeit')) {
-            return ['event-yahrzeit'];
-          }
-          return ['bg-primary'];
-        },
-        dayMaxEvents: true,
-        initialView: 'listYear',
+        height: 'auto',
+        noEventsContent: 'No dates in this period',
         events: {
           url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
           format: 'ics',
         },
         loading: function(isLoading) {
-          if (isLoading) {
-            loadingEl.style.display = 'block';
-          } else {
-            loadingEl.style.display = 'none';
-          }
+          loadingEl.classList.toggle('d-none', !isLoading);
         },
         eventClick: function(info) {
           info.jsEvent.preventDefault();
-          console.log('Event clicked:', info.event);
-          var modal = new bootstrap.Modal(document.getElementById('eventModal'));
           var event = info.event;
-
-          // Set modal title
           document.getElementById('eventModalLabel').textContent = event.title;
-
-          // Set event time
-          var timeStr = formatEventTime(event.start, event.end, event.allDay);
-          document.getElementById('eventTime').textContent = timeStr;
-          document.getElementById('eventTimeItem').style.display = 'list-item';
-
-          // Set event type if available in description (Birthday, Anniversary, Yahrzeit)
-          var typeEl = document.getElementById('eventTypeItem');
-          if (event.extendedProps.description) {
-            var description = event.extendedProps.description;
-            var eventType = '';
-            if (description.includes('Birthday') || event.title.includes('Birthday')) {
-              eventType = 'Birthday';
-            } else if (description.includes('Anniversary') || event.title.includes('Anniversary')) {
-              eventType = 'Anniversary';
-            } else if (description.includes('Yahrzeit') || event.title.includes('Yahrzeit')) {
-              eventType = 'Yahrzeit';
-            }
-
-            if (eventType) {
-              document.getElementById('eventType').textContent = eventType;
-              typeEl.style.display = 'list-item';
-            } else {
-              typeEl.style.display = 'none';
-            }
-          } else {
-            typeEl.style.display = 'none';
-          }
-
-          // Set location if available
-          var locationEl = document.getElementById('eventLocationItem');
-          if (event.extendedProps.location) {
-            document.getElementById('eventLocation').textContent = event.extendedProps.location;
-            locationEl.style.display = 'list-item';
-          } else {
-            locationEl.style.display = 'none';
-          }
-
-          // Set description if available
+          document.getElementById('eventTime').textContent = event.start.toLocaleDateString(undefined, {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          });
           var descriptionEl = document.getElementById('eventDescription');
           if (event.extendedProps.description) {
             showDescription(descriptionEl, event.extendedProps.description);
           } else {
-            descriptionEl.textContent = 'No additional details.';
+            descriptionEl.textContent = '';
           }
-
-          modal.show();
-        }
+          bootstrap.Modal.getOrCreateInstance(document.getElementById('eventModal')).show();
+        },
       });
-
       calendar.render();
-      console.log('Calendar rendered');
     });
-
-    function formatEventTime(start, end, allDay) {
-      var options = {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: '2-digit',
-      };
-
-      if (allDay) {
-        options.hour = undefined;
-        options.minute = undefined;
-        return start.toLocaleDateString('en-US', options);
-      }
-
-      var startStr = start.toLocaleString('en-US', options);
-      if (!end) return startStr;
-
-      var endOptions = {
-        ...options
-      };
-      // If start and end are on the same day, only show the date once
-      if (start.toDateString() === end.toDateString()) {
-        endOptions = {
-          hour: 'numeric',
-          minute: '2-digit',
-        };
-      }
-
-      var endStr = end.toLocaleString('en-US', endOptions);
-      return `${startStr} - ${endStr}`;
-    }
 
     // Event text comes from what users typed, so it is added as text nodes,
     // never as HTML. Only http(s) URLs become links.

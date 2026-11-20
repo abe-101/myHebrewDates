@@ -34,3 +34,36 @@ span.asteriskField {
 .text-pre-line {
   white-space: pre-line;
 }
+
+/* FullCalendar takes its colours from Bootstrap, so it follows light and dark mode. */
+.fc {
+  --fc-page-bg-color: var(--bs-body-bg);
+  --fc-border-color: var(--bs-border-color);
+  --fc-neutral-bg-color: var(--bs-secondary-bg);
+  --fc-neutral-text-color: var(--bs-secondary-color);
+  --fc-list-event-hover-bg-color: var(--bs-tertiary-bg);
+  --fc-today-bg-color: var(--bs-primary-bg-subtle);
+  --fc-button-text-color: var(--bs-body-color);
+  --fc-button-bg-color: var(--bs-body-bg);
+  --fc-button-border-color: var(--bs-border-color);
+  --fc-button-hover-bg-color: var(--bs-tertiary-bg);
+  --fc-button-hover-border-color: var(--bs-border-color);
+  --fc-button-active-bg-color: var(--bs-secondary-bg);
+  --fc-button-active-border-color: var(--bs-border-color);
+  --fc-event-bg-color: var(--bs-primary-bg-subtle);
+  --fc-event-border-color: var(--bs-primary-border-subtle);
+  --fc-event-text-color: var(--bs-primary-text-emphasis);
+}
+
+.fc a {
+  color: inherit;
+}
+
+.fc .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.25rem;
+}
