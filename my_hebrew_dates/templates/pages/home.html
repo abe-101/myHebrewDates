@@ -7,6 +7,22 @@
   Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.
 {% endblock meta_description %}
 {% block content %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "My Hebrew Dates",
+      "url": "https://myhebrewdates.com/",
+      "description": "Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.",
+      "applicationCategory": "LifestyleApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  </script>
   <div class="row gy-5">
     <div class="col-lg-6">
       <h1 class="h2 mb-3">Hebrew birthdays, anniversaries, and yahrzeits in your calendar</h1>
