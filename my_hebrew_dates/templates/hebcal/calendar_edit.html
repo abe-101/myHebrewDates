@@ -3,11 +3,11 @@
 {% load static %}
 
 {% block title %}
-  Calendars
+  Dates in {{ calendar.name }}
 {% endblock title %}
 {% block content %}
-  <div class="container mt-4">
-    {% include "hebcal/_calendar_name.html" %}
+  {% include "hebcal/_calendar_header.html" with active_tab="dates" %}
+  <div>
     <div class="row mb-4">
       <div class="col">
         <form id="filter-form"

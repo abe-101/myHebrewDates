@@ -36,11 +36,12 @@
                   type="button"
                   aria-expanded="false"
                   data-bs-toggle="dropdown"
+                  data-bs-display="static"
                   aria-label="Toggle theme (light)">
             <i class="bi theme-icon-active bi-sun-fill"></i>
             <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
           </button>
-          <ul class="dropdown-menu dropdown-menu-end shadow"
+          <ul class="dropdown-menu dropdown-menu-lg-end shadow"
               aria-labelledby="bd-theme-text">
             <li>
               <button type="button"
@@ -79,11 +80,12 @@
             <button class="btn btn-outline-primary btn-sm dropdown-toggle d-flex align-items-center gap-1"
                     type="button"
                     data-bs-toggle="dropdown"
+                    data-bs-display="static"
                     aria-expanded="false">
               <i class="bi bi-person-circle"></i>
               {{ request.user.username }}
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow">
+            <ul class="dropdown-menu dropdown-menu-lg-end shadow">
               <li>
                 <a class="dropdown-item"
                    href="{% url 'users:detail' request.user.username %}">

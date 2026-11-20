@@ -50,10 +50,7 @@ def calendar_list_view(request):
         request.user,
         user_owned_calendars,
     )
-    event_count = HebrewDate.objects.filter(calendar__in=user_owned_calendars).count()
-
     context = {
-        "event_count": event_count,
         "calendar_list": user_owned_calendars,
         "domain_name": Site.objects.get_current().domain,
     }
@@ -127,7 +124,8 @@ class CalendarUpdateModalView(  # type: ignore[misc]
     modal_size = "md"
     form_class = CalendarForm
     detail_template_name = "hebcal/_calendar_name.html"
-    success_message = "Calendar updated successfully"
+    modal_title = "Calendar settings"
+    success_message = "Calendar settings saved"
     login_url = reverse_lazy("users:redirect")
 
     def get_queryset(self):

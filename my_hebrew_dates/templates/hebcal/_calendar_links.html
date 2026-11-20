@@ -1,188 +1,77 @@
 <div id="calendarLinks">
-  <!-- Copy URL Section -->
-  <div class="mb-4">
-    <label for="calendarUrl" class="form-label fw-bold">
-      <i class="bi bi-link-45deg"></i> Calendar Subscription URL
-    </label>
-    <div class="input-group">
-      <input type="text"
-             class="form-control"
-             id="calendarUrl"
-             readonly
-             value="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}" />
-      <button class="btn btn-primary"
-              type="button"
-              onclick="copyCalendarUrl()"
-              title="Copy to clipboard">
-        <i class="bi bi-clipboard"></i> Copy
-      </button>
-    </div>
-    <small class="form-text text-muted">Copy this URL to subscribe in any calendar app that supports iCalendar subscriptions</small>
+  <div class="list-group mb-4">
+    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+       href="https://www.google.com/calendar/render?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+       target="_blank"
+       rel="noopener noreferrer">
+      <i class="bi bi-google fs-5" aria-hidden="true"></i>
+      <span>
+        <span class="d-block fw-semibold">Google Calendar</span>
+        <span class="small text-body-secondary">Opens Google Calendar in your browser. Click “Add calendar” there.</span>
+      </span>
+      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+    </a>
+    {# djlint:off D018 #}
+    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+       href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
+      {# djlint:on #}
+      <i class="bi bi-apple fs-5" aria-hidden="true"></i>
+      <span>
+        <span class="d-block fw-semibold">Apple Calendar</span>
+        <span class="small text-body-secondary">iPhone, iPad, or Mac. Opens the Calendar app to confirm.</span>
+      </span>
+      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+    </a>
+    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+       href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+       target="_blank"
+       rel="noopener noreferrer">
+      <i class="bi bi-microsoft fs-5" aria-hidden="true"></i>
+      <span>
+        <span class="d-block fw-semibold">Outlook.com</span>
+        <span class="small text-body-secondary">Personal Microsoft account</span>
+      </span>
+      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+    </a>
+    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+       href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+       target="_blank"
+       rel="noopener noreferrer">
+      <i class="bi bi-microsoft fs-5" aria-hidden="true"></i>
+      <span>
+        <span class="d-block fw-semibold">Outlook for work or school</span>
+        <span class="small text-body-secondary">Office 365 account</span>
+      </span>
+      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+    </a>
   </div>
-  <!-- Platform Quick Links -->
-  <div class="mb-3">
-    <p class="fw-bold mb-3">
-      <i class="bi bi-calendar-plus"></i> Quick Subscribe
-    </p>
-    <div class="row g-3">
-      <!-- Apple Calendar Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm platform-card">
-          <div class="card-body">
-            <h6 class="card-title">
-              <i class="bi bi-apple fs-4"></i> Apple Calendar
-            </h6>
-            <p class="card-text small text-muted">iPhone, iPad, Mac</p>
-            {# djlint:off D018 #}
-            <a href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-               {# djlint:on #}
-               class="btn btn-outline-primary btn-sm w-100">
-              <i class="bi bi-box-arrow-up-right"></i> Subscribe
-            </a>
-            <button class="btn btn-link btn-sm w-100 p-0 mt-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#appleHelp"
-                    aria-expanded="false">
-              <small>How to use</small> <i class="bi bi-chevron-down"></i>
-            </button>
-            <div class="collapse mt-2" id="appleHelp">
-              <small class="text-muted">
-                <ol class="mb-0 ps-3">
-                  <li>Click "Subscribe"</li>
-                  <li>Calendar app will open automatically</li>
-                  <li>Confirm the subscription</li>
-                </ol>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Google Calendar Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm platform-card">
-          <div class="card-body">
-            <h6 class="card-title">
-              <i class="bi bi-google fs-4"></i> Google Calendar
-            </h6>
-            <p class="card-text small text-muted">Android, Web, iOS</p>
-            <a href="https://www.google.com/calendar/render?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-               class="btn btn-outline-primary btn-sm w-100"
-               target="_blank"
-               rel="noopener noreferrer">
-              <i class="bi bi-box-arrow-up-right"></i> Subscribe
-            </a>
-            <button class="btn btn-link btn-sm w-100 p-0 mt-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#googleHelp"
-                    aria-expanded="false">
-              <small>How to use</small> <i class="bi bi-chevron-down"></i>
-            </button>
-            <div class="collapse mt-2" id="googleHelp">
-              <small class="text-muted">
-                <ol class="mb-0 ps-3">
-                  <li>Click "Subscribe" above</li>
-                  <li>Google Calendar will open in your web browser</li>
-                  <li>Click "Add calendar" to confirm</li>
-                  <li>
-                    <strong>For mobile app sync:</strong> Visit <a href="https://calendar.google.com/calendar/syncselect"
-    target="_blank"
-    rel="noopener noreferrer">calendar sync settings</a> and enable this calendar
-                  </li>
-                </ol>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Office 365 Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm platform-card">
-          <div class="card-body">
-            <h6 class="card-title">
-              <i class="bi bi-microsoft fs-4"></i> Office 365
-            </h6>
-            <p class="card-text small text-muted">Outlook for work/school</p>
-            <a href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-               class="btn btn-outline-primary btn-sm w-100"
-               target="_blank"
-               rel="noopener noreferrer">
-              <i class="bi bi-box-arrow-up-right"></i> Subscribe
-            </a>
-            <button class="btn btn-link btn-sm w-100 p-0 mt-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#office365Help"
-                    aria-expanded="false">
-              <small>How to use</small> <i class="bi bi-chevron-down"></i>
-            </button>
-            <div class="collapse mt-2" id="office365Help">
-              <small class="text-muted">
-                <ol class="mb-0 ps-3">
-                  <li>Click "Subscribe"</li>
-                  <li>Sign in to your Office 365 account</li>
-                  <li>Click "Import" to add the calendar</li>
-                </ol>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- Outlook.com Card -->
-      <div class="col-md-6">
-        <div class="card h-100 shadow-sm platform-card">
-          <div class="card-body">
-            <h6 class="card-title">
-              <i class="bi bi-microsoft-teams fs-4"></i> Outlook.com
-            </h6>
-            <p class="card-text small text-muted">Personal Microsoft account</p>
-            <a href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-               class="btn btn-outline-primary btn-sm w-100"
-               target="_blank"
-               rel="noopener noreferrer">
-              <i class="bi bi-box-arrow-up-right"></i> Subscribe
-            </a>
-            <button class="btn btn-link btn-sm w-100 p-0 mt-2"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#outlookHelp"
-                    aria-expanded="false">
-              <small>How to use</small> <i class="bi bi-chevron-down"></i>
-            </button>
-            <div class="collapse mt-2" id="outlookHelp">
-              <small class="text-muted">
-                <ol class="mb-0 ps-3">
-                  <li>Click "Subscribe"</li>
-                  <li>Sign in to your Outlook account</li>
-                  <li>Click "Import" to add the calendar</li>
-                </ol>
-              </small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <p class="small text-body-secondary mb-4">
+    Using the Google Calendar phone app? After adding it in the browser, turn it on in
+    <a href="https://calendar.google.com/calendar/syncselect"
+       target="_blank"
+       rel="noopener noreferrer">Google’s sync settings</a>.
+  </p>
+  <h3 class="h6">Another calendar app</h3>
+  <p class="small text-body-secondary mb-2">
+    Copy this link and paste it where your app offers to subscribe or add a calendar from a URL.
+  </p>
+  <div class="input-group mb-3">
+    <input type="text"
+           class="form-control"
+           id="calendarUrl"
+           aria-label="Calendar subscription link"
+           readonly
+           value="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}" />
+    <button class="btn btn-outline-primary"
+            type="button"
+            data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
+      <i class="bi bi-clipboard me-1" aria-hidden="true"></i><span class="copy-label">Copy</span>
+    </button>
   </div>
-  <!-- Download Option -->
-  <div class="mt-4">
-    <p class="fw-bold mb-2">
-      <i class="bi bi-download"></i> Other Options
-    </p>
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <h6 class="card-title mb-1">Download Calendar File</h6>
-            <small class="text-muted">One-time import (no automatic updates)</small>
-          </div>
-          <a href="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-             class="btn btn-outline-secondary btn-sm"
-             download="{{ calendar.name }}.ics">
-            <i class="bi bi-file-earmark-arrow-down"></i> Download .ics
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
+  <p class="small text-body-secondary mb-0">
+    Want a one-time copy instead?
+    <a href="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+       download="{{ calendar.name }}.ics">Download an .ics file</a>.
+    It won’t update when dates change.
+  </p>
 </div>

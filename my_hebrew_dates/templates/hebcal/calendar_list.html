@@ -1,88 +1,45 @@
 {% extends "base.html" %}
 
 {% block title %}
-  My Calendars
+  My calendars
 {% endblock title %}
 {% block content %}
-  <div class="container py-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <div>
-        <h2>My Calendars</h2>
-        <p class="text-muted mb-0">
-          {{ calendar_list|length }} calendar
-          {% if calendar_list|length != 1 %}s{% endif %}
-          , {{ event_count }} event
-          {% if event_count != 1 %}s{% endif %}
-        </p>
-      </div>
-      <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i>
-        <span class="d-none d-sm-inline">New Calendar</span>
-        <span class="d-inline d-sm-none">New</span>
-      </a>
-    </div>
-    {% if not calendar_list %}
-      <!-- Empty State -->
-      <div class="alert alert-info" role="alert">
-        <h4 class="alert-heading">
-          <i class="bi bi-info-circle me-2"></i>No calendars yet
-        </h4>
-        <p class="mb-3">Create your first calendar to start tracking Hebrew dates.</p>
-        <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
-          <i class="bi bi-plus-circle me-1"></i>Create Calendar
-        </a>
-      </div>
-    {% else %}
-      <!-- Calendar Cards -->
-      <div class="row g-3">
-        {% for calendar in calendar_list %}
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                  <div class="flex-grow-1">
-                    <h5 class="card-title mb-1">
-                      <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                         class="text-decoration-none">
-                        <i class="bi bi-calendar-event text-primary me-2"></i>{{ calendar.name }}
-                      </a>
-                    </h5>
-                    <div class="text-muted small">
-                      <span class="badge bg-primary">{{ calendar.calendarOf.all.count }} event
-                        {% if calendar.calendarOf.all.count != 1 %}s{% endif %}
-                      </span>
-                      <span class="ms-2">{{ calendar.timezone }}</span>
-                    </div>
-                  </div>
-                </div>
-                <input type="hidden"
-                       id="calendar_file_url{{ calendar.uuid }}"
-                       value="https://{{ domain_name }}{% url 'hebcal:calendar_detail' calendar.uuid %}" />
-                <div class="d-grid gap-2 d-sm-flex">
-                  <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
-                     class="btn btn-primary btn-sm">
-                    <i class="bi bi-eye me-1"></i>View
-                  </a>
-                  <button onclick="shareFile('{{ calendar.uuid }}')"
-                          class="btn btn-outline-secondary btn-sm"
-                          type="button">
-                    <i class="bi bi-share me-1"></i>Share
-                  </button>
-                  <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
-                     class="btn btn-outline-secondary btn-sm">
-                    <i class="bi bi-pencil me-1"></i>Edit
-                  </a>
-                  <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
-                     class="btn btn-outline-danger btn-sm">
-                    <i class="bi bi-trash me-1"></i>Delete
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <h1 class="h3 mb-0">My calendars</h1>
+    <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
+      <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New calendar
+    </a>
   </div>
+  <ul class="list-group">
+    {% for calendar in calendar_list %}
+      <li class="list-group-item py-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+          <div>
+            <h2 class="h5 mb-1">
+              <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}">{{ calendar.name }}</a>
+            </h2>
+            <p class="small text-body-secondary mb-0">
+              {% with count=calendar.calendarOf.count %}
+                {{ count }} date{{ count|pluralize }}
+              {% endwith %}
+              · {{ calendar.timezone }}
+            </p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="{% url 'hebcal:calendar_edit' calendar.uuid %}"
+               class="btn btn-outline-primary btn-sm">Dates</a>
+            <a href="{% url 'hebcal:calendar_detail' calendar.uuid %}"
+               class="btn btn-outline-primary btn-sm">Add to your calendar</a>
+            <button type="button"
+                    class="btn btn-outline-secondary btn-sm"
+                    data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+              <i class="bi bi-link-45deg me-1" aria-hidden="true"></i><span class="copy-label">Copy link</span>
+            </button>
+            <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
+               class="btn btn-link btn-sm link-danger">Delete</a>
+          </div>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
 {% endblock content %}

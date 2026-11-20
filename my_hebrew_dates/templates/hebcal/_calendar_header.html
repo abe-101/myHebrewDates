@@ -1,0 +1,15 @@
+<div id="calendar-{{ calendar.id }}">{% include "hebcal/_calendar_name.html" %}</div>
+{% if calendar.owner == request.user %}
+  <ul class="nav nav-underline mb-4">
+    <li class="nav-item">
+      <a class="nav-link {% if active_tab == 'dates' %}active{% endif %}"
+         {% if active_tab == 'dates' %}aria-current="page"{% endif %}
+         href="{% url 'hebcal:calendar_edit' calendar.uuid %}">Dates</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if active_tab == 'subscribe' %}active{% endif %}"
+         {% if active_tab == 'subscribe' %}aria-current="page"{% endif %}
+         href="{% url 'hebcal:calendar_detail' calendar.uuid %}">Add to your calendar</a>
+    </li>
+  </ul>
+{% endif %}
