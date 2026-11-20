@@ -1,37 +1,39 @@
 {% extends "base.html" %}
 
-{% load static %}
-
 {% block title %}
-  User: {{ object.username }}
+  My profile | My Hebrew Dates
 {% endblock title %}
 {% block content %}
-  <div class="szPlaceholder"></div>
-  <div class="container text-center">
-    <div class="row">
-      <div class="col-sm-12">
-        <h2 class="szCaps">~ {{ object.username }} ~</h2>
-        {% if object.name %}<p>{{ object.name }}</p>{% endif %}
-      </div>
-    </div>
-    <hr />
-    {% if object == request.user %}
-      <!-- Action buttons -->
-      <div class="row">
-        <div class="col-sm-12">
-          <a class="btn btn-outline-primarySmall btn btn-primary"
-             href="{% url 'users:update' %}"
-             role="button">My Info</a>
-          <a class="btn btn-outline-primarySmall btn btn-primary"
-             href="{% url 'account_email' %}"
-             role="button">E-Mail</a>
-          <a class="btn btn-outline-primarySmall btn btn-primary"
-             href="{% url 'mfa_index' %}"
-             role="button">MFA</a>
-          <!-- Your Stuff: Custom user template urls -->
+  <div class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-4">{{ object.name|default:object.username }}</h1>
+      {% if object == request.user %}
+        <div class="list-group mb-4">
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+             href="{% url 'hebcal:calendar_list' %}">
+            <i class="bi bi-calendar-heart fs-5" aria-hidden="true"></i>
+            <span class="fw-semibold">My calendars</span>
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+             href="{% url 'users:update' %}">
+            <i class="bi bi-person fs-5" aria-hidden="true"></i>
+            <span class="fw-semibold">Change my name</span>
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+             href="{% url 'account_email' %}">
+            <i class="bi bi-envelope fs-5" aria-hidden="true"></i>
+            <span class="fw-semibold">Email addresses</span>
+          </a>
+          <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+             href="{% url 'mfa_index' %}">
+            <i class="bi bi-shield-lock fs-5" aria-hidden="true"></i>
+            <span>
+              <span class="d-block fw-semibold">Two-factor sign-in</span>
+              <span class="small text-body-secondary">Optional extra security, using an authenticator app</span>
+            </span>
+          </a>
         </div>
-      </div>
-      <!-- End Action buttons -->
-    {% endif %}
+      {% endif %}
+    </div>
   </div>
 {% endblock content %}
