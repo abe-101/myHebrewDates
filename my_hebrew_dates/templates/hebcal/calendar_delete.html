@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 
+{% block title %}
+  Delete {{ calendar.name }}
+{% endblock title %}
 {% block content %}
-  <div class="szPlaceholder"></div>
-  <div class="text-center">
-    <h1>Delete</h1>
-    <form action="" method="post">
-      {% csrf_token %}
-      <p>Are you sure you want to delete "{{ calendar.name }}"?</p>
-      <button class="btn btn-primary btn btn-danger ml-2" type="submit">Confirm</button>
-    </form>
+  <div class="row">
+    <div class="col-md-8 col-lg-6">
+      <h1 class="h3 mb-3">Delete “{{ calendar.name }}”?</h1>
+      <p>
+        {% with count=calendar.calendarOf.count %}
+          This removes the calendar and its {{ count }} date{{ count|pluralize }}.
+        {% endwith %}
+        Anyone subscribed will stop getting updates. You can’t undo this.
+      </p>
+      <form action="" method="post" class="d-flex gap-2">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Delete calendar</button>
+        <a href="{% url 'hebcal:calendar_list' %}"
+           class="btn btn-outline-secondary">Cancel</a>
+      </form>
+    </div>
   </div>
 {% endblock content %}
