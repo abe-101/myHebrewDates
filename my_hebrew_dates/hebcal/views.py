@@ -195,7 +195,7 @@ def hebrew_date_form_view(request: HttpRequest, uuid: UUID, pk: int | None = Non
     else:
         initial: dict[str, object] = {
             field: request.GET[field]
-            for field in ("name", "event_type")
+            for field in ("name", "event_type", "day", "month")
             if field in request.GET
         }
         english_date = parse_date(request.GET.get("english_date", ""))

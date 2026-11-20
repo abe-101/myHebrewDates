@@ -5,6 +5,9 @@
     <p class="mb-0">© {% now "Y" %} My Hebrew Dates</p>
     <ul class="list-inline mb-0">
       <li class="list-inline-item me-3">
+        <a href="{% url 'converter' %}">{% translate "Hebrew date converter" %}</a>
+      </li>
+      <li class="list-inline-item me-3">
         <a href="{% url 'about' %}">{% translate "About" %}</a>
       </li>
       <li class="list-inline-item me-3">
