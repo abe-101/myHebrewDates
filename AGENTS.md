@@ -34,6 +34,10 @@ The app runs natively. Postgres and Redis run as local services. Dependencies ar
 lists them and `uv.lock` pins the full tree. Add one with `uv add <pkg>` (runtime) or `uv add --dev <pkg>` (dev only).
 Run commands through `uv run`, or activate `.venv` (`source .venv/bin/activate`).
 
+Railway settings live in `.railway/railway.py`. Railway does not read it on deploy: preview with
+`uv run railway config plan` and apply with `uv run railway config apply`. Static files are collected at build time
+because WhiteNoise serves them from the image; the pre-deploy container's filesystem is thrown away.
+
 ### First-time Setup
 
 ```bash

@@ -64,6 +64,7 @@ dev = [
     "django-coverage-plugin==3.2.2",
     "django-browser-reload==1.21.0",
     "pytest-django==4.14.0",
+    "railway-sdk==0.7.0",
 ]
 
 # ==== pytest ====
@@ -195,6 +196,9 @@ ignore = [
   "SIM102", # sometimes it's better to nest
   "PLC0415", # Django app ready() hooks and Celery signal handlers import late on purpose
 ]
+
+[tool.ruff.lint.per-file-ignores]
+".railway/railway.py" = ["INP001", "E501"]
 
 [tool.ruff.lint.isort]
 force-single-line = true
