@@ -18,7 +18,8 @@
     <meta property="og:image"
           content="{% block og_image %}https://www.MyHebrewDates.com{% static 'images/favicon.jpeg' %}{% endblock og_image %}" />
     <meta property="og:url"
-          content="{% block og_url %}https://www.MyHebrewDates.com/{% endblock og_url %}" />
+          content="{% block og_url %}https://myhebrewdates.com{{ request.path }}{% endblock og_url %}" />
+    <link rel="canonical" href="https://myhebrewdates.com{{ request.path }}" />
     <meta property="og:type" content="website" />
     <!-- Twitter-specific tags -->
     <meta name="twitter:card" content="summary_large_image" />
