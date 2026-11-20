@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Guides: Hebrew Dates in Your Calendar | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  Step-by-step guides for keeping Hebrew birthdays, anniversaries, and yahrzeits in Google Calendar, iPhone, and Outlook.
+{% endblock meta_description %}
+{% block content %}
+  <div class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-4">Guides</h1>
+      <ul class="list-group">
+        <li class="list-group-item py-3">
+          <a href="{% url 'guide_google_calendar' %}"
+             class="fw-semibold">How to add Hebrew birthdays and yahrzeits to Google Calendar</a>
+        </li>
+        <li class="list-group-item py-3">
+          <a href="{% url 'guide_iphone' %}"
+             class="fw-semibold">How to add Hebrew birthdays and yahrzeits to your iPhone calendar</a>
+        </li>
+        <li class="list-group-item py-3">
+          <a href="{% url 'guide_yahrzeit' %}" class="fw-semibold">How to get a yahrzeit reminder every year</a>
+        </li>
+        <li class="list-group-item py-3">
+          <a href="{% url 'converter' %}" class="fw-semibold">Hebrew date converter</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+{% endblock content %}

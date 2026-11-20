@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+  How to Add Hebrew Birthdays and Yahrzeits to Google Calendar | My Hebrew Dates
+{% endblock title %}
+{% block meta_description %}
+  Google Calendar can't repeat an event by the Hebrew date. Here's how to get Hebrew birthdays, anniversaries, and yahrzeits on the right day every year, on the web and on your phone.
+{% endblock meta_description %}
+{% block content %}
+  <article class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-3">How to add Hebrew birthdays and yahrzeits to Google Calendar</h1>
+      <p>
+        Google Calendar can only repeat events by the English calendar. A Hebrew birthday or yahrzeit moves to a different English day each year, so a repeating Google event drifts off the right day after the first year.
+      </p>
+      <p>
+        The fix is to subscribe Google Calendar to a calendar that already knows the Hebrew dates. You add each date once, by its Hebrew date, and Google shows it on the right English day every year.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Steps</h2>
+      <ol>
+        <li class="mb-2">
+          <a href="{% url 'account_signup' %}">Sign up</a> and make a calendar, for example “Cohen family”.
+        </li>
+        <li class="mb-2">
+          Add each person: their name, whether it's a birthday, anniversary, or yahrzeit, and the Hebrew date. If you only know the English date, enter that and the Hebrew date is filled in for you.
+        </li>
+        <li class="mb-2">Open the calendar's <strong>Add to your calendar</strong> page and choose <strong>Google Calendar</strong>.</li>
+        <li class="mb-2">Google Calendar opens in your browser and asks whether to add the calendar. Click <strong>Add calendar</strong>.</li>
+      </ol>
+      <h2 class="h4 mt-5 mb-3">Seeing it in the Google Calendar phone app</h2>
+      <p>
+        A calendar you add on the web usually shows up in the app on its own. If it doesn't, open the app's menu, tap <strong>Refresh</strong>, then go to <strong>Settings</strong>, find the calendar under your Google account, and turn on <strong>Sync</strong>.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Why don't my changes show up straight away?</h2>
+      <p>
+        Google Calendar checks subscribed calendars on its own schedule, usually every 12 to 24 hours. When you add or change a date, it appears after Google's next check.
+      </p>
+      {% include "pages/guides/_get_started.html" %}
+    </div>
+  </article>
+{% endblock content %}
