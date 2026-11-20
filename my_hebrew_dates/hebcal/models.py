@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from shortuuid.django_fields import ShortUUIDField
 
 from my_hebrew_dates.core.models import TimeStampedModel
 
@@ -142,6 +143,7 @@ class HebrewDate(TimeStampedModel):
         related_name="calendarOf",
         help_text="Select the calendar to which this event belongs.",
     )
+    public_id = ShortUUIDField(length=10, unique=True, editable=False)
 
     def __str__(self):
         return self.name
