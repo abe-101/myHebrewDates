@@ -1,123 +1,93 @@
 {% extends "base.html" %}
 
-{% load static compress %}
+{% load static %}
 
-{% block css %}
-  {{ block.super }}
-  {% compress css %}
-    <link rel="stylesheet"
-          type="text/x-scss"
-          href="{% static "scss/about.scss" %}" />
-  {% endcompress %}
-{% endblock css %}
+{% block title %}
+  About My Hebrew Dates | Why It Was Built
+{% endblock title %}
+{% block meta_description %}
+  My Hebrew Dates started with a grandmother who wanted to remember her grandchildren's Hebrew birthdays. It's a free, open-source project built by Abe Hanoka in 2023.
+{% endblock meta_description %}
 {% block content %}
-  <!-- Hero Section -->
-  <div class="bg-body-tertiary py-5 mb-5 about-hero">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-lg-6 px-4 py-lg-5">
-          <!-- Added padding -->
-          <h1 class="display-4 fw-bold mb-4">About My Hebrew Dates</h1>
-          <!-- Increased bottom margin -->
-          <p class="lead mb-4">
-            <!-- Added bottom margin -->
-            Simplifying Hebrew calendar management by bringing your important dates into your everyday calendar. Perfect for families keeping track of birthdays, anniversaries, and yahrzeits across the Hebrew calendar.
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "url": "https://myhebrewdates.com/about/",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "My Hebrew Dates",
+        "url": "https://myhebrewdates.com/",
+        "logo": "https://myhebrewdates.com{% static 'images/logo.png' %}",
+        "email": "abe@myhebrewdates.com",
+        "foundingDate": "2023",
+        "founder": {
+          "@type": "Person",
+          "name": "Abe Hanoka"
+        },
+        "sameAs": [
+          "https://github.com/abe-101/myhebrewdates",
+          "https://discord.gg/2vqUzSpt6N"
+        ]
+      }
+    }
+  </script>
+  <article class="row">
+    <div class="col-lg-8 col-xl-7">
+      <h1 class="h2 mb-3">About My Hebrew Dates</h1>
+      <p class="lead">
+        My Hebrew Dates puts Hebrew birthdays, anniversaries, and yahrzeits into the calendar you already use, on the right English date every year.
+      </p>
+      <h2 class="h4 mt-5 mb-3">Why I built it</h2>
+      <div class="d-flex flex-column flex-sm-row gap-4 align-items-sm-start">
+        <img src="{% static 'images/hi.png' %}"
+             alt="Abe Hanoka"
+             width="160"
+             height="160"
+             class="rounded flex-shrink-0" />
+        <div>
+          <p>
+            My grandmother kept telling me she couldn't keep track of her grandchildren's birthdays. She wanted to send each of them a gift on the day, but Hebrew birthdays move around the English calendar every year, and her calendar couldn't follow them.
           </p>
-        </div>
-        <div class="col-lg-6 d-none d-lg-flex justify-content-center align-items-center">
-          <!-- Changed to flex container -->
-          <div class="hero-logo">
-            <img src="{% static 'images/logo.png' %}"
-                 alt="My Hebrew Dates Logo"
-                 class="img-fluid logo-filter" />
-          </div>
+          <p>
+            In 2023 I sat down with a friend who knows the ins and outs of calendars. I knew Django, he knew how the Hebrew and English calendars line up, and by the end of that session we had a working prototype. That prototype grew into My Hebrew Dates.
+          </p>
+          <p class="mb-0">— Abe Hanoka</p>
         </div>
       </div>
-    </div>
-  </div>
-  <!-- Meet the Creator Section -->
-  <section class="about-content py-5">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-4 mb-4 mb-md-0">
-          <img src="{% static 'images/hi.png' %}"
-               alt="Abe Hanoka"
-               class="img-fluid creator-image" />
-        </div>
-        <div class="col-md-8">
-          <h2 class="mb-3">Meet the Creator: Abe Hanoka</h2>
-          <p>
-            Hi! I'm Abe, a developer passionate about making Jewish life more accessible through technology. My Hebrew Dates was born from a personal challenge: keeping track of family events that follow the Hebrew calendar while using modern digital tools.
-          </p>
-          <p>
-            After years of manually converting dates and maintaining multiple calendars, I realized there had to be a better way. That's why I created My Hebrew Dates—to bridge the gap between traditional Jewish date-keeping and modern calendar applications.
-          </p>
-          <p>
-            Today, My Hebrew Dates helps families worldwide stay connected to their important dates, making it easier to honor traditions while embracing modern convenience.
-          </p>
-          <div class="social-links mt-4 d-flex flex-wrap gap-2">
-            <a href="mailto:abe@myhebrewdates.com" class="btn btn-outline-primary">
-              <i class="bi bi-envelope me-2"></i>Get in Touch
-            </a>
-            <a href="https://github.com/abe-101/myhebrewdates"
-               class="btn btn-outline-primary">
-              <i class="bi bi-github me-2"></i>View on GitHub
-            </a>
-            <a href="https://discord.gg/2vqUzSpt6N" class="btn btn-outline-primary">
-              <i class="bi bi-discord me-2"></i>Join Our Discord
-            </a>
-          </div>
-        </div>
+      <h2 class="h4 mt-5 mb-3">How it works</h2>
+      <p>
+        You add each date once, by its Hebrew date. My Hebrew Dates works out the English date for every year and serves it as a calendar link. Google Calendar, Apple Calendar, and Outlook subscribe to that link, so the dates show up with a reminder and stay up to date when you change them. Family members can subscribe to the same link without an account.
+      </p>
+      <p>The guides walk through it step by step:</p>
+      <ul>
+        <li>
+          <a href="{% url 'guide_google_calendar' %}">Hebrew birthdays in Google Calendar</a>
+        </li>
+        <li>
+          <a href="{% url 'guide_iphone' %}">Hebrew birthdays on iPhone</a>
+        </li>
+        <li>
+          <a href="{% url 'guide_yahrzeit' %}">A yahrzeit reminder every year</a>
+        </li>
+      </ul>
+      <h2 class="h4 mt-5 mb-3">Free and open source</h2>
+      <p>
+        My Hebrew Dates is free to use, and the code is open source on GitHub. Questions, bug reports, and ideas are always welcome.
+      </p>
+      <div class="d-flex flex-wrap gap-2">
+        <a href="mailto:abe@myhebrewdates.com" class="btn btn-outline-primary">
+          <i class="bi bi-envelope me-2"></i>Email me
+        </a>
+        <a href="https://github.com/abe-101/myhebrewdates"
+           class="btn btn-outline-primary">
+          <i class="bi bi-github me-2"></i>GitHub
+        </a>
+        <a href="https://discord.gg/2vqUzSpt6N" class="btn btn-outline-primary">
+          <i class="bi bi-discord me-2"></i>Discord
+        </a>
       </div>
+      {% include "pages/guides/_get_started.html" %}
     </div>
-  </section>
-  <!-- Features Section -->
-  <section class="py-5 bg-body-tertiary">
-    <div class="container">
-      <h2 class="text-center mb-4 display-5 fw-bold">Why Choose My Hebrew Dates?</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center p-4">
-              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
-                <i class="bi bi-calendar-check text-primary display-6"></i>
-              </div>
-              <h3 class="h5 fw-bold">Easy Integration</h3>
-              <p class="text-muted">
-                Seamlessly add Hebrew dates to Google Calendar, Apple Calendar, or any calendar app that supports iCal feeds.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center p-4">
-              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
-                <i class="bi bi-share text-primary display-6"></i>
-              </div>
-              <h3 class="h5 fw-bold">Family Sharing</h3>
-              <p class="text-muted">
-                Share your calendar with family members through a simple link, keeping everyone connected to important dates.
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card h-100 border-0 shadow-sm feature-card">
-            <div class="card-body text-center p-4">
-              <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
-                <i class="bi bi-bell text-primary display-6"></i>
-              </div>
-              <h3 class="h5 fw-bold">Custom Reminders</h3>
-              <p class="text-muted">
-                Set personalized alerts for events and never miss an important Hebrew date celebration again.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- FAQ Section -->
-  {% include "pages/_faq.html" %}
+  </article>
 {% endblock content %}
