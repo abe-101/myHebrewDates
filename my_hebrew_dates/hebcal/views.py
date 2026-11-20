@@ -275,9 +275,7 @@ def serve_pixel(request, pixel_id: UUID, pk: int):
 def calendar_file(request, uuid: UUID):
     ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
-    alarm_trigger_hours = request.GET.get("alarm", "9")
-    if alarm_trigger_hours == "":
-        alarm_trigger_hours = "9"
+    alarm_trigger_hours = request.GET.get("alarm") or "9"
     try:
         alarm_trigger = timedelta(hours=int(alarm_trigger_hours))
     except ValueError:
