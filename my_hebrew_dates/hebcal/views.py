@@ -242,16 +242,8 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
-def client_ip(request: HttpRequest) -> str | None:
-    x_forwarded_for = request.headers.get("x-forwarded-for")
-    if x_forwarded_for:
-        return x_forwarded_for.split(",")[0]
-    return request.META.get("REMOTE_ADDR")
-
-
 @cache_page(60 * 60)
 def calendar_file(request, uuid: UUID):
-    ip = client_ip(request)
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm") or "9"
     try:
@@ -265,9 +257,8 @@ def calendar_file(request, uuid: UUID):
     )
 
     logger.info(
-        "Calendar file requested for %s with ip %s User-Agent %s, Alarm: %s",
+        "Calendar file requested for %s User-Agent %s, Alarm: %s",
         calendar.name,
-        ip,
         user_agent,
         alarm_trigger,
     )
