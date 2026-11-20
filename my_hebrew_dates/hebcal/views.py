@@ -219,18 +219,15 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
     calendar = get_object_or_404(Calendar, owner=request.user, uuid=uuid)
     hebrew_date = get_object_or_404(HebrewDate, calendar=calendar, pk=pk)
     formatted_name = hebrew_date.get_formatted_name()
-
-    if request.method == "POST":
-        hebrew_date.delete()
-        logger.info(
-            "user: %s deleted HebrewDate: %s (%s)",
-            request.user,
-            hebrew_date.name,
-            pk,
-        )
-        messages.success(request, f"Removed {formatted_name}.")
-        return HttpResponse()
-    return None
+    hebrew_date.delete()
+    logger.info(
+        "user: %s deleted HebrewDate: %s (%s)",
+        request.user,
+        hebrew_date.name,
+        pk,
+    )
+    messages.success(request, f"Removed {formatted_name}.")
+    return HttpResponse()
 
 
 class CalendarDeleteView(LoginRequiredMixin, DeleteView):
