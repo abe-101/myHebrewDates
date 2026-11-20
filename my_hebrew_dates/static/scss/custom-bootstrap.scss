@@ -1,55 +1,50 @@
-// New theme palette
-$white: #ffffff;
-
 $theme-colors: (
-    "light":      #d4d9d5,
-    "dark":       #030100,
-    "primary":    #324189,
-    "secondary":  #1770c9,
-    "info":       #49bee8,
-    "success":    #0da862,
-    "warning":    #e3cc0d,
-    "danger":     #f21d04,
+  "primary": #324189,
+  "secondary": #6c757d,
+  "success": #198754,
+  "info": #0d6efd,
+  "warning": #ffc107,
+  "danger": #dc3545,
+  "light": #f8f9fa,
+  "dark": #212529,
 );
 
-// Import Bootstrap and override defaults
+$primary: #324189;
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$headings-font-weight: 600;
+$link-decoration: none;
+$link-hover-decoration: underline;
+
 @import "bootstrap/bootstrap";
 
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-body {
-  font-family: 'Inter', sans-serif;
-}
-
-:root {
-    --gradient-primary: linear-gradient(135deg, #{map-get($theme-colors, "primary")}, #{map-get($theme-colors, "secondary")});
-    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.12);
-}
-
 [data-bs-theme="dark"] {
-    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --card-shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --bs-primary: #8c9ae0;
+  --bs-primary-rgb: 140, 154, 224;
+  --bs-link-color-rgb: 140, 154, 224;
+  --bs-link-hover-color-rgb: 175, 185, 235;
+
+  .btn-primary {
+    --bs-btn-bg: #4656b0;
+    --bs-btn-border-color: #4656b0;
+    --bs-btn-hover-bg: #5464bd;
+    --bs-btn-hover-border-color: #5464bd;
+    --bs-btn-active-bg: #3d4c9f;
+    --bs-btn-active-border-color: #3d4c9f;
+  }
+
+  .btn-outline-primary {
+    --bs-btn-color: #8c9ae0;
+    --bs-btn-border-color: #8c9ae0;
+    --bs-btn-hover-bg: #4656b0;
+    --bs-btn-hover-border-color: #4656b0;
+    --bs-btn-active-bg: #3d4c9f;
+  }
 }
 
-// Button gradient enhancement
-.btn-primary {
-    background: var(--gradient-primary);
-    border: none;
-
-    &:hover {
-        background: var(--gradient-primary);
-        opacity: 0.9;
-    }
+.site-nav {
+  border-bottom: 1px solid var(--bs-border-color);
 }
 
-// Card hover enhancement
-.card {
-    box-shadow: var(--card-shadow);
-    transition: box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out;
-
-    &:hover {
-        box-shadow: var(--card-shadow-hover);
-        transform: translateY(-2px);
-    }
+.site-footer {
+  border-top: 1px solid var(--bs-border-color);
 }
