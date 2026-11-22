@@ -144,9 +144,26 @@ class TestSubscriptionEndpoints:
 
         assert response.status_code == HTTPStatus.OK
         assert response["Content-Type"] == "text/calendar"
-        assert f'filename="{calendar.uuid}.ics"' in response["Content-Disposition"]
+        assert response["Content-Disposition"] == (
+            'attachment; filename="Golden Calendar.ics"'
+        )
         assert response.content.startswith(b"BEGIN:VCALENDAR")
         assert response["Cache-Control"] == "max-age=3600"
+
+    def test_hebrew_calendar_name_is_the_download_filename(
+        self,
+        client,
+        make_calendar,
+    ):
+        calendar = make_calendar(name="ימים משמחים")
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+
+        response = client.get(url)
+
+        assert response["Content-Disposition"] == (
+            "attachment; filename*=utf-8''"
+            "%D7%99%D7%9E%D7%99%D7%9D%20%D7%9E%D7%A9%D7%9E%D7%97%D7%99%D7%9D.ics"
+        )
 
     def test_legacy_ical_url_serves_same_body(self, client, calendar):
         modern = client.get(

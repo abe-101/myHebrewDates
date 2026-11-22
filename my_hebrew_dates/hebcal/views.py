@@ -14,6 +14,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.http import content_disposition_header
 from django.views.decorators.cache import cache_control
 from django.views.decorators.http import conditional_page
 from django.views.decorators.http import require_POST
@@ -277,7 +278,10 @@ def calendar_file(request, uuid: UUID):
         )
 
     response = HttpResponse(calendar_str, content_type="text/calendar")
-    response["Content-Disposition"] = f'attachment; filename="{uuid}.ics"'
+    response["Content-Disposition"] = content_disposition_header(
+        as_attachment=True,
+        filename=f"{calendar.name}.ics",
+    )
 
     return response
 
