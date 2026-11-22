@@ -103,6 +103,7 @@
           </p>
           <button type="button"
                   class="btn btn-outline-primary"
+                  data-ph-capture-attribute-calendar-action="share_page"
                   data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}"
                   data-share-label="Share this page"
                   data-share-title="{{ calendar.name }}">

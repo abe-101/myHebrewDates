@@ -2,6 +2,7 @@
   <div class="d-flex flex-column gap-2 mb-3">
     <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
        data-suggest="android"
+       data-ph-capture-attribute-calendar-action="subscribe_google"
        href="https://www.google.com/calendar/render?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
@@ -15,6 +16,7 @@
     {# djlint:off D018 #}
     <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
        data-suggest="ios"
+       data-ph-capture-attribute-calendar-action="subscribe_apple"
        href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
       {# djlint:on #}
       <i class="bi bi-apple fs-4" aria-hidden="true"></i>
@@ -25,6 +27,7 @@
       <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
     <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
+       data-ph-capture-attribute-calendar-action="subscribe_outlook"
        href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
@@ -36,6 +39,7 @@
       <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
     <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
+       data-ph-capture-attribute-calendar-action="subscribe_outlook_work"
        href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
@@ -68,6 +72,7 @@
                value="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}" />
         <button class="btn btn-outline-primary"
                 type="button"
+                data-ph-capture-attribute-calendar-action="copy_feed_link"
                 data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
           <i class="bi bi-clipboard me-1" aria-hidden="true"></i><span class="copy-label">Copy</span>
         </button>
@@ -75,6 +80,7 @@
       <p class="small text-body-secondary mb-0">
         Want a one-time copy instead?
         <a href="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+           data-ph-capture-attribute-calendar-action="download_ics"
            download="{{ calendar.name }}.ics">Download an .ics file</a>.
         It won’t update when dates change.
       </p>
