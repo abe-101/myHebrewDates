@@ -32,7 +32,8 @@ class RequestContextMiddleware:
         try:
             response = self.get_response(request)
             if user_id is not None:
-                route = request.resolver_match and request.resolver_match.view_name
+                match = request.resolver_match
+                route = match.view_name if match and match.url_name else request.path
                 logger.info(
                     "%s %s %s",
                     request.method,

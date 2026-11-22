@@ -33,6 +33,15 @@ def test_logged_in_request_writes_one_request_line(client, user, captured):
     assert line.request_id == "rail-123"
 
 
+def test_unnamed_route_is_logged_by_path(client, user, captured):
+    client.force_login(user)
+
+    client.get("/favicon.png")
+
+    [line] = [r for r in captured.records if r.name == REQUEST_LOGGER]
+    assert line.route == "/favicon.png"
+
+
 def test_anonymous_request_writes_no_request_line(client, db, captured):
     client.get(reverse("home"))
 
