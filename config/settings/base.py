@@ -166,6 +166,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "my_hebrew_dates.core.request_context.RequestContextMiddleware",
     "my_hebrew_dates.core.middleware.CustomLoginRequiredMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -284,10 +285,16 @@ LOGGING = {
             "format": "%(asctime)s %(name)s %(levelname)s %(funcName)s %(lineno)d %(message)s",
         },
     },
+    "filters": {
+        "request_context": {
+            "()": "my_hebrew_dates.core.request_context.RequestContextFilter",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "rich.logging.RichHandler",
+            "filters": ["request_context"],
             "formatter": "rich",
             "rich_tracebacks": True,
             "tracebacks_show_locals": True,
