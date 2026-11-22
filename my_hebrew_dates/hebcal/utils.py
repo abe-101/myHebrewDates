@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
+from icalendar import vDuration
 
 if TYPE_CHECKING:
     from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
@@ -17,28 +18,39 @@ if TYPE_CHECKING:
 MYHEBREWDATES_URL = "https://myhebrewdates.com"
 CHARJ_URL = "https://charj.cc"
 MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
+# The feed view caches for an hour, so asking clients to come back sooner is pointless
+FEED_REFRESH_INTERVAL = timedelta(hours=6)
+
+
+def new_feed_calendar(model_calendar: ModelCalendar) -> Calendar:
+    newcal = Calendar.new(
+        prodid="-//MyHebrewDates.com//Hebrew Calendar Events//EN",
+        calscale="GREGORIAN",  # Required for Google Calendar
+        method="PUBLISH",
+        name=model_calendar.name,
+        description="Hebrew calendar events created by MyHebrewDates.com",
+        color="royalblue",
+    )
+    # Calendar.new() always adds a random UID, which would change on every fetch
+    del newcal["UID"]
+    # Calendar.new(refresh_interval=...) omits the VALUE=DURATION that RFC 7986 requires
+    newcal.add(
+        "refresh-interval",
+        FEED_REFRESH_INTERVAL,
+        parameters={"value": "DURATION"},
+    )
+    # Outlook and Apple Calendar read the older X-PUBLISHED-TTL, not REFRESH-INTERVAL
+    newcal.add("x-published-ttl", vDuration(FEED_REFRESH_INTERVAL))
+    # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
+    newcal.add("x-wr-timezone", model_calendar.timezone)
+    return newcal
 
 
 def generate_ical(
     model_calendar: ModelCalendar,
-    user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    # Google Calendar works better with UTC for all-day events
-    is_google = "google" in user_agent.lower()
-    timezone = "UTC" if is_google else model_calendar.timezone
-
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
@@ -94,15 +106,13 @@ def generate_ical(
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
 
-            # Add alarm to the event
-            alarm = Alarm()
-            alarm.add("action", "DISPLAY")
             alarm_desc = (
                 f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
             )
-            alarm.add("description", alarm_desc)
-
-            alarm.add("trigger", alarm_trigger)
+            alarm = Alarm.new_display(
+                description=alarm_desc,
+                trigger=alarm_trigger,
+            )
             event.add_component(alarm)
 
             events.append(event)
@@ -118,24 +128,9 @@ def generate_ical(
 
 def generate_ical_experimental(
     model_calendar: ModelCalendar,
-    user_agent: str = "",
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
-    # Google Calendar works better with UTC for all-day events
-    is_google = "google" in user_agent.lower()
-    timezone = "UTC" if is_google else model_calendar.timezone
-
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
@@ -190,15 +185,13 @@ def generate_ical_experimental(
         event.add("x-microsoft-cdo-alldayevent", "TRUE")
         event.add("x-microsoft-cdo-busystatus", "FREE")
 
-        # Add alarm to the event
-        alarm = Alarm()
-        alarm.add("action", "DISPLAY")
         alarm_desc = (
             f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
         )
-        alarm.add("description", alarm_desc)
-
-        alarm.add("trigger", alarm_trigger)
+        alarm = Alarm.new_display(
+            description=alarm_desc,
+            trigger=alarm_trigger,
+        )
         event.add_component(alarm)
         rrule = {
             "rscale": "hebrew",
