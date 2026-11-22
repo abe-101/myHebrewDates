@@ -94,15 +94,13 @@ def generate_ical(
             event.add("x-microsoft-cdo-alldayevent", "TRUE")
             event.add("x-microsoft-cdo-busystatus", "FREE")
 
-            # Add alarm to the event
-            alarm = Alarm()
-            alarm.add("action", "DISPLAY")
             alarm_desc = (
                 f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
             )
-            alarm.add("description", alarm_desc)
-
-            alarm.add("trigger", alarm_trigger)
+            alarm = Alarm.new_display(
+                description=alarm_desc,
+                trigger=alarm_trigger,
+            )
             event.add_component(alarm)
 
             events.append(event)
@@ -190,15 +188,13 @@ def generate_ical_experimental(
         event.add("x-microsoft-cdo-alldayevent", "TRUE")
         event.add("x-microsoft-cdo-busystatus", "FREE")
 
-        # Add alarm to the event
-        alarm = Alarm()
-        alarm.add("action", "DISPLAY")
         alarm_desc = (
             f"{hebrew_date.name}'s {hebrew_date.get_event_type_display()} is today!"
         )
-        alarm.add("description", alarm_desc)
-
-        alarm.add("trigger", alarm_trigger)
+        alarm = Alarm.new_display(
+            description=alarm_desc,
+            trigger=alarm_trigger,
+        )
         event.add_component(alarm)
         rrule = {
             "rscale": "hebrew",
