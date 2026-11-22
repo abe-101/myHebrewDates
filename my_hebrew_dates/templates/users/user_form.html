@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-lg-6">
       <a href="{% url 'users:detail' user.username %}" class="small">My profile</a>
-      <h1 class="h2 mt-2 mb-4">Change my name</h1>
+      <h1 class="h2 fw-semibold mt-2 mb-4">Change my name</h1>
       <form method="post" action="{% url 'users:update' %}">
         {% csrf_token %}
         {{ form|crispy }}

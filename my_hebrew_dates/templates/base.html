@@ -89,6 +89,8 @@
     {% include "_navbar.html" %}
     <main class="flex-grow-1">
       {% block body %}
+        {% block page_header %}
+        {% endblock page_header %}
         {% block main %}
           <div class="container py-4 py-lg-5">
             {% block content %}

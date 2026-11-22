@@ -8,6 +8,9 @@
 {% block meta_description %}
   My Hebrew Dates started with a grandmother who wanted to remember her grandchildren's Hebrew birthdays. It's a free, open-source project built by Abe Hanoka in 2023.
 {% endblock meta_description %}
+{% block page_header %}
+  {% include "_page_header.html" with eyebrow="About" title="About My Hebrew Dates" lead="My Hebrew Dates puts Hebrew birthdays, anniversaries, and yahrzeits into the calendar you already use, on the right English date every year." %}
+{% endblock page_header %}
 {% block content %}
   <script type="application/ld+json">
     {
@@ -34,11 +37,7 @@
   </script>
   <article class="row">
     <div class="col-lg-8 col-xl-7">
-      <h1 class="h2 mb-3">About My Hebrew Dates</h1>
-      <p class="lead">
-        My Hebrew Dates puts Hebrew birthdays, anniversaries, and yahrzeits into the calendar you already use, on the right English date every year.
-      </p>
-      <h2 class="h4 mt-5 mb-3">Why I built it</h2>
+      <h2 class="h4 fw-semibold mb-3">Why I built it</h2>
       <div class="d-flex flex-column flex-sm-row gap-4 align-items-sm-start">
         <img src="{% static 'images/hi.png' %}"
              alt="Abe Hanoka"
@@ -55,7 +54,7 @@
           <p class="mb-0">— Abe Hanoka</p>
         </div>
       </div>
-      <h2 class="h4 mt-5 mb-3">How it works</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">How it works</h2>
       <p>
         You add each date once, by its Hebrew date. My Hebrew Dates works out the English date for every year and serves it as a calendar link. Google Calendar, Apple Calendar, and Outlook subscribe to that link, so the dates show up with a reminder and stay up to date when you change them. Family members can subscribe to the same link without an account.
       </p>
@@ -77,7 +76,7 @@
           <a href="{% url 'guide_anniversary' %}">Keeping track of a Hebrew anniversary</a>
         </li>
       </ul>
-      <h2 class="h4 mt-5 mb-3">Free and open source</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">Free and open source</h2>
       <p>
         My Hebrew Dates is free to use, and the code is open source on GitHub. Questions, bug reports, and ideas are always welcome.
       </p>

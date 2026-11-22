@@ -5,7 +5,7 @@
 {% endblock title %}
 {% block content %}
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
-    <h1 class="h3 mb-0">My calendars</h1>
+    <h1 class="h3 fw-semibold mb-0">My calendars</h1>
     <a href="{% url 'hebcal:calendar_new' %}" class="btn btn-primary">
       <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New calendar
     </a>
@@ -35,7 +35,9 @@
             <button type="button"
                     class="btn btn-outline-secondary btn-sm"
                     title="Copy a link to send to family, so they can add this calendar too"
-                    data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+                    data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                    data-share-label="Share"
+                    data-share-title="{{ calendar.name }}">
               <i class="bi bi-link-45deg me-1" aria-hidden="true"></i><span class="copy-label">Copy share link</span>
             </button>
             <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"

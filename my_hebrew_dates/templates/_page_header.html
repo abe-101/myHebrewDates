@@ -1,0 +1,13 @@
+<section class="bg-body-tertiary border-bottom">
+  <div class="container py-5">
+    <div class="col-lg-8 col-xl-7">
+      {% if breadcrumb %}
+        {% include "pages/guides/_breadcrumb.html" with name=breadcrumb %}
+      {% else %}
+        <p class="small text-primary text-uppercase fw-semibold mb-2">{{ eyebrow }}</p>
+      {% endif %}
+      <h1 class="display-6 fw-semibold mb-0">{{ title }}</h1>
+      {% if lead %}<p class="lead text-body-secondary mt-3 mb-0">{{ lead }}</p>{% endif %}
+    </div>
+  </div>
+</section>
