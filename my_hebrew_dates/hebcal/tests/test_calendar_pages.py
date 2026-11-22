@@ -15,6 +15,7 @@ def test_owner_sees_settings_tabs_and_sharing(client, user):
     assert "Calendar settings" in content
     assert reverse("hebcal:calendar_edit", args=[calendar.uuid]) in content
     assert "Share with your family" in content
+    assert 'data-share-title="Family"' in content
 
 
 def test_family_member_sees_only_how_to_subscribe(client, user):
@@ -39,3 +40,4 @@ def test_list_copies_the_page_family_should_open(client, user):
     domain = Site.objects.get_current().domain.lower()
     share_url = reverse("hebcal:calendar_detail", args=[calendar.uuid])
     assert f'data-copy="https://{domain}{share_url}"' in content
+    assert 'data-share-title="Family"' in content

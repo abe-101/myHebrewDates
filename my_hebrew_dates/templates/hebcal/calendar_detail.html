@@ -98,7 +98,9 @@
           </p>
           <button type="button"
                   class="btn btn-outline-primary"
-                  data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+                  data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                  data-share-label="Share this page"
+                  data-share-title="{{ calendar.name }}">
             <i class="bi bi-link-45deg me-1"
                aria-hidden="true"></i><span class="copy-label">Copy link to this page</span>
           </button>
