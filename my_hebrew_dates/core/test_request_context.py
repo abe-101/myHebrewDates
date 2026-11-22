@@ -33,6 +33,15 @@ def test_logged_in_request_writes_one_request_line(client, user, captured):
     assert line.request_id == "rail-123"
 
 
+def test_unnamed_route_is_logged_by_path(client, user, captured):
+    client.force_login(user)
+
+    client.get("/favicon.png")
+
+    [line] = [r for r in captured.records if r.name == REQUEST_LOGGER]
+    assert line.route == "/favicon.png"
+
+
 def test_anonymous_request_writes_no_request_line(client, db, captured):
     client.get(reverse("home"))
 
@@ -47,6 +56,19 @@ def test_lines_from_views_carry_the_request_id(client, calendar, captured):
 
     [line] = [r for r in captured.records if r.funcName == "calendar_file"]
     assert line.request_id == "rail-456"
+    assert line.user_id is None
+
+
+def test_feed_fetch_writes_a_request_line_with_its_status(client, calendar, captured):
+    url = reverse("hebcal:calendar_file", kwargs={"uuid": calendar.uuid})
+    etag = client.get(url).headers["ETag"]
+    captured.clear()
+
+    client.get(url, HTTP_IF_NONE_MATCH=etag)
+
+    [line] = [r for r in captured.records if r.name == REQUEST_LOGGER]
+    assert line.route == "hebcal:calendar_file"
+    assert line.status == 304  # noqa: PLR2004
     assert line.user_id is None
 
 
