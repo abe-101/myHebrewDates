@@ -47,11 +47,6 @@ def calendar_list_view(request):
     if not user_owned_calendars.exists():
         return redirect("hebcal:calendar_new")
 
-    logger.info(
-        "Calendar list view called for user: %s with calendars: %s",
-        request.user,
-        user_owned_calendars,
-    )
     context = {
         "calendar_list": user_owned_calendars,
         "domain_name": Site.objects.get_current().domain,
@@ -68,13 +63,6 @@ def calendar_detail_view(request: HttpRequest, uuid: UUID):
         "domain_name": Site.objects.get_current().domain,
         "alarm_time": 9,
     }
-    logger.info(
-        "user: %s accessed Calendar_detail_view for calendar: %s (%s)",
-        request.user,
-        calendar.name,
-        calendar.uuid,
-    )
-
     return render(request, "hebcal/calendar_detail.html", context)
 
 
@@ -106,11 +94,6 @@ def create_calendar_view(request: HttpRequest):
     context = {
         "form": form,
     }
-    logger.info(
-        "user: %s accessed create_calendar_view",
-        request.user,
-    )
-
     return render(request, "hebcal/calendar_new.html", context)
 
 
@@ -155,12 +138,6 @@ def calendar_edit_view(request: HttpRequest, uuid: UUID):
         "hebrew_dates": upcoming,
         "search_query": search_query,
     }
-    logger.info(
-        "user: %s accessed calendar_edit_view for calendar: %s (%s)",
-        request.user,
-        calendar.name,
-        calendar.uuid,
-    )
     return render(request, "hebcal/calendar_edit.html", context)
 
 
@@ -299,11 +276,4 @@ def update_calendar_links_htmx(request: HttpRequest, uuid: UUID):
         "domain_name": domain_name,
         "alarm_time": alarm_time,
     }
-    logger.info(
-        "update_calendar_links_htmx: %s for calendar: %s (%s)",
-        request.user,
-        calendar.name,
-        calendar.uuid,
-    )
-
     return render(request, "hebcal/_calendar_links.html", context)
