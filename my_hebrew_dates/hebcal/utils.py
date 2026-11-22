@@ -42,6 +42,8 @@ def new_feed_calendar(model_calendar: ModelCalendar) -> Calendar:
         FEED_REFRESH_INTERVAL,
         parameters={"value": "DURATION"},
     )
+    # Apple Calendar may read this rather than COLOR; it is royalblue in hex
+    newcal.add("x-apple-calendar-color", "#4169E1")
     # Outlook and Apple Calendar read the older X-PUBLISHED-TTL, not REFRESH-INTERVAL
     newcal.add("x-published-ttl", vDuration(FEED_REFRESH_INTERVAL))
     # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
