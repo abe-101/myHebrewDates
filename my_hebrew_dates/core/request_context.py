@@ -8,6 +8,8 @@ logger = logging.getLogger(__name__)
 
 request_context: ContextVar[dict | None] = ContextVar("request_context", default=None)
 
+FEED_ROUTES = {"hebcal:calendar_file", "hebcal:legacy_calendar_file"}
+
 
 class RequestContextFilter(logging.Filter):
     def filter(self, record):
@@ -31,9 +33,9 @@ class RequestContextMiddleware:
         sentry_sdk.set_tag("request_id", request_id)
         try:
             response = self.get_response(request)
-            if user_id is not None:
-                match = request.resolver_match
-                route = match.view_name if match and match.url_name else request.path
+            match = request.resolver_match
+            route = match.view_name if match and match.url_name else request.path
+            if user_id is not None or route in FEED_ROUTES:
                 logger.info(
                     "%s %s %s",
                     request.method,

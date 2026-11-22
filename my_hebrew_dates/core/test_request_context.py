@@ -59,6 +59,19 @@ def test_lines_from_views_carry_the_request_id(client, calendar, captured):
     assert line.user_id is None
 
 
+def test_feed_fetch_writes_a_request_line_with_its_status(client, calendar, captured):
+    url = reverse("hebcal:calendar_file", kwargs={"uuid": calendar.uuid})
+    etag = client.get(url).headers["ETag"]
+    captured.clear()
+
+    client.get(url, HTTP_IF_NONE_MATCH=etag)
+
+    [line] = [r for r in captured.records if r.name == REQUEST_LOGGER]
+    assert line.route == "hebcal:calendar_file"
+    assert line.status == 304  # noqa: PLR2004
+    assert line.user_id is None
+
+
 def test_request_id_is_generated_without_the_railway_header(client, user, captured):
     client.force_login(user)
 
