@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
+from icalendar import vDuration
 
 if TYPE_CHECKING:
     from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
@@ -17,6 +18,32 @@ if TYPE_CHECKING:
 MYHEBREWDATES_URL = "https://myhebrewdates.com"
 CHARJ_URL = "https://charj.cc"
 MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
+# The feed view caches for an hour, so asking clients to come back sooner is pointless
+FEED_REFRESH_INTERVAL = timedelta(hours=6)
+
+
+def new_feed_calendar(model_calendar: ModelCalendar, timezone: str) -> Calendar:
+    newcal = Calendar.new(
+        prodid="-//MyHebrewDates.com//Hebrew Calendar Events//EN",
+        calscale="GREGORIAN",  # Required for Google Calendar
+        method="PUBLISH",
+        name=model_calendar.name,
+        description="Hebrew calendar events created by MyHebrewDates.com",
+        color="royalblue",
+    )
+    # Calendar.new() always adds a random UID, which would change on every fetch
+    del newcal["UID"]
+    # Calendar.new(refresh_interval=...) omits the VALUE=DURATION that RFC 7986 requires
+    newcal.add(
+        "refresh-interval",
+        FEED_REFRESH_INTERVAL,
+        parameters={"value": "DURATION"},
+    )
+    # Outlook and Apple Calendar read the older X-PUBLISHED-TTL, not REFRESH-INTERVAL
+    newcal.add("x-published-ttl", vDuration(FEED_REFRESH_INTERVAL))
+    # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
+    newcal.add("x-wr-timezone", timezone)
+    return newcal
 
 
 def generate_ical(
@@ -28,17 +55,7 @@ def generate_ical(
     is_google = "google" in user_agent.lower()
     timezone = "UTC" if is_google else model_calendar.timezone
 
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar, timezone)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
@@ -123,17 +140,7 @@ def generate_ical_experimental(
     is_google = "google" in user_agent.lower()
     timezone = "UTC" if is_google else model_calendar.timezone
 
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar, timezone)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
