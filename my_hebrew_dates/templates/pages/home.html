@@ -6,7 +6,7 @@
 {% block meta_description %}
   Add Hebrew birthdays, anniversaries, and yahrzeits once, and they show up on the right English date every year in Google Calendar, Apple Calendar, or Outlook.
 {% endblock meta_description %}
-{% block content %}
+{% block main %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -23,57 +23,122 @@
       }
     }
   </script>
-  <div class="row gy-5">
-    <div class="col-lg-6">
-      <h1 class="h2 mb-3">Hebrew birthdays, anniversaries, and yahrzeits in your calendar</h1>
-      <p class="text-body-secondary mb-4">
-        Add each date once, by its Hebrew date. Every year it shows up on the right English day in Google Calendar, Apple Calendar, or Outlook.
-      </p>
-      {% if user.is_authenticated %}
-        <a href="{% url 'hebcal:calendar_list' %}" class="btn btn-primary">Go to my calendars</a>
-      {% else %}
-        <a href="{% url 'account_signup' %}" class="btn btn-primary">Sign up</a>
-        <p class="small text-body-secondary mt-2 mb-0">
-          Free. Already have an account? <a href="{% url 'account_login' %}">Sign in</a>
-        </p>
-      {% endif %}
-      <h2 class="h5 mt-5 mb-3">How it works</h2>
-      <ol class="mb-0">
-        <li class="mb-2">Make a calendar for your family.</li>
-        <li class="mb-2">Add each person’s Hebrew birthday, anniversary, or yahrzeit.</li>
-        <li class="mb-2">
-          Subscribe to it once from Google Calendar, Apple Calendar, or Outlook. Dates you add later show up there on their own.
-        </li>
-        <li>Share the link so the rest of the family can subscribe too.</li>
-      </ol>
-    </div>
-    <div class="col-lg-5 offset-lg-1">
-      <h2 class="h6 text-body-secondary mb-2">What shows up in your calendar</h2>
-      <ul class="list-group">
-        {% for english_date in example_dates %}
-          <li class="list-group-item py-3">
-            <div class="fw-semibold">
-              <span lang="he" dir="rtl">כג אייר</span> | 🎂 Savta Rivka
+  <section class="bg-body-tertiary border-bottom">
+    <div class="container py-5">
+      <div class="row gy-5 align-items-center py-lg-4">
+        <div class="col-lg-6">
+          <h1 class="display-5 fw-semibold mb-3">Hebrew birthdays, anniversaries, and yahrzeits in your calendar</h1>
+          <p class="lead text-body-secondary mb-4">
+            Add each date once, by its Hebrew date. Every year it shows up on the right English day in Google Calendar, Apple Calendar, or Outlook.
+          </p>
+          {% if user.is_authenticated %}
+            <a href="{% url 'hebcal:calendar_list' %}"
+               class="btn btn-primary btn-lg">Go to my calendars</a>
+          {% else %}
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign up free</a>
+            <p class="small text-body-secondary mt-2 mb-0">
+              Already have an account? <a href="{% url 'account_login' %}">Sign in</a>
+            </p>
+          {% endif %}
+        </div>
+        <div class="col-lg-5 offset-lg-1">
+          <div class="card border-0 shadow">
+            <div class="card-body p-4">
+              <p class="small text-body-secondary text-uppercase fw-semibold mb-1">One Hebrew date</p>
+              <p class="display-6 fw-semibold mb-0" lang="he" dir="rtl">כ״ג אייר</p>
+              <p class="text-body-secondary mb-4">🎂 Savta Rivka’s birthday</p>
+              <p class="small text-body-secondary text-uppercase fw-semibold mb-2">A different English day each year</p>
+              <ul class="list-unstyled mb-0">
+                {% for english_date in example_dates %}
+                  <li class="d-flex align-items-center gap-3 border-start border-4 border-primary bg-primary-subtle rounded-end px-3 py-2{% if not forloop.last %} mb-2{% endif %}">
+                    <span class="badge text-bg-primary">{{ english_date|date:"Y" }}</span>
+                    <span class="text-primary-emphasis fw-semibold">{{ english_date|date:"l, F j" }}</span>
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
-            <div class="small text-body-secondary">{{ english_date|date:"l, F j, Y" }} · all day</div>
-          </li>
-        {% endfor %}
-      </ul>
-      <p class="small text-body-secondary mt-2">
-        The same Hebrew date lands on a different English day each year.
-        <a href="{% url 'converter' %}">Look up any Hebrew date</a>.
+          </div>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <span class="badge rounded-pill bg-body text-body border fw-normal px-3 py-2">🎂 Birthdays</span>
+            <span class="badge rounded-pill bg-body text-body border fw-normal px-3 py-2">💍 Anniversaries</span>
+            <span class="badge rounded-pill bg-body text-body border fw-normal px-3 py-2">🕯️ Yahrzeits</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-5">
+    <div class="container py-lg-4">
+      <div class="col-lg-7 text-center mx-auto mb-5">
+        <p class="small text-primary text-uppercase fw-semibold mb-2">How it works</p>
+        <h2 class="h1 fw-semibold mb-3">Set it up once, and it keeps going</h2>
+        <p class="lead text-body-secondary mb-0">A few minutes today, and every date shows up on time for years to come.</p>
+      </div>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col">
+          <div class="h-100 p-4 rounded-3 border bg-body">
+            <div class="step-icon d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4 mb-3">
+              <i class="bi bi-calendar-plus" aria-hidden="true"></i>
+            </div>
+            <p class="small text-body-secondary fw-semibold mb-1">Step 1</p>
+            <h3 class="h5 fw-semibold">Make a calendar</h3>
+            <p class="text-body-secondary mb-0">One for your family, or one for each side.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="h-100 p-4 rounded-3 border bg-body">
+            <div class="step-icon d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4 mb-3">
+              <i class="bi bi-person-heart" aria-hidden="true"></i>
+            </div>
+            <p class="small text-body-secondary fw-semibold mb-1">Step 2</p>
+            <h3 class="h5 fw-semibold">Add your dates</h3>
+            <p class="text-body-secondary mb-0">Each person’s Hebrew birthday, anniversary, or yahrzeit.</p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="h-100 p-4 rounded-3 border bg-body">
+            <div class="step-icon d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4 mb-3">
+              <i class="bi bi-arrow-repeat" aria-hidden="true"></i>
+            </div>
+            <p class="small text-body-secondary fw-semibold mb-1">Step 3</p>
+            <h3 class="h5 fw-semibold">Subscribe once</h3>
+            <p class="text-body-secondary mb-0">
+              From Google Calendar, Apple Calendar, or Outlook. Dates you add later show up there on their own.
+            </p>
+          </div>
+        </div>
+        <div class="col">
+          <div class="h-100 p-4 rounded-3 border bg-body">
+            <div class="step-icon d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4 mb-3">
+              <i class="bi bi-share" aria-hidden="true"></i>
+            </div>
+            <p class="small text-body-secondary fw-semibold mb-1">Step 4</p>
+            <h3 class="h5 fw-semibold">Share with family</h3>
+            <p class="text-body-secondary mb-0">Send the link so everyone can subscribe too.</p>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-body-secondary mt-4 mb-0">
+        Want to check a date first? <a href="{% url 'converter' %}">Look up any Hebrew date</a>.
       </p>
     </div>
-  </div>
-  <div class="row mt-5 pt-lg-4">
-    <div class="col-lg-8 col-xl-7">
-      <h2 class="h4 mb-3">Questions</h2>
-      {% include "pages/_home_questions.html" %}
-      {% if not user.is_authenticated %}
-        <p class="mt-4 mb-0">
-          Ready to add your family’s dates? <a href="{% url 'account_signup' %}">Sign up</a>
-        </p>
-      {% endif %}
+  </section>
+  <section class="py-5 bg-body-tertiary border-top">
+    <div class="container py-lg-4">
+      <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+          <p class="small text-primary text-uppercase fw-semibold mb-2">Questions</p>
+          <h2 class="h1 fw-semibold mb-3">Good to know</h2>
+          <p class="lead text-body-secondary mb-0">The things people usually ask before they sign up.</p>
+        </div>
+        {% include "pages/_home_questions.html" %}
+        {% if not user.is_authenticated %}
+          <div class="text-center mt-5">
+            <p class="fs-5 mb-3">Ready to add your family’s dates?</p>
+            <a href="{% url 'account_signup' %}" class="btn btn-primary btn-lg">Sign up free</a>
+          </div>
+        {% endif %}
+      </div>
     </div>
-  </div>
-{% endblock content %}
+  </section>
+{% endblock main %}

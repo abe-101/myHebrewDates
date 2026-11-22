@@ -67,3 +67,8 @@ span.asteriskField {
 .fc .fc-toolbar-title {
   font-size: 1.25rem;
 }
+
+.step-icon {
+  width: 3rem;
+  height: 3rem;
+}
