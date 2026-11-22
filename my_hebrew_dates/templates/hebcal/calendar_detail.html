@@ -6,16 +6,48 @@
 {% block meta_description %}
   Hebrew birthdays, anniversaries, and yahrzeits. Add them to your Google, Apple, or Outlook calendar.
 {% endblock meta_description %}
+{% block css %}
+  {{ block.super }}
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/skeleton.min.css"
+        integrity="sha384-dc/C3lBARgvsqSKJjuInXLIdwNjE3I7iSj0VeF3VkFUWhgbX4IFwvVMythz6D9ku"
+        crossorigin="anonymous" />
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@7.1.5/theme.min.css"
+        integrity="sha384-fGmrqBV7ycpQwdneVMOJxX5eXWbfRHSq5uryzgnsCaLJe0GIsNJBQCOMwufY6cHM"
+        crossorigin="anonymous" />
+{% endblock css %}
 {% block javascript %}
   {{ block.super }}
-  <script src="https://cdn.jsdelivr.net/npm/ical.js@1.5.0/build/ical.min.js"
-          integrity="sha256-uotVKltUv5neKsIlZxrxUccba0PaptusFj6p+w8Sons="
+  {% comment %}
+    ical.js 2 is only published as an ES module, but the FullCalendar iCalendar plugin reads it from window.ICAL.
+    Module scripts and deferred scripts run in document order, so ICAL is set before the plugin runs.
+  {% endcomment %}
+  <script type="importmap">
+    {
+      "imports": {
+        "ical.js": "https://cdn.jsdelivr.net/npm/ical.js@2.2.1/dist/ical.min.js"
+      },
+      "integrity": {
+        "https://cdn.jsdelivr.net/npm/ical.js@2.2.1/dist/ical.min.js": "sha384-6/6vhQMZEiqgaNEDX9aldI95Cf5kbJliPfmGzQ4SRuqkd5CVuLFoEqim+DGt+rtn"
+      }
+    }
+  </script>
+  <script type="module">
+    import ICAL from 'ical.js';
+    window.ICAL = ICAL;
+  </script>
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/fullcalendar@7.1.5/all/global.min.js"
+          integrity="sha384-uZ+7sGN7acFbCgiHm9LopB92Hlac9aEmIt+mBCJm2Ys1cNe/lfTUFj5BT5rNAafG"
           crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.22/index.global.min.js"
-          integrity="sha384-a9qx08ufzJ+0qbHzdqA+GYiSayQQB5BK2YGS/HQT9cxhQm+GhiXFj1ByVXa93ZRR"
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/@fullcalendar/bootstrap5@7.1.5/global.min.js"
+          integrity="sha384-sG+rP0GOS2/AQHS1lvwE3oq0NBAaFytr6i09e+sNPDegRnNiNRDjXDYJrZqBYamz"
           crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@6.1.22/index.global.min.js"
-          integrity="sha384-vvS92ORLaHziRRVFsPbGNAecrGfBMOlYoTgsFypdkV3JtVpzcFwYt99mEkF/ll1b"
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@7.1.5/global.min.js"
+          integrity="sha384-4kWy/Co+rc9D35J3BJxu5kkzX9d7wLWl3IN7Do3HTcUasz0AiUIPmCLTu8KUMM83"
           crossorigin="anonymous"></script>
 {% endblock javascript %}
 {% block content %}
@@ -110,8 +142,17 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var loadingEl = document.getElementById('calendarLoading');
+      var upcomingToolbar = {
+        start: '',
+        center: 'title',
+        end: 'listUpcoming,dayGridMonth',
+      };
+      var monthToolbar = {
+        start: 'prev,next today',
+        center: 'title',
+        end: 'listUpcoming,dayGridMonth',
+      };
       var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-        schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
         initialView: 'listUpcoming',
         views: {
           listUpcoming: {
@@ -119,22 +160,36 @@
             duration: {
               days: 365
             },
-            buttonText: 'Upcoming',
+            titleFormat: function() {
+              return 'Next 12 months';
+            },
           },
         },
-        headerToolbar: {
-          start: 'prev,next',
-          center: 'title',
-          end: 'listUpcoming,dayGridMonth',
+        headerToolbar: upcomingToolbar,
+        buttons: {
+          listUpcoming: {
+            text: 'Upcoming',
+            click: function(event) {
+              event.preventDefault();
+              calendar.changeView('listUpcoming', new Date());
+            },
+          },
+          dayGridMonth: {
+            text: 'Month',
+          },
         },
-        buttonText: {
-          month: 'Month',
-        },
+        displayEventTime: false,
+        eventContrastColor: 'var(--bs-body-bg)',
+        headingLevel: 3,
         height: 'auto',
-        noEventsContent: 'No dates in this period',
+        aspectRatio: window.matchMedia('(min-width: 768px)').matches ? 2 : 1,
+        noEventsText: 'No dates in this period',
         events: {
           url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
           format: 'ics',
+        },
+        datesSet: function(info) {
+          calendar.setOption('headerToolbar', info.view.type === 'dayGridMonth' ? monthToolbar : upcomingToolbar);
         },
         loading: function(isLoading) {
           loadingEl.classList.toggle('d-none', !isLoading);
