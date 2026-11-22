@@ -25,7 +25,7 @@ def test_family_member_sees_only_how_to_subscribe(client, user):
         reverse("hebcal:calendar_detail", args=[calendar.uuid]),
     ).content.decode()
 
-    assert "Add these dates to your own calendar app" in content
+    assert "Choose your calendar app" in content
     assert "Calendar settings" not in content
     assert reverse("hebcal:calendar_edit", args=[calendar.uuid]) not in content
     assert "Share with your family" not in content

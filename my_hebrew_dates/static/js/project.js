@@ -1,5 +1,13 @@
 /* Project specific Javascript goes here. */
 
+// Lets pages suggest the calendar app a phone most likely uses. iPads report a Mac user agent, hence the touch check.
+const userAgent = navigator.userAgent;
+if (/iPhone|iPad|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && navigator.maxTouchPoints > 1)) {
+  document.documentElement.dataset.device = 'ios';
+} else if (/Android/.test(userAgent)) {
+  document.documentElement.dataset.device = 'android';
+}
+
 // On phones and tablets, a copy button with data-share-label opens the device's share sheet instead.
 const canShare = 'share' in navigator && window.matchMedia('(pointer: coarse)').matches;
 if (canShare) {

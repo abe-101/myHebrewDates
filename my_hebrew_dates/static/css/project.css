@@ -47,3 +47,23 @@ span.asteriskField {
   background-color: currentColor;
   mask: url("../images/logo.png") center / contain no-repeat;
 }
+
+.app-option:hover {
+  background-color: var(--bs-tertiary-bg);
+}
+
+/* project.js sets data-device, so the app a phone most likely uses moves to the top. */
+.app-option .suggested-badge {
+  display: none;
+}
+
+[data-device="ios"] .app-option[data-suggest="ios"],
+[data-device="android"] .app-option[data-suggest="android"] {
+  order: -1;
+  border-color: var(--bs-primary) !important;
+}
+
+[data-device="ios"] [data-suggest="ios"] .suggested-badge,
+[data-device="android"] [data-suggest="android"] .suggested-badge {
+  display: inline-block;
+}

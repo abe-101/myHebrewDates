@@ -1,77 +1,83 @@
 <div id="calendarLinks">
-  <div class="list-group mb-4">
-    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+  <div class="d-flex flex-column gap-2 mb-3">
+    <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
+       data-suggest="android"
        href="https://www.google.com/calendar/render?cid=http%3A%2F%2F{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
-      <i class="bi bi-google fs-5" aria-hidden="true"></i>
-      <span>
-        <span class="d-block fw-semibold">Google Calendar</span>
+      <i class="bi bi-google fs-4" aria-hidden="true"></i>
+      <span class="flex-grow-1">
+        <span class="d-block fw-semibold">Google Calendar <span class="suggested-badge badge bg-primary-subtle text-primary-emphasis ms-1">Suggested</span></span>
         <span class="small text-body-secondary">Opens Google Calendar in your browser. Click “Add calendar” there.</span>
       </span>
-      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+      <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
     {# djlint:off D018 #}
-    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+    <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
+       data-suggest="ios"
        href="webcal://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
       {# djlint:on #}
-      <i class="bi bi-apple fs-5" aria-hidden="true"></i>
-      <span>
-        <span class="d-block fw-semibold">Apple Calendar</span>
-        <span class="small text-body-secondary">iPhone, iPad, or Mac. Opens the Calendar app to confirm.</span>
+      <i class="bi bi-apple fs-4" aria-hidden="true"></i>
+      <span class="flex-grow-1">
+        <span class="d-block fw-semibold">Apple Calendar <span class="suggested-badge badge bg-primary-subtle text-primary-emphasis ms-1">Suggested</span></span>
+        <span class="small text-body-secondary">iPhone, iPad, or Mac. The Calendar app opens and asks you to subscribe.</span>
       </span>
-      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+      <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
-    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+    <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
        href="https://outlook.live.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
-      <i class="bi bi-microsoft fs-5" aria-hidden="true"></i>
-      <span>
+      <i class="bi bi-microsoft fs-4" aria-hidden="true"></i>
+      <span class="flex-grow-1">
         <span class="d-block fw-semibold">Outlook.com</span>
         <span class="small text-body-secondary">Personal Microsoft account</span>
       </span>
-      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+      <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
-    <a class="list-group-item list-group-item-action d-flex align-items-center gap-3 py-3"
+    <a class="app-option d-flex align-items-center gap-3 p-3 border rounded-3 link-body-emphasis text-decoration-none"
        href="https://outlook.office.com/calendar/0/addfromweb?url=https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
        target="_blank"
        rel="noopener noreferrer">
-      <i class="bi bi-microsoft fs-5" aria-hidden="true"></i>
-      <span>
+      <i class="bi bi-microsoft fs-4" aria-hidden="true"></i>
+      <span class="flex-grow-1">
         <span class="d-block fw-semibold">Outlook for work or school</span>
         <span class="small text-body-secondary">Office 365 account</span>
       </span>
-      <i class="bi bi-box-arrow-up-right ms-auto" aria-hidden="true"></i>
+      <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>
     </a>
   </div>
-  <p class="small text-body-secondary mb-4">
+  <p class="small text-body-secondary mb-3">
     Using the Google Calendar phone app? After adding it in the browser, turn it on in
     <a href="https://calendar.google.com/calendar/syncselect"
        target="_blank"
        rel="noopener noreferrer">Google’s sync settings</a>.
   </p>
-  <h3 class="h6">Another calendar app</h3>
-  <p class="small text-body-secondary mb-2">
-    Copy this link and paste it where your app offers to subscribe or add a calendar from a URL.
-  </p>
-  <div class="input-group mb-3">
-    <input type="text"
-           class="form-control"
-           id="calendarUrl"
-           aria-label="Calendar subscription link"
-           readonly
-           value="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}" />
-    <button class="btn btn-outline-primary"
-            type="button"
-            data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
-      <i class="bi bi-clipboard me-1" aria-hidden="true"></i><span class="copy-label">Copy</span>
-    </button>
-  </div>
-  <p class="small text-body-secondary mb-0">
-    Want a one-time copy instead?
-    <a href="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
-       download="{{ calendar.name }}.ics">Download an .ics file</a>.
-    It won’t update when dates change.
-  </p>
+  <details>
+    <summary class="small">Using a different app, or want a file instead?</summary>
+    <div class="pt-3">
+      <p class="small text-body-secondary mb-2">
+        Copy this link and paste it where your app offers to subscribe or add a calendar from a URL.
+      </p>
+      <div class="input-group mb-3">
+        <input type="text"
+               class="form-control"
+               id="calendarUrl"
+               aria-label="Calendar subscription link"
+               readonly
+               value="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}" />
+        <button class="btn btn-outline-primary"
+                type="button"
+                data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}">
+          <i class="bi bi-clipboard me-1" aria-hidden="true"></i><span class="copy-label">Copy</span>
+        </button>
+      </div>
+      <p class="small text-body-secondary mb-0">
+        Want a one-time copy instead?
+        <a href="https://{{ domain_name|lower }}{% url 'hebcal:calendar_file' calendar.uuid %}?alarm={{ alarm_time }}"
+           download="{{ calendar.name }}.ics">Download an .ics file</a>.
+        It won’t update when dates change.
+      </p>
+    </div>
+  </details>
 </div>
