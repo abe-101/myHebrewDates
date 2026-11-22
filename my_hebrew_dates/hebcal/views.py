@@ -14,7 +14,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_control
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 from django_htmx_modal_forms import HtmxModalUpdateView
@@ -242,7 +242,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
-@cache_page(60 * 60)
+@cache_control(max_age=60 * 60)
 def calendar_file(request, uuid: UUID):
     user_agent = request.headers.get("user-agent", "")
     alarm_trigger_hours = request.GET.get("alarm") or "9"

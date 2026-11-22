@@ -21,8 +21,9 @@
 
 ### iCalendar gotchas
 
-- The feed is cached by URL alone, in Django (`cache_page`) and at Cloudflare, so its body must not depend on
-  anything else in the request, such as the User-Agent.
+- Cloudflare caches the feed by URL alone, for as long as the view's `Cache-Control` says, so its body must not
+  depend on anything else in the request, such as the User-Agent. Django does not cache it, so a request that
+  bypasses Cloudflare always gets fresh data.
 - Google Calendar requires `CALSCALE:GREGORIAN`, `DTSTAMP`, `LAST-MODIFIED` and `SEQUENCE`.
 - All-day events use `VALUE=DATE`, and DTEND is DTSTART + 1 day.
 - Alarms use `TRIGGER` with a timedelta (default: -9 hours).
