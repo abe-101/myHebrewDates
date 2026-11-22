@@ -8,6 +8,7 @@ X-WR-CALDESC:Hebrew calendar events created by MyHebrewDates.com
 NAME:Golden Calendar
 X-WR-CALNAME:Golden Calendar
 COLOR:royalblue
+LAST-MODIFIED:20260601T120000Z
 REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 X-WR-TIMEZONE:America/New_York

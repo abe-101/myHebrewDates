@@ -260,6 +260,48 @@ class TestTimestampFields:
         assert {value.strip() for value in last_modified} == {expected}
         assert unexpected not in {value.strip() for value in last_modified}
 
+    def test_calendar_last_modified_moves_when_a_date_is_deleted(
+        self,
+        client,
+        make_calendar,
+        frozen_clock,
+    ):
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+        hebrew_date = calendar.calendarOf.get()
+        frozen_clock.move_to(LATER)
+        client.force_login(calendar.owner)
+        client.post(
+            reverse(
+                "hebcal:delete_hebrew_date_htmx",
+                args=[calendar.uuid, hebrew_date.pk],
+            ),
+            headers={"HX-Request": "true"},
+        )
+        calendar.refresh_from_db()
+
+        assert "LAST-MODIFIED:20260915T083000Z" in generate_ical(calendar)
+
+    def test_calendar_last_modified_moves_on_a_bulk_delete(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """The admin's bulk delete action deletes through a queryset."""
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+
+        frozen_clock.move_to(LATER)
+        calendar.calendarOf.all().delete()
+        calendar.refresh_from_db()
+
+        assert "LAST-MODIFIED:20260915T083000Z" in generate_ical(calendar)
+
+    def test_calendar_with_dates_can_still_be_deleted(self, make_calendar):
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+
+        calendar.delete()
+
+        assert not Calendar.objects.filter(pk=calendar.pk).exists()
+
     def test_body_does_not_change_while_the_data_does_not(
         self,
         make_calendar,

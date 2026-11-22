@@ -28,6 +28,10 @@ def new_feed_calendar(model_calendar: ModelCalendar) -> Calendar:
         name=model_calendar.name,
         description="Hebrew calendar events created by MyHebrewDates.com",
         color="royalblue",
+        last_modified=max(
+            [model_calendar.modified]
+            + [hebrew_date.modified for hebrew_date in model_calendar.calendarOf.all()],
+        ),
     )
     # Calendar.new() always adds a random UID, which would change on every fetch
     del newcal["UID"]

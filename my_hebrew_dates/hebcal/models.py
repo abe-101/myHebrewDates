@@ -6,7 +6,10 @@ from functools import cache
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.urls import reverse
+from django.utils import timezone
 
 from my_hebrew_dates.core.models import TimeStampedModel
 
@@ -231,3 +234,14 @@ class HebrewDate(TimeStampedModel):
         if self.day == LONG_MONTH_DAY:
             return "BACKWARD"
         return ""
+
+
+@receiver(post_delete, sender=HebrewDate)
+def touch_calendar_on_date_delete(sender, instance, **kwargs):
+    """
+    A deleted date leaves no row to carry the change, so the calendar's
+    modified moves instead and the feed's LAST-MODIFIED follows it. An
+    update rather than save() does nothing when the calendar is the thing
+    being deleted.
+    """
+    Calendar.objects.filter(pk=instance.calendar_id).update(modified=timezone.now())
