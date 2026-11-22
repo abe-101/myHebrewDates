@@ -4,9 +4,5 @@
   Server Error
 {% endblock title %}
 {% block content %}
-  <h1>Ooops!!! 500</h1>
-  <h3>Looks like something went wrong!</h3>
-  <p>
-    We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing.
-  </p>
+  {% include "_error_page.html" with title="Something went wrong" message="We track these errors automatically, but if the problem persists feel free to contact us. In the meantime, try refreshing." %}
 {% endblock content %}

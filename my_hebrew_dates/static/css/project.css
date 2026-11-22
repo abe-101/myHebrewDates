@@ -67,3 +67,16 @@ span.asteriskField {
 .fc .fc-toolbar-title {
   font-size: 1.25rem;
 }
+
+.step-icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.brand-logo {
+  display: inline-block;
+  width: 1.75em;
+  height: 1.75em;
+  background-color: currentColor;
+  mask: url("../images/logo.png") center / contain no-repeat;
+}

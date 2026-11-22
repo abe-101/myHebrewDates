@@ -6,33 +6,82 @@
 {% block meta_description %}
   Step-by-step guides for keeping Hebrew birthdays, anniversaries, and yahrzeits in Google Calendar, iPhone, and Outlook.
 {% endblock meta_description %}
+{% block page_header %}
+  {% include "_page_header.html" with eyebrow="Guides" title="Hebrew dates in your calendar, step by step" lead="Short guides for keeping Hebrew birthdays, anniversaries, and yahrzeits on the right day every year." %}
+{% endblock page_header %}
 {% block content %}
-  <div class="row">
-    <div class="col-lg-8 col-xl-7">
-      <h1 class="h2 mb-4">Guides</h1>
-      <ul class="list-group">
-        <li class="list-group-item py-3">
-          <a href="{% url 'guide_google_calendar' %}"
-             class="fw-semibold">How to add Hebrew birthdays and yahrzeits to Google Calendar</a>
-        </li>
-        <li class="list-group-item py-3">
-          <a href="{% url 'guide_iphone' %}"
-             class="fw-semibold">How to add Hebrew birthdays and yahrzeits to your iPhone calendar</a>
-        </li>
-        <li class="list-group-item py-3">
-          <a href="{% url 'guide_outlook' %}"
-             class="fw-semibold">How to add Hebrew birthdays and yahrzeits to Outlook</a>
-        </li>
-        <li class="list-group-item py-3">
-          <a href="{% url 'guide_yahrzeit' %}" class="fw-semibold">How to get a yahrzeit reminder every year</a>
-        </li>
-        <li class="list-group-item py-3">
-          <a href="{% url 'guide_anniversary' %}" class="fw-semibold">How to keep track of a Hebrew anniversary</a>
-        </li>
-        <li class="list-group-item py-3">
-          <a href="{% url 'converter' %}" class="fw-semibold">Hebrew date converter</a>
-        </li>
-      </ul>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    <div class="col">
+      <a href="{% url 'guide_google_calendar' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-google" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">Google Calendar</span>
+          <span class="text-body-secondary">How to add Hebrew birthdays and yahrzeits to Google Calendar</span>
+        </span>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{% url 'guide_iphone' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-apple" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">iPhone</span>
+          <span class="text-body-secondary">How to add Hebrew birthdays and yahrzeits to your iPhone calendar</span>
+        </span>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{% url 'guide_outlook' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-microsoft" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">Outlook</span>
+          <span class="text-body-secondary">How to add Hebrew birthdays and yahrzeits to Outlook</span>
+        </span>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{% url 'guide_yahrzeit' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-fire" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">Yahrzeit reminders</span>
+          <span class="text-body-secondary">How to get a yahrzeit reminder every year</span>
+        </span>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{% url 'guide_anniversary' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-heart" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">Hebrew anniversaries</span>
+          <span class="text-body-secondary">How to keep track of a Hebrew anniversary</span>
+        </span>
+      </a>
+    </div>
+    <div class="col">
+      <a href="{% url 'converter' %}"
+         class="d-flex gap-3 h-100 p-4 rounded-3 border bg-body text-body text-decoration-none">
+        <span class="step-icon flex-shrink-0 d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary-emphasis fs-4">
+          <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+        </span>
+        <span>
+          <span class="d-block h5 fw-semibold text-primary-emphasis">Hebrew date converter</span>
+          <span class="text-body-secondary">Find the English dates for any Hebrew date</span>
+        </span>
+      </a>
     </div>
   </div>
 {% endblock content %}

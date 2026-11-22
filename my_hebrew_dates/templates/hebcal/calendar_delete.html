@@ -6,7 +6,7 @@
 {% block content %}
   <div class="row">
     <div class="col-md-8 col-lg-6">
-      <h1 class="h3 mb-3">Delete “{{ calendar.name }}”?</h1>
+      <h1 class="h3 fw-semibold mb-3">Delete “{{ calendar.name }}”?</h1>
       <p>
         {% with count=calendar.calendarOf.count %}
           This removes the calendar and its {{ count }} date{{ count|pluralize }}.
