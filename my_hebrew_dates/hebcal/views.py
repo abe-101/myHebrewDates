@@ -266,13 +266,11 @@ def calendar_file(request, uuid: UUID):
     if experimental:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
-            user_agent=user_agent,
             alarm_trigger=alarm_trigger,
         )
     else:
         calendar_str = generate_ical(
             model_calendar=calendar,
-            user_agent=user_agent,
             alarm_trigger=alarm_trigger,
         )
 

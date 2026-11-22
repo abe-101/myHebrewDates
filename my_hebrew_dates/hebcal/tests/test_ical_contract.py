@@ -12,6 +12,7 @@ import re
 from http import HTTPStatus
 
 import pytest
+from django.core.cache import cache
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.tests.conftest import LATER
@@ -135,6 +136,19 @@ class TestSubscriptionEndpoints:
         # byte reproducible, so a header, alarm or line ending that
         # drifted on one route alone would show up here.
         assert legacy.content == modern.content
+
+    def test_body_is_the_same_for_every_client(self, client, calendar):
+        """
+        The feed is cached by URL alone, in Django and at Cloudflare, so a body
+        that depended on the User-Agent would be served to whichever client
+        asked second.
+        """
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        google = client.get(url, headers={"user-agent": "Google-Calendar-Importer"})
+        cache.clear()
+        apple = client.get(url, headers={"user-agent": "CalendarAgent/950.11"})
+
+        assert google.content == apple.content
 
     def test_subscription_does_not_require_login(self, client, calendar):
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
