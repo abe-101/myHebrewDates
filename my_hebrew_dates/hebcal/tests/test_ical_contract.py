@@ -185,6 +185,30 @@ class TestSubscriptionEndpoints:
 
         assert "Zebulun" in client.get(url).content.decode()
 
+    def test_unchanged_feed_answers_revalidation_with_304(self, client, calendar):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        etag = client.get(url)["ETag"]
+
+        response = client.get(url, headers={"if-none-match": etag})
+
+        assert response.status_code == HTTPStatus.NOT_MODIFIED
+        assert response["Cache-Control"] == "max-age=3600"
+
+    def test_changed_feed_answers_revalidation_with_new_body(self, client, calendar):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        etag = client.get(url)["ETag"]
+        calendar.calendarOf.create(
+            month=NISAN,
+            day=20,
+            event_type=BIRTHDAY,
+            name="Zebulun",
+        )
+
+        response = client.get(url, headers={"if-none-match": etag})
+
+        assert response.status_code == HTTPStatus.OK
+        assert "Zebulun" in response.content.decode()
+
     def test_subscription_does_not_require_login(self, client, calendar):
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
         assert client.get(url).status_code == HTTPStatus.OK
