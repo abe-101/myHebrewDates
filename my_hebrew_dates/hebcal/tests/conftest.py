@@ -1,4 +1,5 @@
 from datetime import timedelta
+from uuid import UUID
 
 import pytest
 from django.contrib.auth import get_user_model
@@ -18,6 +19,9 @@ PINNED_HEBREW_YEAR = 5787
 LATER = "2026-09-15 08:30:00 +0000"
 
 DEFAULT_ALARM = timedelta(hours=9)
+
+# Events link to the calendar page, so its uuid is part of the golden bytes.
+GOLDEN_UUID = UUID("6f1c2b8e-3d4a-4e5f-9a7b-1c2d3e4f5a6b")
 
 
 @pytest.fixture
@@ -60,6 +64,7 @@ def make_calendar(calendar_owner):
     def _make(name="Golden Calendar", timezone="America/New_York", events=()):
         calendar = Calendar.objects.create(
             name=name,
+            uuid=GOLDEN_UUID,
             owner=calendar_owner,
             timezone=timezone,
         )

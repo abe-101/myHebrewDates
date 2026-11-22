@@ -4,6 +4,7 @@ from datetime import timedelta
 from hashlib import sha1
 from typing import TYPE_CHECKING
 
+from django.urls import reverse
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
@@ -53,6 +54,10 @@ def generate_ical(
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
     newcal = new_feed_calendar(model_calendar)
+    calendar_url = MYHEBREWDATES_URL + reverse(
+        "hebcal:calendar_detail",
+        kwargs={"uuid": model_calendar.uuid},
+    )
 
     events = []
 
@@ -83,6 +88,7 @@ def generate_ical(
                 f"Keep your credit cards active. Prevent closures → {CHARJ_URL}"
             )
             event.add("description", base_description)
+            event.add("url", calendar_url)
 
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
             event.add("dtstamp", hebrew_date.modified)
@@ -133,6 +139,10 @@ def generate_ical_experimental(
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
     newcal = new_feed_calendar(model_calendar)
+    calendar_url = MYHEBREWDATES_URL + reverse(
+        "hebcal:calendar_detail",
+        kwargs={"uuid": model_calendar.uuid},
+    )
 
     events = []
 
@@ -162,6 +172,7 @@ def generate_ical_experimental(
             f"{title}\n\nKeep your credit cards active. Prevent closures → {CHARJ_URL}"
         )
         event.add("description", base_description)
+        event.add("url", calendar_url)
 
         # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
         event.add("dtstamp", hebrew_date.modified)
