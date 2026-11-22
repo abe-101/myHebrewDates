@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
+from icalendar import vDuration
 
 if TYPE_CHECKING:
     from my_hebrew_dates.hebcal.models import Calendar as ModelCalendar
@@ -17,6 +18,8 @@ if TYPE_CHECKING:
 MYHEBREWDATES_URL = "https://myhebrewdates.com"
 CHARJ_URL = "https://charj.cc"
 MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
+# The feed view caches for an hour, so asking clients to come back sooner is pointless
+FEED_REFRESH_INTERVAL = timedelta(hours=6)
 
 
 def new_feed_calendar(model_calendar: ModelCalendar, timezone: str) -> Calendar:
@@ -29,6 +32,14 @@ def new_feed_calendar(model_calendar: ModelCalendar, timezone: str) -> Calendar:
     )
     # Calendar.new() always adds a random UID, which would change on every fetch
     del newcal["UID"]
+    # Calendar.new(refresh_interval=...) omits the VALUE=DURATION that RFC 7986 requires
+    newcal.add(
+        "refresh-interval",
+        FEED_REFRESH_INTERVAL,
+        parameters={"value": "DURATION"},
+    )
+    # Outlook and Apple Calendar read the older X-PUBLISHED-TTL, not REFRESH-INTERVAL
+    newcal.add("x-published-ttl", vDuration(FEED_REFRESH_INTERVAL))
     # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
     newcal.add("x-wr-timezone", timezone)
     return newcal
