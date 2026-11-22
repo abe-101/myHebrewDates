@@ -261,4 +261,4 @@ def add_request_context(request):
 
 
 POSTHOG_MW_EXTRA_TAGS = add_request_context
-POSTHOG_MW_CAPTURE_EXCEPTIONS = True
+POSTHOG_MW_CAPTURE_EXCEPTIONS = False
