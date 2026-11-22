@@ -1,10 +1,8 @@
 # ruff: noqa: S324
 from base64 import urlsafe_b64encode
-from datetime import datetime
 from datetime import timedelta
 from hashlib import sha1
 from typing import TYPE_CHECKING
-from zoneinfo import ZoneInfo
 
 from icalendar import Alarm
 from icalendar import Calendar
@@ -53,9 +51,9 @@ def generate_ical(
     newcal = new_feed_calendar(model_calendar)
 
     events = []
-    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
-    for hebrew_date in model_calendar.calendarOf.all():
+    # Identical dates share a start and UID, so only the pk can order them
+    for hebrew_date in sorted(model_calendar.calendarOf.all(), key=lambda d: d.pk):
         for eng_date in hebrew_date.get_english_dates():
             event_hash = sha1(
                 (
@@ -83,7 +81,7 @@ def generate_ical(
             event.add("description", base_description)
 
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-            event.add("dtstamp", now_utc)
+            event.add("dtstamp", hebrew_date.modified)
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
 
@@ -117,7 +115,7 @@ def generate_ical(
 
             events.append(event)
 
-    sorted_events = sorted(events, key=lambda e: e.start)
+    sorted_events = sorted(events, key=lambda e: (e.start, e.uid))
 
     for event in sorted_events:
         newcal.add_component(event)
@@ -133,9 +131,9 @@ def generate_ical_experimental(
     newcal = new_feed_calendar(model_calendar)
 
     events = []
-    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
-    for hebrew_date in model_calendar.calendarOf.all():
+    # Identical dates share a start and UID, so only the pk can order them
+    for hebrew_date in sorted(model_calendar.calendarOf.all(), key=lambda d: d.pk):
         event_hash = sha1(
             (
                 hebrew_date.event_type
@@ -162,7 +160,7 @@ def generate_ical_experimental(
         event.add("description", base_description)
 
         # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-        event.add("dtstamp", now_utc)
+        event.add("dtstamp", hebrew_date.modified)
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
 
@@ -206,7 +204,7 @@ def generate_ical_experimental(
 
         events.append(event)
 
-    sorted_events = sorted(events, key=lambda e: e.start)
+    sorted_events = sorted(events, key=lambda e: (e.start, e.uid))
 
     for event in sorted_events:
         newcal.add_component(event)

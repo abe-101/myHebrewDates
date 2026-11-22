@@ -14,6 +14,7 @@ from http import HTTPStatus
 import pytest
 from django.urls import reverse
 
+from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.tests.conftest import LATER
 from my_hebrew_dates.hebcal.utils import generate_ical
 
@@ -95,6 +96,30 @@ class TestUidStability:
         ical = generate_ical(calendar)
         starts = re.findall(r"^DTSTART;VALUE=DATE:(\d{8})", ical, re.MULTILINE)
         assert starts == sorted(starts)
+
+    def test_identical_dates_keep_their_order_after_an_edit(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """
+        Two copies of a date share a start and UID. Postgres tends to return
+        an updated row last, which would reorder them and change the ETag.
+        """
+        calendar = make_calendar(
+            events=[
+                (NISAN, 15, BIRTHDAY, "Avraham"),
+                (NISAN, 15, BIRTHDAY, "Avraham"),
+            ],
+        )
+        first = calendar.calendarOf.order_by("pk").first()
+        frozen_clock.move_to(LATER)
+        first.save()
+        calendar = Calendar.objects.prefetch_related("calendarOf").get(pk=calendar.pk)
+
+        dtstamps = re.findall(r"^DTSTAMP:(\S+)", generate_ical(calendar), re.MULTILINE)
+
+        assert dtstamps[:2] == ["20260915T083000Z", "20260601T120000Z"]
 
 
 @pytest.mark.usefixtures("pinned_hebrew_dates")
@@ -211,13 +236,18 @@ class TestTimestampFields:
         assert {value.strip() for value in last_modified} == {expected}
         assert unexpected not in {value.strip() for value in last_modified}
 
-    def test_dtstamp_is_the_current_instant(self, make_calendar, frozen_clock):
+    def test_body_does_not_change_while_the_data_does_not(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """
+        An unchanged body keeps its ETag, so a client or Cloudflare that
+        revalidates gets a 304 instead of the whole feed again.
+        """
         calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+        before = generate_ical(calendar)
 
         frozen_clock.move_to(LATER)
-        ical = generate_ical(calendar)
-        dtstamps = {
-            value.strip() for value in re.findall(r"^DTSTAMP:(.*)$", ical, re.MULTILINE)
-        }
 
-        assert dtstamps == {"20260915T083000Z"}
+        assert generate_ical(calendar) == before
