@@ -199,6 +199,9 @@ LOGGING = {
     },
     "root": {"level": "INFO", "handlers": ["console"]},
     "loggers": {
+        # Named so that disable_existing_loggers spares app loggers created
+        # while this config is applied, such as the request context filter's.
+        "my_hebrew_dates": {"level": "INFO"},
         "django.db.backends": {
             "level": "ERROR",
             "handlers": ["console"],
