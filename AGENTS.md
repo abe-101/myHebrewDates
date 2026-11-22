@@ -21,7 +21,8 @@
 
 ### iCalendar gotchas
 
-- Google Calendar is detected by user-agent sniffing and gets UTC timezones for better compatibility.
+- The feed is cached by URL alone, in Django (`cache_page`) and at Cloudflare, so its body must not depend on
+  anything else in the request, such as the User-Agent.
 - Google Calendar requires `CALSCALE:GREGORIAN`, `DTSTAMP`, `LAST-MODIFIED` and `SEQUENCE`.
 - All-day events use `VALUE=DATE`, and DTEND is DTSTART + 1 day.
 - Alarms use `TRIGGER` with a timedelta (default: -9 hours).
