@@ -15,6 +15,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.cache import cache_control
+from django.views.decorators.http import conditional_page
 from django.views.decorators.http import require_POST
 from django.views.generic.edit import DeleteView
 from django_htmx_modal_forms import HtmxModalUpdateView
@@ -242,6 +243,7 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
 
 
+@conditional_page
 @cache_control(max_age=60 * 60)
 def calendar_file(request, uuid: UUID):
     user_agent = request.headers.get("user-agent", "")
@@ -262,8 +264,8 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    experimental = request.GET.get("experimental", False)
-    if experimental:
+    experimental = request.GET.get("experimental", "").lower()
+    if experimental not in {"", "0", "false"}:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             alarm_trigger=alarm_trigger,

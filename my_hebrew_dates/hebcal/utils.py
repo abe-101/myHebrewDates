@@ -1,11 +1,10 @@
 # ruff: noqa: S324
 from base64 import urlsafe_b64encode
-from datetime import datetime
 from datetime import timedelta
 from hashlib import sha1
 from typing import TYPE_CHECKING
-from zoneinfo import ZoneInfo
 
+from django.urls import reverse
 from icalendar import Alarm
 from icalendar import Calendar
 from icalendar import Event
@@ -30,6 +29,10 @@ def new_feed_calendar(model_calendar: ModelCalendar) -> Calendar:
         name=model_calendar.name,
         description="Hebrew calendar events created by MyHebrewDates.com",
         color="royalblue",
+        last_modified=max(
+            [model_calendar.modified]
+            + [hebrew_date.modified for hebrew_date in model_calendar.calendarOf.all()],
+        ),
     )
     # Calendar.new() always adds a random UID, which would change on every fetch
     del newcal["UID"]
@@ -39,6 +42,8 @@ def new_feed_calendar(model_calendar: ModelCalendar) -> Calendar:
         FEED_REFRESH_INTERVAL,
         parameters={"value": "DURATION"},
     )
+    # Apple Calendar may read this rather than COLOR; it is royalblue in hex
+    newcal.add("x-apple-calendar-color", "#4169E1")
     # Outlook and Apple Calendar read the older X-PUBLISHED-TTL, not REFRESH-INTERVAL
     newcal.add("x-published-ttl", vDuration(FEED_REFRESH_INTERVAL))
     # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
@@ -51,11 +56,15 @@ def generate_ical(
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
     newcal = new_feed_calendar(model_calendar)
+    calendar_url = MYHEBREWDATES_URL + reverse(
+        "hebcal:calendar_detail",
+        kwargs={"uuid": model_calendar.uuid},
+    )
 
     events = []
-    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
-    for hebrew_date in model_calendar.calendarOf.all():
+    # Identical dates share a start and UID, so only the pk can order them
+    for hebrew_date in sorted(model_calendar.calendarOf.all(), key=lambda d: d.pk):
         for eng_date in hebrew_date.get_english_dates():
             event_hash = sha1(
                 (
@@ -81,9 +90,10 @@ def generate_ical(
                 f"Keep your credit cards active. Prevent closures → {CHARJ_URL}"
             )
             event.add("description", base_description)
+            event.add("url", calendar_url)
 
             # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-            event.add("dtstamp", now_utc)
+            event.add("dtstamp", hebrew_date.modified)
             event.add("last-modified", hebrew_date.modified)
             event.add("sequence", 0)
 
@@ -97,6 +107,8 @@ def generate_ical(
             )
             event.add("uid", uid)
             event.add("transp", "TRANSPARENT")
+            event.add("status", "CONFIRMED")
+            event.add("class", "PUBLIC")
             event.add(
                 "categories",
                 ["Hebrew Date", str(hebrew_date.get_event_type_display())],
@@ -117,7 +129,7 @@ def generate_ical(
 
             events.append(event)
 
-    sorted_events = sorted(events, key=lambda e: e.start)
+    sorted_events = sorted(events, key=lambda e: (e.start, e.uid))
 
     for event in sorted_events:
         newcal.add_component(event)
@@ -131,11 +143,15 @@ def generate_ical_experimental(
     alarm_trigger: timedelta = timedelta(hours=9),
 ) -> str:
     newcal = new_feed_calendar(model_calendar)
+    calendar_url = MYHEBREWDATES_URL + reverse(
+        "hebcal:calendar_detail",
+        kwargs={"uuid": model_calendar.uuid},
+    )
 
     events = []
-    now_utc = datetime.now(tz=ZoneInfo("UTC"))
 
-    for hebrew_date in model_calendar.calendarOf.all():
+    # Identical dates share a start and UID, so only the pk can order them
+    for hebrew_date in sorted(model_calendar.calendarOf.all(), key=lambda d: d.pk):
         event_hash = sha1(
             (
                 hebrew_date.event_type
@@ -160,9 +176,10 @@ def generate_ical_experimental(
             f"{title}\n\nKeep your credit cards active. Prevent closures → {CHARJ_URL}"
         )
         event.add("description", base_description)
+        event.add("url", calendar_url)
 
         # Critical for Google Calendar: DTSTAMP, LAST-MODIFIED, and SEQUENCE
-        event.add("dtstamp", now_utc)
+        event.add("dtstamp", hebrew_date.modified)
         event.add("last-modified", hebrew_date.modified)
         event.add("sequence", 0)
 
@@ -175,6 +192,8 @@ def generate_ical_experimental(
             parameters={"value": "DATE"},
         )
         event.add("transp", "TRANSPARENT")
+        event.add("status", "CONFIRMED")
+        event.add("class", "PUBLIC")
         event.add("uid", uid)
         event.add(
             "categories",
@@ -206,7 +225,7 @@ def generate_ical_experimental(
 
         events.append(event)
 
-    sorted_events = sorted(events, key=lambda e: e.start)
+    sorted_events = sorted(events, key=lambda e: (e.start, e.uid))
 
     for event in sorted_events:
         newcal.add_component(event)

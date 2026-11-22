@@ -14,6 +14,7 @@ from http import HTTPStatus
 import pytest
 from django.urls import reverse
 
+from my_hebrew_dates.hebcal.models import Calendar
 from my_hebrew_dates.hebcal.tests.conftest import LATER
 from my_hebrew_dates.hebcal.utils import generate_ical
 
@@ -96,6 +97,30 @@ class TestUidStability:
         starts = re.findall(r"^DTSTART;VALUE=DATE:(\d{8})", ical, re.MULTILINE)
         assert starts == sorted(starts)
 
+    def test_identical_dates_keep_their_order_after_an_edit(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """
+        Two copies of a date share a start and UID. Postgres tends to return
+        an updated row last, which would reorder them and change the ETag.
+        """
+        calendar = make_calendar(
+            events=[
+                (NISAN, 15, BIRTHDAY, "Avraham"),
+                (NISAN, 15, BIRTHDAY, "Avraham"),
+            ],
+        )
+        first = calendar.calendarOf.order_by("pk").first()
+        frozen_clock.move_to(LATER)
+        first.save()
+        calendar = Calendar.objects.prefetch_related("calendarOf").get(pk=calendar.pk)
+
+        dtstamps = re.findall(r"^DTSTAMP:(\S+)", generate_ical(calendar), re.MULTILINE)
+
+        assert dtstamps[:2] == ["20260915T083000Z", "20260601T120000Z"]
+
 
 @pytest.mark.usefixtures("pinned_hebrew_dates")
 class TestSubscriptionEndpoints:
@@ -160,6 +185,30 @@ class TestSubscriptionEndpoints:
 
         assert "Zebulun" in client.get(url).content.decode()
 
+    def test_unchanged_feed_answers_revalidation_with_304(self, client, calendar):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        etag = client.get(url)["ETag"]
+
+        response = client.get(url, headers={"if-none-match": etag})
+
+        assert response.status_code == HTTPStatus.NOT_MODIFIED
+        assert response["Cache-Control"] == "max-age=3600"
+
+    def test_changed_feed_answers_revalidation_with_new_body(self, client, calendar):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        etag = client.get(url)["ETag"]
+        calendar.calendarOf.create(
+            month=NISAN,
+            day=20,
+            event_type=BIRTHDAY,
+            name="Zebulun",
+        )
+
+        response = client.get(url, headers={"if-none-match": etag})
+
+        assert response.status_code == HTTPStatus.OK
+        assert "Zebulun" in response.content.decode()
+
     def test_subscription_does_not_require_login(self, client, calendar):
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
         assert client.get(url).status_code == HTTPStatus.OK
@@ -179,6 +228,15 @@ class TestSubscriptionEndpoints:
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
         response = client.get(url, {"alarm": alarm})
         assert f"TRIGGER:{expected}" in response.content.decode()
+
+    @pytest.mark.parametrize(
+        ("value", "has_rrule"),
+        [("1", True), ("true", True), ("0", False), ("false", False), ("", False)],
+    )
+    def test_experimental_query_param(self, client, calendar, value, has_rrule):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        response = client.get(url, {"experimental": value})
+        assert ("RRULE:" in response.content.decode()) == has_rrule
 
 
 @pytest.mark.usefixtures("pinned_hebrew_dates")
@@ -211,13 +269,60 @@ class TestTimestampFields:
         assert {value.strip() for value in last_modified} == {expected}
         assert unexpected not in {value.strip() for value in last_modified}
 
-    def test_dtstamp_is_the_current_instant(self, make_calendar, frozen_clock):
+    def test_calendar_last_modified_moves_when_a_date_is_deleted(
+        self,
+        client,
+        make_calendar,
+        frozen_clock,
+    ):
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+        hebrew_date = calendar.calendarOf.get()
+        frozen_clock.move_to(LATER)
+        client.force_login(calendar.owner)
+        client.post(
+            reverse(
+                "hebcal:delete_hebrew_date_htmx",
+                args=[calendar.uuid, hebrew_date.pk],
+            ),
+            headers={"HX-Request": "true"},
+        )
+        calendar.refresh_from_db()
+
+        assert "LAST-MODIFIED:20260915T083000Z" in generate_ical(calendar)
+
+    def test_calendar_last_modified_moves_on_a_bulk_delete(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """The admin's bulk delete action deletes through a queryset."""
         calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
 
         frozen_clock.move_to(LATER)
-        ical = generate_ical(calendar)
-        dtstamps = {
-            value.strip() for value in re.findall(r"^DTSTAMP:(.*)$", ical, re.MULTILINE)
-        }
+        calendar.calendarOf.all().delete()
+        calendar.refresh_from_db()
 
-        assert dtstamps == {"20260915T083000Z"}
+        assert "LAST-MODIFIED:20260915T083000Z" in generate_ical(calendar)
+
+    def test_calendar_with_dates_can_still_be_deleted(self, make_calendar):
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+
+        calendar.delete()
+
+        assert not Calendar.objects.filter(pk=calendar.pk).exists()
+
+    def test_body_does_not_change_while_the_data_does_not(
+        self,
+        make_calendar,
+        frozen_clock,
+    ):
+        """
+        An unchanged body keeps its ETag, so a client or Cloudflare that
+        revalidates gets a 304 instead of the whole feed again.
+        """
+        calendar = make_calendar(events=[(NISAN, 15, BIRTHDAY, "Avraham")])
+        before = generate_ical(calendar)
+
+        frozen_clock.move_to(LATER)
+
+        assert generate_ical(calendar) == before

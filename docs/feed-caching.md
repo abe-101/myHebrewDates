@@ -48,6 +48,10 @@ Nothing on our side makes Google show a change immediately.
   That broke the rule above. Every event is all-day with a date only, so the time zone never moved an event.
 - **No Django cache.** A Django cache kept an old copy for an hour, and nothing could delete it after a change. That
   copy also stopped the Referer exception from working.
+- **An ETag on every feed.** The body changes only when the calendar's data changes, so the view sends an `ETag` and
+  answers a matching `If-None-Match` with `304 Not Modified`. Cloudflare and calendar apps that revalidate then skip
+  the download. Keep the body free of anything that changes on each request, such as the current time in `DTSTAMP`.
+  The view sends no `Last-Modified` header: a deleted date changes the body but would not move that date.
 - **No purge after a change, for now.** Cloudflare can purge every feed URL for one calendar with one API call. With
   purges, a much longer edge lifetime is possible. We did not add purges, because the load is low and we want no
   Cloudflare API integration.
