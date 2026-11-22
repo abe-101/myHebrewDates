@@ -105,6 +105,8 @@ def generate_ical(
             )
             event.add("uid", uid)
             event.add("transp", "TRANSPARENT")
+            event.add("status", "CONFIRMED")
+            event.add("class", "PUBLIC")
             event.add(
                 "categories",
                 ["Hebrew Date", str(hebrew_date.get_event_type_display())],
@@ -188,6 +190,8 @@ def generate_ical_experimental(
             parameters={"value": "DATE"},
         )
         event.add("transp", "TRANSPARENT")
+        event.add("status", "CONFIRMED")
+        event.add("class", "PUBLIC")
         event.add("uid", uid)
         event.add(
             "categories",
