@@ -12,7 +12,6 @@ import re
 from http import HTTPStatus
 
 import pytest
-from django.core.cache import cache
 from django.urls import reverse
 
 from my_hebrew_dates.hebcal.tests.conftest import LATER
@@ -122,6 +121,7 @@ class TestSubscriptionEndpoints:
         assert response["Content-Type"] == "text/calendar"
         assert f'filename="{calendar.uuid}.ics"' in response["Content-Disposition"]
         assert response.content.startswith(b"BEGIN:VCALENDAR")
+        assert response["Cache-Control"] == "max-age=3600"
 
     def test_legacy_ical_url_serves_same_body(self, client, calendar):
         modern = client.get(
@@ -139,16 +139,26 @@ class TestSubscriptionEndpoints:
 
     def test_body_is_the_same_for_every_client(self, client, calendar):
         """
-        The feed is cached by URL alone, in Django and at Cloudflare, so a body
-        that depended on the User-Agent would be served to whichever client
-        asked second.
+        Cloudflare caches the feed by URL alone, so a body that depended on the
+        User-Agent would be served to whichever client asked second.
         """
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
         google = client.get(url, headers={"user-agent": "Google-Calendar-Importer"})
-        cache.clear()
         apple = client.get(url, headers={"user-agent": "CalendarAgent/950.11"})
 
         assert google.content == apple.content
+
+    def test_edit_shows_up_on_the_next_request(self, client, calendar):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        client.get(url)
+        calendar.calendarOf.create(
+            month=NISAN,
+            day=20,
+            event_type=BIRTHDAY,
+            name="Zebulun",
+        )
+
+        assert "Zebulun" in client.get(url).content.decode()
 
     def test_subscription_does_not_require_login(self, client, calendar):
         url = reverse("hebcal:calendar_file", args=[calendar.uuid])
