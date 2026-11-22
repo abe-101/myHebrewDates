@@ -9,6 +9,8 @@ from .models import HebrewDate
 
 class HebrewDateInline(admin.TabularInline):
     model = HebrewDate
+    fields = ("name", "event_type", "month", "day")
+    extra = 0
 
 
 @admin.register(Calendar)
@@ -16,60 +18,64 @@ class CalendarAdmin(admin.ModelAdmin):
     inlines = [HebrewDateInline]
     list_display = (
         "name",
-        "owner_email",
-        "display_uuid",
-        "timezone",
+        "owner_link",
+        "public_page",
         "events_count",
+        "timezone",
         "created",
         "modified",
     )
+    list_select_related = ("owner",)
     search_fields = ("name", "uuid", "owner__email")
+    date_hierarchy = "created"
+    ordering = ("-created",)
+    autocomplete_fields = ("owner",)
+    fields = ("name", "owner", "timezone", "public_page", "created", "modified")
+    readonly_fields = ("public_page", "created", "modified")
 
-    def owner_email(self, obj):
-        return obj.owner.email
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(events_count=Count("calendarOf"))
 
-    @admin.display(ordering="events_count")
+    @admin.display(description="Owner", ordering="owner__email")
+    def owner_link(self, obj):
+        url = reverse("admin:users_user_change", args=[obj.owner.pk])
+        return format_html('<a href="{}">{}</a>', url, obj.owner.email)
+
+    @admin.display(description="Events", ordering="events_count")
     def events_count(self, obj):
         return obj.events_count
 
-    def display_uuid(self, obj):
+    @admin.display(description="Public page")
+    def public_page(self, obj):
         url = reverse("hebcal:calendar_detail", args=[obj.uuid])
         return format_html('<a href="{}">{}</a>', url, obj.uuid)
-
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request).prefetch_related("owner")
-        return queryset.annotate(events_count=Count("calendarOf")).order_by(
-            "-events_count",
-        )
 
 
 @admin.register(HebrewDate)
 class HebrewDateAdmin(admin.ModelAdmin):
     list_display = (
         "name",
-        "month",
-        "day",
         "event_type",
-        "link_to_calendar",
-        "formatted_event_date",
+        "hebrew_date",
+        "calendar_link",
+        "owner_email",
         "created",
-        "modified",
     )
-    list_filter = ("event_type", "calendar", "month", "day")
-    search_fields = (
-        "name",
-        "calendar__name",
-        "calendar__owner__email",
-        "calendar__uuid",
-    )
+    list_select_related = ("calendar__owner",)
+    list_filter = ("event_type",)
+    search_fields = ("name", "calendar__name", "calendar__owner__email")
+    ordering = ("-created",)
+    autocomplete_fields = ("calendar",)
 
-    @admin.display(description="Calendar")
-    def link_to_calendar(self, obj):
-        # This method creates a link to the Calendar object in the admin.
+    @admin.display(description="Date", ordering="month")
+    def hebrew_date(self, obj):
+        return obj.get_hebrew_date()
+
+    @admin.display(description="Calendar", ordering="calendar__name")
+    def calendar_link(self, obj):
         url = reverse("admin:hebcal_calendar_change", args=[obj.calendar.pk])
         return format_html('<a href="{}">{}</a>', url, obj.calendar.name)
 
-    @admin.display(description="Formatted Event Date")
-    def formatted_event_date(self, obj):
-        # Assuming you have a method to format the date
-        return obj.get_hebrew_date()
+    @admin.display(description="Owner", ordering="calendar__owner__email")
+    def owner_email(self, obj):
+        return obj.calendar.owner.email
