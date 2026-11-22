@@ -29,6 +29,7 @@ def new_feed_calendar(model_calendar: ModelCalendar, timezone: str) -> Calendar:
         method="PUBLISH",
         name=model_calendar.name,
         description="Hebrew calendar events created by MyHebrewDates.com",
+        color="royalblue",
     )
     # Calendar.new() always adds a random UID, which would change on every fetch
     del newcal["UID"]
