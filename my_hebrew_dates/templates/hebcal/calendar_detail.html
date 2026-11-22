@@ -142,6 +142,16 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       var loadingEl = document.getElementById('calendarLoading');
+      var upcomingToolbar = {
+        start: '',
+        center: 'title',
+        end: 'listUpcoming,dayGridMonth',
+      };
+      var monthToolbar = {
+        start: 'prev,next today',
+        center: 'title',
+        end: 'listUpcoming,dayGridMonth',
+      };
       var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
         initialView: 'listUpcoming',
         views: {
@@ -150,27 +160,36 @@
             duration: {
               days: 365
             },
+            titleFormat: function() {
+              return 'Next 12 months';
+            },
           },
         },
-        headerToolbar: {
-          start: 'prev,next',
-          center: 'title',
-          end: 'listUpcoming,dayGridMonth',
-        },
+        headerToolbar: upcomingToolbar,
         buttons: {
           listUpcoming: {
             text: 'Upcoming',
+            click: function(event) {
+              event.preventDefault();
+              calendar.changeView('listUpcoming', new Date());
+            },
           },
           dayGridMonth: {
             text: 'Month',
           },
         },
+        displayEventTime: false,
+        eventContrastColor: 'var(--bs-body-bg)',
         headingLevel: 3,
         height: 'auto',
+        aspectRatio: window.matchMedia('(min-width: 768px)').matches ? 2 : 1,
         noEventsText: 'No dates in this period',
         events: {
           url: "{% url 'hebcal:calendar_file' calendar.uuid %}",
           format: 'ics',
+        },
+        datesSet: function(info) {
+          calendar.setOption('headerToolbar', info.view.type === 'dayGridMonth' ? monthToolbar : upcomingToolbar);
         },
         loading: function(isLoading) {
           loadingEl.classList.toggle('d-none', !isLoading);
