@@ -4,12 +4,5 @@
   Page not found
 {% endblock title %}
 {% block content %}
-  <h1>Page not found</h1>
-  <p>
-    {% if exception %}
-      {{ exception }}
-    {% else %}
-      This is not the page you were looking for.
-    {% endif %}
-  </p>
+  {% include "_error_page.html" with title="Page not found" message=exception|default:"This is not the page you were looking for." %}
 {% endblock content %}

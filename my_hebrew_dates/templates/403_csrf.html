@@ -4,12 +4,5 @@
   Forbidden (403)
 {% endblock title %}
 {% block content %}
-  <h1>Forbidden (403)</h1>
-  <p>
-    {% if exception %}
-      {{ exception }}
-    {% else %}
-      You're not allowed to access this page.
-    {% endif %}
-  </p>
+  {% include "_error_page.html" with title="Forbidden (403)" message=exception|default:"You're not allowed to access this page." %}
 {% endblock content %}
