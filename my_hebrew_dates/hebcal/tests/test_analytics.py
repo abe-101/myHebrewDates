@@ -42,7 +42,12 @@ def test_journey_is_captured_under_the_user_id(client, mailoutbox, captured):
     calendar = Calendar.objects.get(owner__username="analytics")
     client.post(
         reverse("hebcal:hebrew_date_new", args=[calendar.uuid]),
-        {"name": "Moshe", "month": HebrewMonthEnum.SHEVAT, "day": 15, "event_type": "🎂"},
+        {
+            "name": "Moshe",
+            "month": HebrewMonthEnum.SHEVAT,
+            "day": 15,
+            "event_type": "🎂",
+        },
     )
     client.logout()
     client.get(
@@ -77,7 +82,9 @@ def test_journey_is_captured_under_the_user_id(client, mailoutbox, captured):
         ("", "other"),
     ],
 )
-def test_feed_fetch_names_the_calendar_app(client, user, captured, user_agent, expected):
+def test_feed_fetch_names_the_calendar_app(
+    client, user, captured, user_agent, expected
+):
     calendar = Calendar.objects.create(name="Family", owner=user)
     client.get(
         reverse("hebcal:calendar_file", args=[calendar.uuid]),
