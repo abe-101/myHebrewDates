@@ -54,16 +54,19 @@
   {% include "hebcal/_calendar_header.html" with active_tab="subscribe" %}
   <div class="row">
     <div class="col-lg-8">
-      {% if calendar.owner != request.user %}
-        <p class="mb-4">Add these dates to your own calendar app. When new dates are added here, they show up for you too.</p>
-      {% endif %}
       <section class="mb-5">
-        <h2 class="h5 mb-3">Choose your calendar app</h2>
-        <div class="mb-3">
-          <label for="alarmTime" class="form-label">Reminder</label>
+        <h2 class="h5 mb-2">Add to your calendar</h2>
+        <p class="text-body-secondary mb-4">
+          Subscribe once and every date shows up in your calendar app on the right day, every year. Dates added here later show up for you too.
+        </p>
+        <div class="mb-4">
+          <h3 id="reminderStep" class="h6 mb-2">
+            <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis me-1">1</span> Choose a reminder
+          </h3>
           <select name="alarm"
                   id="alarmTime"
                   class="form-select w-auto"
+                  aria-labelledby="reminderStep"
                   aria-describedby="alarmHelp"
                   hx-get="{% url 'hebcal:update_calendar_links_htmx' calendar.uuid %}"
                   hx-target="#calendarLinks"
@@ -84,10 +87,12 @@
             <option value="11">11 AM on the day</option>
             <option value="12">Noon on the day</option>
           </select>
-          <div id="alarmHelp" class="form-text">
-            Pick this before you add the calendar. To change it later, remove the calendar from your app and add it again.
-          </div>
+          <div id="alarmHelp"
+               class="form-text">To change it later, remove the calendar from your app and add it again.</div>
         </div>
+        <h3 class="h6 mb-2">
+          <span class="badge rounded-pill bg-primary-subtle text-primary-emphasis me-1">2</span> Choose your calendar app
+        </h3>
         {% include "hebcal/_calendar_links.html" %}
       </section>
       {% if calendar.owner == request.user %}
@@ -98,7 +103,9 @@
           </p>
           <button type="button"
                   class="btn btn-outline-primary"
-                  data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+                  data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                  data-share-label="Share this page"
+                  data-share-title="{{ calendar.name }}">
             <i class="bi bi-link-45deg me-1"
                aria-hidden="true"></i><span class="copy-label">Copy link to this page</span>
           </button>

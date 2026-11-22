@@ -35,7 +35,9 @@
             <button type="button"
                     class="btn btn-outline-secondary btn-sm"
                     title="Copy a link to send to family, so they can add this calendar too"
-                    data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}">
+                    data-copy="https://{{ domain_name|lower }}{% url 'hebcal:calendar_detail' calendar.uuid %}"
+                    data-share-label="Share"
+                    data-share-title="{{ calendar.name }}">
               <i class="bi bi-link-45deg me-1" aria-hidden="true"></i><span class="copy-label">Copy share link</span>
             </button>
             <a href="{% url 'hebcal:calendar_delete' calendar.uuid %}"
