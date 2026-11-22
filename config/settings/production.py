@@ -183,10 +183,16 @@ LOGGING = {
             "json_ensure_ascii": False,
         },
     },
+    "filters": {
+        "request_context": {
+            "()": "my_hebrew_dates.core.request_context.RequestContextFilter",
+        },
+    },
     "handlers": {
         "console": {
             "level": "DEBUG",
             "class": "logging.StreamHandler",
+            "filters": ["request_context"],
             "stream": "ext://sys.stdout",
             "formatter": "json",
         },
