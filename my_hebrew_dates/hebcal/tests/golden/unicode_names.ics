@@ -3,7 +3,9 @@ VERSION:2.0
 PRODID:-//MyHebrewDates.com//Hebrew Calendar Events//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
+DESCRIPTION:Hebrew calendar events created by MyHebrewDates.com
 X-WR-CALDESC:Hebrew calendar events created by MyHebrewDates.com
+NAME:לוח עברי
 X-WR-CALNAME:לוח עברי
 X-WR-TIMEZONE:America/New_York
 BEGIN:VEVENT

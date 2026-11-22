@@ -19,6 +19,21 @@ CHARJ_URL = "https://charj.cc"
 MYHEBREWDATES_DOMAIN = "@myhebrewdates.com"
 
 
+def new_feed_calendar(model_calendar: ModelCalendar, timezone: str) -> Calendar:
+    newcal = Calendar.new(
+        prodid="-//MyHebrewDates.com//Hebrew Calendar Events//EN",
+        calscale="GREGORIAN",  # Required for Google Calendar
+        method="PUBLISH",
+        name=model_calendar.name,
+        description="Hebrew calendar events created by MyHebrewDates.com",
+    )
+    # Calendar.new() always adds a random UID, which would change on every fetch
+    del newcal["UID"]
+    # No VTIMEZONE needed: all-day events (VALUE=DATE) have no time component
+    newcal.add("x-wr-timezone", timezone)
+    return newcal
+
+
 def generate_ical(
     model_calendar: ModelCalendar,
     user_agent: str = "",
@@ -28,17 +43,7 @@ def generate_ical(
     is_google = "google" in user_agent.lower()
     timezone = "UTC" if is_google else model_calendar.timezone
 
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar, timezone)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
@@ -123,17 +128,7 @@ def generate_ical_experimental(
     is_google = "google" in user_agent.lower()
     timezone = "UTC" if is_google else model_calendar.timezone
 
-    newcal = Calendar()
-    newcal.add("prodid", "-//MyHebrewDates.com//Hebrew Calendar Events//EN")
-    newcal.add("version", "2.0")
-    newcal.add("calscale", "GREGORIAN")  # Required for Google Calendar
-    newcal.add("method", "PUBLISH")
-    newcal.add("x-wr-calname", model_calendar.name)
-    newcal.add("x-wr-timezone", timezone)
-    newcal.add("x-wr-caldesc", "Hebrew calendar events created by MyHebrewDates.com")
-
-    # Note: VTIMEZONE component not needed for all-day events
-    # All-day events (VALUE=DATE) don't require timezone conversion
+    newcal = new_feed_calendar(model_calendar, timezone)
 
     events = []
     now_utc = datetime.now(tz=ZoneInfo("UTC"))
