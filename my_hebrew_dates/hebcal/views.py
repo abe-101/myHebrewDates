@@ -4,6 +4,7 @@ from datetime import timedelta
 from typing import TYPE_CHECKING
 from typing import cast
 
+import posthog
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -80,6 +81,11 @@ def create_calendar_view(request: HttpRequest):
                 calendar.name,
                 calendar.uuid,
             )
+            posthog.capture(
+                "calendar_created",
+                distinct_id=str(request.user.pk),
+                properties={"calendar_uuid": str(calendar.uuid)},
+            )
             return redirect("hebcal:calendar_edit", uuid=calendar.uuid)
         messages.error(request, "Please correct the errors in the form.")
         logger.warning(
@@ -112,6 +118,18 @@ class CalendarUpdateModalView(  # type: ignore[misc]
 
     def get_queryset(self):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        posthog.capture(
+            "calendar_updated",
+            distinct_id=str(self.request.user.pk),
+            properties={
+                "calendar_uuid": str(self.object.uuid),
+                "changed_fields": form.changed_data,
+            },
+        )
+        return response
 
 
 def calendar_edit_view(request: HttpRequest, uuid: UUID):
@@ -159,6 +177,14 @@ def hebrew_date_form_view(request: HttpRequest, uuid: UUID, pk: int | None = Non
                 saved.name,
                 saved.pk,
             )
+            posthog.capture(
+                "hebrew_date_added" if hebrew_date is None else "hebrew_date_edited",
+                distinct_id=str(request.user.pk),
+                properties={
+                    "calendar_uuid": str(calendar.uuid),
+                    "event_type": saved.get_event_type_display(),
+                },
+            )
             if hebrew_date is None:
                 messages.success(request, f"Added {saved.get_formatted_name()}.")
             else:
@@ -204,6 +230,14 @@ def delete_hebrew_date_htmx(request: HttpRequest, uuid: UUID, pk: int):
         hebrew_date.name,
         pk,
     )
+    posthog.capture(
+        "hebrew_date_deleted",
+        distinct_id=str(request.user.pk),
+        properties={
+            "calendar_uuid": str(calendar.uuid),
+            "event_type": hebrew_date.get_event_type_display(),
+        },
+    )
     messages.success(request, f"Removed {formatted_name}.")
     return HttpResponse()
 
@@ -219,6 +253,15 @@ class CalendarDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return Calendar.objects.filter(owner=cast("User", self.request.user))
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        posthog.capture(
+            "calendar_deleted",
+            distinct_id=str(self.request.user.pk),
+            properties={"calendar_uuid": str(self.object.uuid)},
+        )
+        return response
 
 
 @conditional_page
@@ -242,8 +285,31 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    experimental = request.GET.get("experimental", "").lower()
-    if experimental not in {"", "0", "false"}:
+    experimental = request.GET.get("experimental", "").lower() not in {"", "0", "false"}
+
+    client = "other"
+    if user_agent.startswith("Google-Calendar-Importer"):
+        client = "google"
+    elif "dataaccessd" in user_agent or "CalendarAgent" in user_agent:
+        client = "apple"
+    elif user_agent.startswith("Microsoft"):
+        client = "outlook"
+    elif user_agent.startswith("Mozilla"):
+        client = "browser"
+    posthog.capture(
+        "feed_fetched",
+        distinct_id=str(calendar.owner_id),
+        properties={
+            "calendar_uuid": str(calendar.uuid),
+            "client": client,
+            "alarm_hours": int(alarm_trigger.total_seconds() // 3600),
+            "experimental": experimental,
+            "date_count": len(calendar.calendarOf.all()),
+        },
+        disable_geoip=True,
+    )
+
+    if experimental:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             alarm_trigger=alarm_trigger,
