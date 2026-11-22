@@ -21,7 +21,11 @@ def captured(monkeypatch):
 
 
 @pytest.mark.django_db
-def test_journey_is_captured_under_the_user_id(client, mailoutbox, captured):
+def test_journey_is_captured_under_the_user_then_the_calendar(
+    client,
+    mailoutbox,
+    captured,
+):
     client.post(
         reverse("account_signup"),
         {
@@ -62,9 +66,11 @@ def test_journey_is_captured_under_the_user_id(client, mailoutbox, captured):
         "hebrew_date_added",
         "feed_fetched",
     ]
-    assert {kwargs["distinct_id"] for _, kwargs in captured} == {
+    assert {kwargs["distinct_id"] for _, kwargs in captured[:4]} == {
         str(calendar.owner_id),
     }
+    assert captured[4][1]["distinct_id"] == str(calendar.uuid)
+    assert captured[4][1]["properties"]["$process_person_profile"] is False
     assert captured[0][1]["properties"] == {"method": "email"}
     assert captured[3][1]["properties"]["event_type"] == "Birthday"
     assert captured[4][1]["properties"]["client"] == "google"

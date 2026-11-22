@@ -298,8 +298,9 @@ def calendar_file(request, uuid: UUID):
         client = "browser"
     posthog.capture(
         "feed_fetched",
-        distinct_id=str(calendar.owner_id),
+        distinct_id=str(calendar.uuid),
         properties={
+            "$process_person_profile": False,
             "calendar_uuid": str(calendar.uuid),
             "client": client,
             "alarm_hours": int(alarm_trigger.total_seconds() // 3600),
