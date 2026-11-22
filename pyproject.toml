@@ -14,7 +14,7 @@ dependencies = [
     "pyluach==2.3.0",
     "icalendar==7.3.0",
     "python-json-logger==4.2.0",
-    "django==6.0.9",
+    "django==6.0.10",
     "django-environ==0.14.0",
     "django-allauth[mfa,socialaccount]==65.22.1",
     "django-crispy-forms==2.7",
