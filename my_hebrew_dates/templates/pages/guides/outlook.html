@@ -6,18 +6,19 @@
 {% block meta_description %}
   Outlook can't repeat an event by the Hebrew date. Here's how to get Hebrew birthdays, anniversaries, and yahrzeits on the right day every year in Outlook.com or Outlook for Office 365.
 {% endblock meta_description %}
+{% block page_header %}
+  {% include "_page_header.html" with breadcrumb="Outlook" title="How to add Hebrew birthdays and yahrzeits to Outlook" %}
+{% endblock page_header %}
 {% block content %}
   <article class="row">
     <div class="col-lg-8 col-xl-7">
-      {% include "pages/guides/_breadcrumb.html" with name="Outlook" %}
-      <h1 class="h2 mb-3">How to add Hebrew birthdays and yahrzeits to Outlook</h1>
       <p>
         Outlook can only repeat events by the English calendar. A Hebrew birthday or yahrzeit falls on a different English day each year, so a yearly Outlook event lands on the wrong day after the first year.
       </p>
       <p>
         The fix is to subscribe Outlook to a calendar that already knows the Hebrew dates. You add each date once, by its Hebrew date, and Outlook shows it on the right English day every year.
       </p>
-      <h2 class="h4 mt-5 mb-3">Personal account or work account?</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">Personal account or work account?</h2>
       <p>The steps are the same, but you pick a different button depending on how you sign in to Outlook:</p>
       <ul>
         <li class="mb-2">
@@ -27,7 +28,7 @@
           <strong>Outlook for work or school</strong>: an Office 365 (Microsoft 365) account from your job or school.
         </li>
       </ul>
-      <h2 class="h4 mt-5 mb-3">Steps</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">Steps</h2>
       <ol>
         <li class="mb-2">
           <a href="{% url 'account_signup' %}">Sign up</a> and make a calendar, for example “Cohen family”.
@@ -48,11 +49,11 @@
       <p>
         If your work account blocks adding calendars from the web, ask your IT team. Otherwise, use your personal Outlook.com account.
       </p>
-      <h2 class="h4 mt-5 mb-3">Changing the reminder time</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">Changing the reminder time</h2>
       <p>
         The reminder time is part of the calendar link. To change it, remove the calendar from Outlook, pick a new time on the <strong>Add to your calendar</strong> page, and add it again.
       </p>
-      <h2 class="h4 mt-5 mb-3">Why don't my changes show up straight away?</h2>
+      <h2 class="h4 fw-semibold mt-5 mb-3">Why don't my changes show up straight away?</h2>
       <p>
         Outlook checks subscribed calendars on its own schedule, not the moment you make a change. When you add or change a date, it appears after Outlook's next check, which can take a while.
       </p>

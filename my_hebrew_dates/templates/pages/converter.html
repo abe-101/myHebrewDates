@@ -8,13 +8,12 @@
 {% block meta_description %}
   Find out when your Hebrew birthday falls this year. Enter your English date of birth, or the Hebrew date, and see the next English date it falls on, and the years after. Works for anniversaries and yahrzeits too.
 {% endblock meta_description %}
+{% block page_header %}
+  {% include "_page_header.html" with eyebrow="Converter" title="Hebrew date converter" lead="Find out when a Hebrew birthday, anniversary, or yahrzeit falls next, and in the years after. If you only know the English date of birth, start with that and the Hebrew date is worked out for you." %}
+{% endblock page_header %}
 {% block content %}
   <div id="converter" class="row gy-5">
     <div class="col-lg-6">
-      <h1 class="h2 mb-2">Hebrew date converter</h1>
-      <p class="text-body-secondary mb-4">
-        Find out when a Hebrew birthday, anniversary, or yahrzeit falls next, and in the years after. If you only know the English date of birth, start with that and the Hebrew date is worked out for you.
-      </p>
       <form method="get"
             action="{% url 'converter' %}"
             hx-get="{% url 'converter' %}"
