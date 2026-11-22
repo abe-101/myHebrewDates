@@ -83,7 +83,11 @@ def test_journey_is_captured_under_the_user_id(client, mailoutbox, captured):
     ],
 )
 def test_feed_fetch_names_the_calendar_app(
-    client, user, captured, user_agent, expected
+    client,
+    user,
+    captured,
+    user_agent,
+    expected,
 ):
     calendar = Calendar.objects.create(name="Family", owner=user)
     client.get(
