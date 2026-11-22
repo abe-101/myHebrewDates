@@ -33,7 +33,7 @@ dependencies = [
     "sentry-sdk==2.75.0",
     "django-storages[s3]==1.14.6",
     "django-anymail[mailjet]==15.2",
-    "posthog==8.0.2",
+    "posthog==8.1.0",
     "django-health-check==4.11.4",
 ]
 
