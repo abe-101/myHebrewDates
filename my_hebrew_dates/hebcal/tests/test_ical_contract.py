@@ -229,6 +229,15 @@ class TestSubscriptionEndpoints:
         response = client.get(url, {"alarm": alarm})
         assert f"TRIGGER:{expected}" in response.content.decode()
 
+    @pytest.mark.parametrize(
+        ("value", "has_rrule"),
+        [("1", True), ("true", True), ("0", False), ("false", False), ("", False)],
+    )
+    def test_experimental_query_param(self, client, calendar, value, has_rrule):
+        url = reverse("hebcal:calendar_file", args=[calendar.uuid])
+        response = client.get(url, {"experimental": value})
+        assert ("RRULE:" in response.content.decode()) == has_rrule
+
 
 @pytest.mark.usefixtures("pinned_hebrew_dates")
 class TestTimestampFields:

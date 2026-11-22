@@ -264,8 +264,8 @@ def calendar_file(request, uuid: UUID):
         user_agent,
         alarm_trigger,
     )
-    experimental = request.GET.get("experimental", False)
-    if experimental:
+    experimental = request.GET.get("experimental", "").lower()
+    if experimental not in {"", "0", "false"}:
         calendar_str = generate_ical_experimental(
             model_calendar=calendar,
             alarm_trigger=alarm_trigger,
