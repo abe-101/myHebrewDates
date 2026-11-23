@@ -35,17 +35,17 @@
              type="{{ attrs.type }}" />
       <label class="form-check-label" for="{{ attrs.id }}">
         {% slot label %}
-      {% endslot %}
-    </label>
+        {% endslot %}
+      </label>
+    </div>
   </div>
-</div>
 </div>
 {% else %}
 <div class="col-sm-10">
   <label for="{{ attrs.id }}">
     {% slot label %}
-  {% endslot %}
-</label>
+    {% endslot %}
+  </label>
 </div>
 <div class="col-sm-10">
   <input {% if attrs.required %}required{% endif %}
