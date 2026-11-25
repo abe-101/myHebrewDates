@@ -39,7 +39,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "watchdog==7.1.0",
+    "watchdog==7.1.1",
     "werkzeug[watchdog]==3.1.9",
     "ipdb==0.13.13",
     "psycopg[binary]==3.3.9",
