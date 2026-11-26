@@ -219,6 +219,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "my_hebrew_dates.users.context_processors.allauth_settings",
+                "my_hebrew_dates.users.context_processors.posthog_support_identity",
             ],
         },
     },
@@ -418,3 +419,4 @@ COMPRESS_PRECOMPILERS = (("text/x-scss", "django_libsass.SassCompiler"),)
 # posthog
 # Read in core.apps.CoreConfig.ready, which loads under every settings module.
 POSTHOG_API_KEY = ""
+POSTHOG_IDENTITY_SECRET = ""
