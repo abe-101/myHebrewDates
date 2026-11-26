@@ -10,6 +10,7 @@ from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
+from shortuuid.django_fields import ShortUUIDField
 
 from my_hebrew_dates.core.models import TimeStampedModel
 
@@ -145,6 +146,7 @@ class HebrewDate(TimeStampedModel):
         related_name="calendarOf",
         help_text="Select the calendar to which this event belongs.",
     )
+    public_id = ShortUUIDField(length=10, unique=True, editable=False)
 
     def __str__(self):
         return self.name

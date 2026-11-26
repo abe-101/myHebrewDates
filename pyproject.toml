@@ -35,6 +35,7 @@ dependencies = [
     "django-anymail[mailjet]==15.2",
     "posthog==8.1.0",
     "django-health-check==4.11.4",
+    "shortuuid>=1.0.13",
 ]
 
 [dependency-groups]

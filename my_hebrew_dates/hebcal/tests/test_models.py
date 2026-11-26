@@ -11,6 +11,8 @@ from my_hebrew_dates.hebcal.models import HebrewDate
 
 User = get_user_model()
 
+PUBLIC_ID_LENGTH = 10
+
 
 class CalendarModelTest(TestCase):
     def setUp(self):
@@ -55,6 +57,17 @@ class HebrewDateModelTest(TestCase):
     def test_get_absolute_url(self):
         url = reverse("hebcal:calendar_edit", kwargs={"uuid": self.calendar.uuid})
         assert self.hebrew_date.get_absolute_url() == url
+
+    def test_public_id_is_short_and_unique(self):
+        other = HebrewDate.objects.create(
+            name="Other",
+            month=1,
+            day=2,
+            event_type="🎂",
+            calendar=self.calendar,
+        )
+        assert len(self.hebrew_date.public_id) == PUBLIC_ID_LENGTH
+        assert self.hebrew_date.public_id != other.public_id
 
 
 class IsValidHebrewDateTest(TestCase):

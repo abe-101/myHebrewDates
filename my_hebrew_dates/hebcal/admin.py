@@ -63,6 +63,7 @@ class HebrewDateAdmin(admin.ModelAdmin):
     )
     list_select_related = ("calendar__owner",)
     list_filter = ("event_type",)
+    readonly_fields = ("public_id",)
     search_fields = ("name", "calendar__name", "calendar__owner__email")
     ordering = ("-created",)
     autocomplete_fields = ("calendar",)
