@@ -253,6 +253,7 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 MIDDLEWARE += ["posthog.integrations.django.PosthogContextMiddleware"]
 
 POSTHOG_API_KEY = env("POSTHOG_API_KEY", default="")
+POSTHOG_IDENTITY_SECRET = env("POSTHOG_IDENTITY_SECRET", default="")
 
 
 def add_request_context(request):

@@ -134,16 +134,23 @@
         ui_host: 'https://us.posthog.com', // necessary because you're using a proxy, this way links will point back to PostHog properly
         defaults: '2026-08-30',
         person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+        {% if request.user.is_authenticated and POSTHOG_IDENTITY_HASH %}
+        identity_distinct_id: '{{ request.user.pk|escapejs }}',
+        identity_hash: '{{ POSTHOG_IDENTITY_HASH|escapejs }}',
+        {% endif %}
         {% if not request.user.is_authenticated %}
         loaded: function (ph) {
-            if (ph.get_property('$user_id')) ph.reset()
+            if (ph.get_property('$user_id')) {
+                ph.clearIdentity?.()
+                ph.reset()
+            }
         },
         {% endif %}
     })
 </script>
   {% if request.user.is_authenticated %}
     <script>
-    posthog.identify('{{ request.user.id }}', {
+    posthog.identify('{{ request.user.pk|escapejs }}', {
       name: "{{ request.user.name|escapejs }}",
       email: "{{ request.user.email|escapejs }}"
     })
